@@ -44,8 +44,12 @@ public class VistaLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 102, 102));
         jLabel1.setText("Usuario");
 
+        btnCerrar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCerrar.setForeground(new java.awt.Color(0, 102, 102));
         btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,6 +57,8 @@ public class VistaLogin extends javax.swing.JFrame {
             }
         });
 
+        btnIniciarSesion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnIniciarSesion.setForeground(new java.awt.Color(0, 102, 102));
         btnIniciarSesion.setText("Iniciar Sesión");
         btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,8 +66,12 @@ public class VistaLogin extends javax.swing.JFrame {
             }
         });
 
+        lblContrasenia.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblContrasenia.setForeground(new java.awt.Color(0, 102, 102));
         lblContrasenia.setText("Contraseña");
 
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("Inicio de Sesión");
 
         jPContrasenia.addActionListener(new java.awt.event.ActionListener() {
@@ -86,20 +96,19 @@ public class VistaLogin extends javax.swing.JFrame {
                         .addGap(73, 73, 73)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblContrasenia)
-                                    .addComponent(jLabel1))
-                                .addGap(36, 36, 36)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnIniciarSesion)
                                 .addGap(94, 94, 94)
-                                .addComponent(btnCerrar))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(259, 259, 259)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnCerrar))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblTitulo)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblContrasenia)
+                                        .addComponent(jLabel1))
+                                    .addGap(36, 36, 36)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(82, 82, 82)
                         .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -108,9 +117,9 @@ public class VistaLogin extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22)
+                .addGap(7, 7, 7)
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -123,8 +132,8 @@ public class VistaLogin extends javax.swing.JFrame {
                     .addComponent(btnIniciarSesion)
                     .addComponent(btnCerrar))
                 .addGap(37, 37, 37)
-                .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         pack();

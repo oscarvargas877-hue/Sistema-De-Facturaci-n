@@ -9,14 +9,60 @@ package Vista;
  * @author Usuario
  */
 public class VistaVerFactura extends javax.swing.JFrame {
-
+ // Atributos privados para almacenar los datos
+    private String cliente;
+    private java.util.List<Modelo.DetalleFacturaModelo> detalle;
+    private double total;
     /**
      * Creates new form VistaVerFactura
      */
-    public VistaVerFactura() {
+    public VistaVerFactura(String cliente, java.util.List<Modelo.DetalleFacturaModelo> detalle, double total) {
         initComponents();
+         this.cliente = cliente;
+        this.detalle = detalle;
+        this.total = total;
+        cargarDatos();
     }
 
+         // Método para cargar los datos en la vista
+    private void cargarDatos() {
+        // Mostrar cliente
+        lblCliente.setText("Cliente: " + cliente);
+
+        // Mostrar fecha y hora actual
+        java.time.LocalDateTime ahora = java.time.LocalDateTime.now();
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        lblFechaHora.setText("Fecha y Hora: " + ahora.format(formatter));
+
+        // Actualizar la tabla de detalle
+        actualizarTablaDetalle();
+
+        // Actualizar el total
+        txtTotal.setText(String.format("%.2f", total));
+    }
+    
+           // Método para actualizar la tabla de detalle
+    private void actualizarTablaDetalle() {
+        // Crear el modelo de la tabla
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new Object[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+        );
+
+        // Llenar la tabla con los detalles
+        for (Modelo.DetalleFacturaModelo item : detalle) {
+            String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+            modelo.addRow(new Object[]{
+                item.getNombreProducto(),
+                item.getCantidad(),
+                String.format("%.2f", item.getPrecioUnitario()),
+                descuentoStr,
+                String.format("%.2f", item.getSubtotal())
+            });
+        }
+
+        // Asignar el modelo a la tabla
+        tablaDetalle.setModel(modelo);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,57 +72,135 @@ public class VistaVerFactura extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblCliente = new javax.swing.JLabel();
+        lblFechaHora = new javax.swing.JLabel();
+        lblDetalleVenta = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaDetalle = new javax.swing.JTable();
+        txtTotal = new javax.swing.JTextField();
+        btnAceptar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
+        lblTitulo.setText("Factura Generada");
+
+        lblCliente.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblCliente.setForeground(new java.awt.Color(0, 102, 102));
+        lblCliente.setText("Cliente: ");
+
+        lblFechaHora.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblFechaHora.setForeground(new java.awt.Color(0, 102, 102));
+        lblFechaHora.setText("Fecha y hora: ");
+
+        lblDetalleVenta.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblDetalleVenta.setForeground(new java.awt.Color(0, 102, 102));
+        lblDetalleVenta.setText("Detalle Venta");
+
+        lblTotal.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(0, 102, 102));
+        lblTotal.setText("Total:");
+
+        tablaDetalle.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        tablaDetalle.setForeground(new java.awt.Color(0, 102, 102));
+        tablaDetalle.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaDetalle);
+
+        txtTotal.setEditable(false);
+
+        btnAceptar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnAceptar.setForeground(new java.awt.Color(0, 102, 102));
+        btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDetalleVenta)
+                            .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(229, 229, 229)
+                        .addComponent(btnAceptar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(267, 267, 267)
+                        .addComponent(lblTitulo)))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblFechaHora)
+                .addGap(18, 18, 18)
+                .addComponent(lblDetalleVenta)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotal)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
+                .addComponent(btnAceptar)
+                .addGap(37, 37, 37))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaVerFactura.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaVerFactura.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaVerFactura.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaVerFactura.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        // TODO add your handling code here:
+          // Cerrar esta ventana y regresar al menú del cajero
+        this.dispose();
+        
+    }//GEN-LAST:event_btnAceptarActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaVerFactura().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAceptar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCliente;
+    private javax.swing.JLabel lblDetalleVenta;
+    private javax.swing.JLabel lblFechaHora;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JTable tablaDetalle;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

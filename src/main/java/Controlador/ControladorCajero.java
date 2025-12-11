@@ -22,10 +22,13 @@ public class ControladorCajero {
 
     // Abre la ventana de facturación (HU005)
     public void abrirVentanaFacturacion() {
-        vistaMenuCajero.dispose(); // Cierra el menú actual
+        int idCajero = 1; // ← ¡Este valor debe venir del login o de una sesión activa!
+        vistaMenuCajero.dispose();
         VistaFacturacion vista = new VistaFacturacion();
-        // Se asume que VistaFacturacion se autogestionará (o tendrá su propio controlador si se implementa)
+        ControladorFacturacion controlador = new ControladorFacturacion(vista, vistaMenuCajero, idCajero);
+        vista.establecerControlador(controlador);
         vista.setVisible(true);
+        controlador.cargarProductos();
     }
 
     // Cierra la sesión del cajero y regresa al login (HU010, CA10)

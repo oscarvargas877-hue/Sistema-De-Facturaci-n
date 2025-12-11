@@ -9,12 +9,19 @@ package Vista;
  * @author Usuario
  */
 public class VistaRegistrarUsuario extends javax.swing.JFrame {
-
+     private Controlador.ControladorRegistrarUsuario controladorRegistrar;
     /**
      * Creates new form VistaRegistrarUsuario
      */
     public VistaRegistrarUsuario() {
         initComponents();
+    // Crear un grupo de botones para que solo se pueda seleccionar uno
+    javax.swing.ButtonGroup grupoRol = new javax.swing.ButtonGroup();
+    grupoRol.add(RadioAdministrador);
+    grupoRol.add(RadioCajero);
+    }
+        public void establecerControlador(Controlador.ControladorRegistrarUsuario controlador) {
+        this.controladorRegistrar = controlador;
     }
 
     /**
@@ -26,22 +33,213 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblNombreUsuario = new javax.swing.JLabel();
+        lblContrasenia = new javax.swing.JLabel();
+        lblRol = new javax.swing.JLabel();
+        lblMensajeError = new javax.swing.JLabel();
+        jPContrasenia = new javax.swing.JPasswordField();
+        txtNombreUsuario = new javax.swing.JTextField();
+        RadioAdministrador = new javax.swing.JRadioButton();
+        RadioCajero = new javax.swing.JRadioButton();
+        btnRegistrar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
+        lblTitulo.setText("Registrar Nuevo Usuario");
+
+        lblNombreUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblNombreUsuario.setForeground(new java.awt.Color(0, 102, 102));
+        lblNombreUsuario.setText("Nombre de usuario");
+
+        lblContrasenia.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblContrasenia.setForeground(new java.awt.Color(0, 102, 102));
+        lblContrasenia.setText("Contraseña");
+
+        lblRol.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblRol.setForeground(new java.awt.Color(0, 102, 102));
+        lblRol.setText("Rol");
+
+        jPContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPContraseniaActionPerformed(evt);
+            }
+        });
+
+        txtNombreUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreUsuarioActionPerformed(evt);
+            }
+        });
+
+        RadioAdministrador.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        RadioAdministrador.setForeground(new java.awt.Color(0, 102, 102));
+        RadioAdministrador.setText("Administrador");
+        RadioAdministrador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RadioAdministradorActionPerformed(evt);
+            }
+        });
+
+        RadioCajero.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        RadioCajero.setForeground(new java.awt.Color(0, 102, 102));
+        RadioCajero.setText("Cajero");
+        RadioCajero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RadioCajeroActionPerformed(evt);
+            }
+        });
+
+        btnRegistrar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnRegistrar.setForeground(new java.awt.Color(0, 102, 102));
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(0, 102, 102));
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(44, 44, 44)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnRegistrar)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblNombreUsuario)
+                                    .addComponent(lblContrasenia)
+                                    .addComponent(lblRol)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(26, 26, 26)
+                                    .addComponent(RadioAdministrador)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(RadioCajero))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(143, 143, 143)
+                                    .addComponent(btnCancelar)))
+                            .addGap(61, 61, 61))
+                        .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(lblTitulo)))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNombreUsuario)
+                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblContrasenia)
+                    .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRol)
+                    .addComponent(RadioAdministrador)
+                    .addComponent(RadioCajero))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnRegistrar))
+                .addGap(57, 57, 57)
+                .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtNombreUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreUsuarioActionPerformed
+
+    private void jPContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPContraseniaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPContraseniaActionPerformed
+
+    private void RadioAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioAdministradorActionPerformed
+        // TODO add your handling code here:
+          lblMensajeError.setVisible(false);
+    }//GEN-LAST:event_RadioAdministradorActionPerformed
+
+    private void RadioCajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioCajeroActionPerformed
+        // TODO add your handling code here:
+          lblMensajeError.setVisible(false);
+    }//GEN-LAST:event_RadioCajeroActionPerformed
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        // TODO add your handling code here:
+        String nombreUsuario = txtNombreUsuario.getText();
+        String contrasenia = new String(jPContrasenia.getPassword());
+        String rol = "";
+        
+          // Validar campos vacíos
+        if (nombreUsuario.trim().isEmpty() || contrasenia.trim().isEmpty()) {
+            lblMensajeError.setText("Por favor complete todos los campos.");
+            lblMensajeError.setVisible(true);
+            return;
+        }
+
+        // Determinar el rol seleccionado
+        if (RadioAdministrador.isSelected()) {
+            rol = "administrador";
+        } else if (RadioCajero.isSelected()) {
+            rol = "cajero";
+        } else {
+            lblMensajeError.setText("Por favor seleccione un rol");
+            lblMensajeError.setVisible(true);
+            return;
+        }
+
+      
+
+        // Llamar al controlador
+        if (controladorRegistrar != null) {
+            controladorRegistrar.registrarUsuario(nombreUsuario, contrasenia, rol);
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        if (controladorRegistrar != null) {
+            controladorRegistrar.cancelar();
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+        // Método público para que el controlador muestre mensajes
+    public void mostrarMensaje(String mensaje, boolean exito) {
+        lblMensajeError.setText(mensaje);
+        lblMensajeError.setForeground(exito ? java.awt.Color.GREEN : java.awt.Color.RED);
+        lblMensajeError.setVisible(true);
+    }
     /**
      * @param args the command line arguments
      */
@@ -78,5 +276,16 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton RadioAdministrador;
+    private javax.swing.JRadioButton RadioCajero;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JPasswordField jPContrasenia;
+    private javax.swing.JLabel lblContrasenia;
+    private javax.swing.JLabel lblMensajeError;
+    private javax.swing.JLabel lblNombreUsuario;
+    private javax.swing.JLabel lblRol;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,12 +9,16 @@ package Vista;
  * @author Usuario
  */
 public class VistaGestionStock extends javax.swing.JFrame {
-
+     // Atributo para guardar la referencia al controlador
+    private Controlador.ControladorGestionStock controladorGestionStock;
     /**
      * Creates new form VistaGestionStock
      */
     public VistaGestionStock() {
         initComponents();
+    }
+        public void establecerControlador(Controlador.ControladorGestionStock controlador) {
+        this.controladorGestionStock = controlador;
     }
 
     /**
@@ -26,22 +30,244 @@ public class VistaGestionStock extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblListaProductos = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaProductos = new javax.swing.JTable();
+        lblCodigo = new javax.swing.JLabel();
+        lblCantidadSumar = new javax.swing.JLabel();
+        lblMensajeDeError = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        txtCantidaSumar = new javax.swing.JTextField();
+        btnReabastecer = new javax.swing.JButton();
+        lblAtras = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
+        lblTitulo.setText("Gestión de Stock");
+
+        lblListaProductos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblListaProductos.setForeground(new java.awt.Color(0, 102, 102));
+        lblListaProductos.setText("Lista de Productos");
+
+        TablaProductos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        TablaProductos.setForeground(new java.awt.Color(0, 102, 102));
+        TablaProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Código", "Nombre", "Precio", "Stock"
+            }
+        ));
+        jScrollPane1.setViewportView(TablaProductos);
+
+        lblCodigo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblCodigo.setForeground(new java.awt.Color(0, 102, 102));
+        lblCodigo.setText("Código");
+
+        lblCantidadSumar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblCantidadSumar.setForeground(new java.awt.Color(0, 102, 102));
+        lblCantidadSumar.setText("Ingrese la cantidad");
+
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoActionPerformed(evt);
+            }
+        });
+
+        txtCantidaSumar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCantidaSumarActionPerformed(evt);
+            }
+        });
+
+        btnReabastecer.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnReabastecer.setForeground(new java.awt.Color(0, 102, 102));
+        btnReabastecer.setText("Reabastecer Stock");
+        btnReabastecer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReabastecerActionPerformed(evt);
+            }
+        });
+
+        lblAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblAtras.setForeground(new java.awt.Color(0, 102, 102));
+        lblAtras.setText("Atras");
+        lblAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblAtrasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblListaProductos)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblCodigo)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(82, 82, 82)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnReabastecer)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(46, 46, 46)
+                                        .addComponent(lblCantidadSumar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtCantidaSumar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblAtras)
+                                    .addComponent(lblMensajeDeError, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(120, 327, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(250, 250, 250)
+                .addComponent(lblTitulo)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(lblTitulo)
+                .addGap(52, 52, 52)
+                .addComponent(lblListaProductos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCodigo)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCantidaSumar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCantidadSumar))
+                .addGap(18, 18, 18)
+                .addComponent(btnReabastecer)
+                .addGap(18, 18, 18)
+                .addComponent(lblAtras)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblMensajeDeError, javax.swing.GroupLayout.DEFAULT_SIZE, 11, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+        // TODO add your handling code here:
+         lblMensajeDeError.setVisible(false);
+    }//GEN-LAST:event_txtCodigoActionPerformed
+
+    private void txtCantidaSumarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidaSumarActionPerformed
+        // TODO add your handling code here:
+         lblMensajeDeError.setVisible(false);
+    }//GEN-LAST:event_txtCantidaSumarActionPerformed
+
+    private void btnReabastecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReabastecerActionPerformed
+        // TODO add your handling code here:
+        // Obtener los valores de los campos
+        String codigoProducto = txtCodigo.getText();
+        String cantidadTexto = txtCantidaSumar.getText();
+
+        // Validar que los campos no estén vacíos
+        if (codigoProducto.trim().isEmpty() || cantidadTexto.trim().isEmpty()) {
+            lblMensajeDeError.setText("Por favor ingrese código y cantidad.");
+            lblMensajeDeError.setVisible(true);
+            return;
+        }
+
+        // Validar que la cantidad sea un número entero positivo
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad <= 0) {
+                lblMensajeDeError.setText("La cantidad debe ser mayor que 0.");
+                lblMensajeDeError.setVisible(true);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            lblMensajeDeError.setText("La cantidad debe ser un número válido.");
+            lblMensajeDeError.setVisible(true);
+            return;
+        }
+
+        // Llamar al controlador para reabastecer el stock
+        if (controladorGestionStock != null) {
+            controladorGestionStock.reabastecerStock(codigoProducto, cantidad);
+        }
+    }//GEN-LAST:event_btnReabastecerActionPerformed
+
+    private void lblAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAtrasActionPerformed
+        // TODO add your handling code here:
+        // Llamar al controlador para volver al menú del administrador
+        if (controladorGestionStock != null) {
+            controladorGestionStock.volverAlMenu();
+        }
+    }//GEN-LAST:event_lblAtrasActionPerformed
+     
+        // Método público para mostrar mensajes de error o éxito
+      public void mostrarMensajeError(String mensaje) {
+          lblMensajeDeError.setText(mensaje);
+          lblMensajeDeError.setVisible(true);
+        }
+          // Método público para mostrar mensajes con color específico
+        public void mostrarMensajeConColor(String mensaje, java.awt.Color color) {
+            lblMensajeDeError.setText(mensaje);
+            lblMensajeDeError.setForeground(color);
+            lblMensajeDeError.setVisible(true);
+        }
+      
+    
+        // Método público para cargar los productos en la tabla y mostrar alerta si hay stock bajo
+    public void cargarProductos(java.util.List<Modelo.ProductoModelo> listaProductos) {
+        // Crear el modelo de la tabla
+        javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(
+            new Object[]{"Código", "Nombre", "Precio", "Stock"}, 0
+        );
+
+        // Bandera para saber si hay stock bajo
+        boolean hayStockBajo = false;
+
+        // Llenar la tabla con los productos
+        for (Modelo.ProductoModelo producto : listaProductos) {
+            modeloTabla.addRow(new Object[]{
+                producto.getCodigo(),
+                producto.getNombre(),
+                producto.getPrecio(),
+                producto.getCantidadStock()
+            });
+
+            // Verificar si el stock es menor a 3
+            if (producto.getCantidadStock() < 3) {
+                hayStockBajo = true;
+            }
+        }
+
+        // Asignar el modelo a la tabla
+        TablaProductos.setModel(modeloTabla);
+
+        // Mostrar o ocultar el mensaje de alerta
+        if (hayStockBajo) {
+            lblMensajeDeError.setText("¡Alerta! Stock bajo (<3) en algunos productos.");
+            lblMensajeDeError.setForeground(java.awt.Color.RED);
+            lblMensajeDeError.setVisible(true);
+        } else {
+            lblMensajeDeError.setVisible(false);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -78,5 +304,16 @@ public class VistaGestionStock extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaProductos;
+    private javax.swing.JButton btnReabastecer;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton lblAtras;
+    private javax.swing.JLabel lblCantidadSumar;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblListaProductos;
+    private javax.swing.JLabel lblMensajeDeError;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextField txtCantidaSumar;
+    private javax.swing.JTextField txtCodigo;
     // End of variables declaration//GEN-END:variables
 }

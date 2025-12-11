@@ -9,6 +9,8 @@ package Vista;
  * @author Usuario
  */
 public class VistaHistorialVentas extends javax.swing.JFrame {
+// Atributo para guardar la referencia al controlador
+private Controlador.ControladorHistorialVentas controladorHistorial;
 
     /**
      * Creates new form VistaHistorialVentas
@@ -16,6 +18,37 @@ public class VistaHistorialVentas extends javax.swing.JFrame {
     public VistaHistorialVentas() {
         initComponents();
     }
+    // Método para inyectar el controlador desde fuera
+    public void establecerControlador(Controlador.ControladorHistorialVentas controlador) {
+        this.controladorHistorial = controlador;
+    }
+    // Método para cargar el historial de ventas en la tabla
+    public void cargarHistorial(java.util.List<Modelo.HistorialVentaModelo> listaHistorial) {
+        // Crear el modelo de la tabla
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new Object[]{"ID", "Fecha/Hora", "Cajero", "Cliente", "Total"}, 0
+        );
+
+        // Llenar la tabla con los datos
+        for (Modelo.HistorialVentaModelo venta : listaHistorial) {
+            modelo.addRow(new Object[]{
+                venta.getIdFactura(),
+                venta.getFechaHora(),
+                venta.getCajero(),
+                venta.getCliente(),
+                String.format("%.2f", venta.getTotal())
+            });
+        }
+
+        // Asignar el modelo a la tabla
+        tablaHistorial.setModel(modelo);
+    }
+    
+    // Método para mostrar mensajes de error
+    private void mostrarMensajeError(String mensaje) {
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,57 +59,116 @@ public class VistaHistorialVentas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        ScrollHistorial = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaHistorial = new javax.swing.JTable();
+        btnRecargar = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
+        lblTitulo.setText("Historial De Ventas");
+
+        tablaHistorial.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        tablaHistorial.setForeground(new java.awt.Color(0, 102, 102));
+        tablaHistorial.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Feha/Hora", "Cajero", "Cliente", "Total"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaHistorial);
+
+        ScrollHistorial.setViewportView(jScrollPane1);
+
+        btnRecargar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnRecargar.setForeground(new java.awt.Color(0, 102, 102));
+        btnRecargar.setText("Recargar");
+        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarActionPerformed(evt);
+            }
+        });
+
+        btnAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnAtras.setForeground(new java.awt.Color(0, 102, 102));
+        btnAtras.setText("Atrás");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addComponent(btnRecargar)
+                .addGap(192, 192, 192)
+                .addComponent(btnAtras)
+                .addContainerGap(191, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(ScrollHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(84, 84, 84))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitulo)
+                .addGap(220, 220, 220))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(lblTitulo)
+                .addGap(31, 31, 31)
+                .addComponent(ScrollHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRecargar)
+                    .addComponent(btnAtras))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
+        // TODO add your handling code here:
+          // Llamar al controlador para recargar los datos
+        if (controladorHistorial != null) {
+        controladorHistorial.cargarHistorial();
+    
+    }
+    }//GEN-LAST:event_btnRecargarActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaHistorialVentas().setVisible(true);
-            }
-        });
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        // TODO add your handling code here:
+        // Llamar al controlador para volver al menú del administrador
+        if (controladorHistorial != null) {
+        controladorHistorial.volverAlMenu();
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
+    
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollHistorial;
+    private javax.swing.JButton btnAtras;
+    private javax.swing.JButton btnRecargar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tablaHistorial;
     // End of variables declaration//GEN-END:variables
 }

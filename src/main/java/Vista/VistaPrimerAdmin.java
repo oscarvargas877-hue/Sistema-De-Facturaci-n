@@ -42,10 +42,16 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("Crear primer administrador ");
 
+        lblPrimerUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblPrimerUsuario.setForeground(new java.awt.Color(0, 102, 102));
         lblPrimerUsuario.setText("Usuario");
 
+        lblContrasenia.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblContrasenia.setForeground(new java.awt.Color(0, 102, 102));
         lblContrasenia.setText("Contraseña");
 
         txtUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -60,6 +66,8 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnCrearPrimerAdministrador.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCrearPrimerAdministrador.setForeground(new java.awt.Color(0, 102, 102));
         btnCrearPrimerAdministrador.setText("Crear Primer Administrador");
         btnCrearPrimerAdministrador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,30 +79,32 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(102, 102, 102)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblContrasenia)
-                    .addComponent(lblPrimerUsuario))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                    .addComponent(txtUsuario))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(128, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnCrearPrimerAdministrador)
-                    .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTitulo))
+                    .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(232, 232, 232))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(102, 102, 102)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblContrasenia)
+                            .addComponent(lblPrimerUsuario))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(txtUsuario))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(29, 29, 29)
                 .addComponent(lblTitulo)
-                .addGap(61, 61, 61)
+                .addGap(62, 62, 62)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPrimerUsuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -106,7 +116,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
                 .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCrearPrimerAdministrador)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         pack();

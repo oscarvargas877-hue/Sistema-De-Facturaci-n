@@ -9,6 +9,7 @@ package Vista;
  * @author Usuario
  */
 public class VistaProductosMasVendidos extends javax.swing.JFrame {
+    private Controlador.ControladorProductosMasVendidos controladorProductos;
 
     /**
      * Creates new form VistaProductosMasVendidos
@@ -16,6 +17,35 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     public VistaProductosMasVendidos() {
         initComponents();
     }
+    // Método para inyectar el controlador desde fuera
+    public void establecerControlador(Controlador.ControladorProductosMasVendidos controlador) {
+        this.controladorProductos = controlador;
+    }
+    
+    // Método para mostrar la lista de productos más vendidos en la tabla
+    public void mostrarProductosMasVendidos(java.util.List<Modelo.ProductoMasVendidoModelo> listaProductos) {
+        // Crear el modelo de la tabla
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new Object[]{"Producto", "Cantidad Total Vendida"}, 0
+        );
+
+        // Llenar la tabla con los datos
+        for (Modelo.ProductoMasVendidoModelo producto : listaProductos) {
+            modelo.addRow(new Object[]{
+                producto.getNombreProducto(),
+                producto.getCantidadTotalVendida()
+            });
+        }
+
+        // Asignar el modelo a la tabla
+        tablaProductos.setModel(modelo);
+    }
+    
+    // Método para mostrar mensajes de error (si ocurre algún problema)
+    private void mostrarMensajeError(String mensaje) {
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,21 +56,107 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        ScrollTablaProductos = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaProductos = new javax.swing.JTable();
+        btnRecargar = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel1.setText("Productos Más Vendidos");
+
+        ScrollTablaProductos.setForeground(new java.awt.Color(0, 102, 102));
+
+        tablaProductos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        tablaProductos.setForeground(new java.awt.Color(0, 102, 102));
+        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Producto", "Cantidad total vendida"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaProductos);
+
+        ScrollTablaProductos.setViewportView(jScrollPane2);
+
+        btnRecargar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnRecargar.setForeground(new java.awt.Color(0, 102, 102));
+        btnRecargar.setText("Recargar");
+        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarActionPerformed(evt);
+            }
+        });
+
+        btnAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnAtras.setForeground(new java.awt.Color(0, 102, 102));
+        btnAtras.setText("Atrás");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(246, 246, 246)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(ScrollTablaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(153, 153, 153)
+                        .addComponent(btnRecargar)
+                        .addGap(228, 228, 228)
+                        .addComponent(btnAtras)))
+                .addContainerGap(328, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(jLabel1)
+                .addGap(72, 72, 72)
+                .addComponent(ScrollTablaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRecargar)
+                    .addComponent(btnAtras))
+                .addContainerGap(256, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
+        // TODO add your handling code here:
+        // Llamar al controlador para recargar los datos desde la BD
+        if (controladorProductos != null) {
+          controladorProductos.cargarProductosMasVendidos();
+        }
+    }//GEN-LAST:event_btnRecargarActionPerformed
+
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        // TODO add your handling code here:
+         // Llamar al controlador para volver al menú del administrador
+        if (controladorProductos != null) {
+        controladorProductos.volverAlMenu();
+        }
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +194,11 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollTablaProductos;
+    private javax.swing.JButton btnAtras;
+    private javax.swing.JButton btnRecargar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 }

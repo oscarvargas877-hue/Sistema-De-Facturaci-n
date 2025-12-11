@@ -25,17 +25,22 @@ public class ControladorAdmin {
 
     // Abre la ventana para registrar un nuevo usuario
     public void abrirVentanaRegistrarUsuario() {
-        vistaMenuAdmin.dispose(); // Cierra el menú actual
-        VistaRegistrarUsuario vista = new VistaRegistrarUsuario();
-        // No necesitas controlador aquí si solo muestra un formulario simple
-        vista.setVisible(true);
+    vistaMenuAdmin.dispose();
+    VistaRegistrarUsuario vista = new VistaRegistrarUsuario();
+    ControladorRegistrarUsuario controlador = new ControladorRegistrarUsuario(vista, vistaMenuAdmin);
+    vista.establecerControlador(controlador);
+    vista.setVisible(true);
     }
 
     // Abre la ventana de gestión de stock
     public void abrirVentanaGestionStock() {
         vistaMenuAdmin.dispose();
         VistaGestionStock vista = new VistaGestionStock();
+        ControladorGestionStock controlador = new ControladorGestionStock(vista, vistaMenuAdmin);
+        vista.establecerControlador(controlador);
         vista.setVisible(true);
+        // Cargar los productos inmediatamente
+        controlador.cargarProductos();
     }
 
     // Abre la ventana del historial de ventas

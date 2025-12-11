@@ -42,8 +42,12 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("Menú Del Administrador");
 
+        btnRegistrarUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnRegistrarUsuario.setForeground(new java.awt.Color(0, 102, 102));
         btnRegistrarUsuario.setText("Registrar nuevo usuario");
         btnRegistrarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -51,6 +55,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnGestionStock.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnGestionStock.setForeground(new java.awt.Color(0, 102, 102));
         btnGestionStock.setText("Gestión de Stock");
         btnGestionStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,6 +64,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnCerrarSesion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCerrarSesion.setForeground(new java.awt.Color(0, 102, 102));
         btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -65,6 +73,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnHistorialVentas.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnHistorialVentas.setForeground(new java.awt.Color(0, 102, 102));
         btnHistorialVentas.setText("Historial de ventas");
         btnHistorialVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,6 +82,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnProductosMasVendidos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnProductosMasVendidos.setForeground(new java.awt.Color(0, 102, 102));
         btnProductosMasVendidos.setText("Productos mas vendidos");
         btnProductosMasVendidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,39 +96,38 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegistrarUsuario)
-                        .addGap(70, 70, 70)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnGestionStock)
-                    .addComponent(btnHistorialVentas)
-                    .addComponent(btnProductosMasVendidos)
+                        .addGap(64, 64, 64)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRegistrarUsuario)
+                            .addComponent(btnGestionStock)
+                            .addComponent(btnHistorialVentas)
+                            .addComponent(btnProductosMasVendidos)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(136, 136, 136)
+                                .addComponent(btnCerrarSesion))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(btnCerrarSesion)))
-                .addContainerGap(165, Short.MAX_VALUE))
+                        .addGap(179, 179, 179)
+                        .addComponent(lblTitulo)))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addComponent(btnRegistrarUsuario)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnGestionStock)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnHistorialVentas)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnProductosMasVendidos)))
+                .addContainerGap()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(btnRegistrarUsuario)
+                .addGap(18, 18, 18)
+                .addComponent(btnGestionStock)
+                .addGap(18, 18, 18)
+                .addComponent(btnHistorialVentas)
+                .addGap(18, 18, 18)
+                .addComponent(btnProductosMasVendidos)
                 .addGap(56, 56, 56)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(196, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();

@@ -40,8 +40,12 @@ public class VistaMenuCajero extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        Titulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        Titulo.setForeground(new java.awt.Color(0, 102, 102));
         Titulo.setText("Menú del cajero");
 
+        btnFacturacion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnFacturacion.setForeground(new java.awt.Color(0, 102, 102));
         btnFacturacion.setText("Realizar Facturación");
         btnFacturacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -49,6 +53,8 @@ public class VistaMenuCajero extends javax.swing.JFrame {
             }
         });
 
+        btnCerrarSesion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCerrarSesion.setForeground(new java.awt.Color(0, 102, 102));
         btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,27 +66,27 @@ public class VistaMenuCajero extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 129, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion)
+                .addGap(138, 138, 138))
             .addGroup(layout.createSequentialGroup()
                 .addGap(81, 81, 81)
-                .addComponent(btnFacturacion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 163, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Titulo)
-                    .addComponent(btnCerrarSesion))
-                .addGap(138, 138, 138))
+                    .addComponent(btnFacturacion))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(26, 26, 26)
                 .addComponent(Titulo)
-                .addGap(37, 37, 37)
+                .addGap(38, 38, 38)
                 .addComponent(btnFacturacion)
                 .addGap(47, 47, 47)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
 
         pack();
