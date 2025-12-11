@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 // Modelo/UsuarioModelo.java
-// Modelo/UsuarioModelo.java
 package Modelo;
 
 import BDD.ConexionBDD;
@@ -11,41 +10,50 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
-// Clase que representa a un usuario y contiene la lógica de negocio relacionada con usuarios
+// Clase que representa a un usuario y contiene toda la lógica de negocio relacionada
 public class UsuarioModelo {
 
     // Atributos del usuario
     private int idUsuario;
     private String nombreUsuario;
-    private String contrasenia; // Se almacena como hash
+    private String contrasenia; // Almacenará el hash
     private String rol;
+    private boolean activo; // true = activo, false = inactivo
 
-    // Constructor vacío
+    // Constructor vacío (necesario para instanciar sin datos)
     public UsuarioModelo() {}
 
     // Constructor para crear un nuevo usuario (usado al registrar)
     public UsuarioModelo(String nombreUsuario, String contrasenia, String rol) {
         this.nombreUsuario = nombreUsuario;
-        // Hasheamos la contraseña en el momento de crear el objeto
+        this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt(12)); // Hasheamos al crear
+        this.rol = rol;
+        this.activo = true; // Por defecto, todos los nuevos usuarios son activos
+    }
+
+    // Constructor para crear un usuario con estado activo explícito (usado en gestión)
+    public UsuarioModelo(String nombreUsuario, String contrasenia, String rol, boolean activo) {
+        this.nombreUsuario = nombreUsuario;
         this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt(12));
         this.rol = rol;
+        this.activo = activo;
     }
 
     // Verifica si ya existe al menos un administrador en la base de datos
-    // Usa el stored procedure sp_existe_admin
     public static boolean existeAdministrador() {
         ConexionBDD conexionBDD = new ConexionBDD();
         Connection conexion = conexionBDD.conectar();
         if (conexion == null) {
-            return false; // No hay conexión, asumimos que no se puede verificar
+            return false;
         }
 
         try {
-            // Preparamos la llamada al stored procedure
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_existe_admin()}");
-            ResultSet resultado = sentencia.executeQuery();
+            CallableStatement llamada = conexion.prepareCall("{CALL sp_existe_admin()}");
+            ResultSet resultado = llamada.executeQuery();
             if (resultado.next()) {
                 return resultado.getInt("existe") > 0;
             }
@@ -63,8 +71,7 @@ public class UsuarioModelo {
         return false;
     }
 
-    // Valida las credenciales de un usuario al hacer login
-    // Usa el stored procedure sp_validar_login
+    // Valida las credenciales de login usando BCrypt
     public static UsuarioModelo validarLogin(String nombreUsuario, String contraseniaIngresada) {
         ConexionBDD conexionBDD = new ConexionBDD();
         Connection conexion = conexionBDD.conectar();
@@ -73,32 +80,30 @@ public class UsuarioModelo {
         }
 
         try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_validar_login(?, ?, ?, ?)}");
-            
-            // Parámetro de entrada: nombre de usuario
-            sentencia.setString(1, nombreUsuario);
-            // Parámetros de salida
-            sentencia.registerOutParameter(2, java.sql.Types.INTEGER);
-            sentencia.registerOutParameter(3, java.sql.Types.VARCHAR);
-            sentencia.registerOutParameter(4, java.sql.Types.VARCHAR);
+            CallableStatement llamada = conexion.prepareCall("{CALL sp_validar_login(?, ?, ?, ?)}");
+            llamada.setString(1, nombreUsuario);
+            llamada.registerOutParameter(2, java.sql.Types.INTEGER);
+            llamada.registerOutParameter(3, java.sql.Types.VARCHAR);
+            llamada.registerOutParameter(4, java.sql.Types.VARCHAR);
 
-            sentencia.execute();
+            llamada.execute();
 
-            int idUsuario = sentencia.getInt(2);
-            String rol = sentencia.getString(3);
-            String hashAlmacenado = sentencia.getString(4);
+            int id = llamada.getInt(2);
+            String rol = llamada.getString(3);
+            String hashAlmacenado = llamada.getString(4);
 
-            // Si no se encontró el usuario
             if (hashAlmacenado == null) {
-                return null;
+                return null; // Usuario no encontrado
             }
 
             // Verificar contraseña con BCrypt
             if (BCrypt.checkpw(contraseniaIngresada, hashAlmacenado)) {
                 UsuarioModelo usuario = new UsuarioModelo();
-                usuario.setIdUsuario(idUsuario);
+                usuario.setIdUsuario(id);
                 usuario.setNombreUsuario(nombreUsuario);
                 usuario.setRol(rol);
+                // Nota: no cargamos 'activo' aquí porque el login solo valida credenciales
+                // Pero si necesitas verificar 'activo', deberás modificar el SP
                 return usuario;
             }
 
@@ -116,8 +121,7 @@ public class UsuarioModelo {
         return null;
     }
 
-    // Guarda este usuario en la base de datos
-    // Usa el stored procedure sp_registrar_usuario
+    // Guarda este usuario en la base de datos (usado al registrar)
     public void guardar() {
         ConexionBDD conexionBDD = new ConexionBDD();
         Connection conexion = conexionBDD.conectar();
@@ -126,9 +130,70 @@ public class UsuarioModelo {
         }
 
         try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_registrar_usuario(?, ?, ?)}");
-            sentencia.setString(1, this.nombreUsuario);
-            sentencia.setString(2, this.contrasenia); // Ya está hasheada
+            CallableStatement llamada = conexion.prepareCall("{CALL sp_registrar_usuario(?, ?, ?)}");
+            llamada.setString(1, this.nombreUsuario);
+            llamada.setString(2, this.contrasenia); // Ya está hasheada
+            llamada.setString(3, this.rol);
+            llamada.execute();
+        } catch (SQLException excepcion) {
+            excepcion.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (SQLException excepcion) {
+                excepcion.printStackTrace();
+            }
+        }
+    }
+
+    // Obtiene todos los usuarios (para gestión de usuarios)
+    public static List<UsuarioModelo> obtenerTodosLosUsuarios() {
+        List<UsuarioModelo> listaUsuarios = new ArrayList<>();
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+
+        if (conexion == null) {
+            return listaUsuarios;
+        }
+
+        try {
+            CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuarios()}");
+            ResultSet resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                UsuarioModelo usuario = new UsuarioModelo();
+                usuario.setIdUsuario(resultado.getInt("idUsuario"));
+                usuario.setNombreUsuario(resultado.getString("nombreUsuario"));
+                usuario.setRol(resultado.getString("rol"));
+                usuario.setActivo(resultado.getInt("activo") == 1);
+                listaUsuarios.add(usuario);
+            }
+        } catch (SQLException excepcion) {
+            excepcion.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (SQLException excepcion) {
+                excepcion.printStackTrace();
+            }
+        }
+        return listaUsuarios;
+    }
+
+    // Actualiza el nombre y rol de un usuario existente
+    public void actualizar() {
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+        if (conexion == null) return;
+
+        try {
+            CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?)}");
+            sentencia.setInt(1, this.idUsuario);
+            sentencia.setString(2, this.nombreUsuario);
             sentencia.setString(3, this.rol);
             sentencia.execute();
         } catch (SQLException excepcion) {
@@ -144,36 +209,43 @@ public class UsuarioModelo {
         }
     }
 
+    // Cambia el estado de activo/inactivo de un usuario
+    public void cambiarEstado(boolean nuevoEstado) {
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+        if (conexion == null) return;
+
+        try {
+            CallableStatement sentencia = conexion.prepareCall("{CALL sp_cambiar_estado_usuario(?, ?)}");
+            sentencia.setInt(1, this.idUsuario);
+            sentencia.setInt(2, nuevoEstado ? 1 : 0);
+            sentencia.execute();
+        } catch (SQLException excepcion) {
+            excepcion.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (SQLException excepcion) {
+                excepcion.printStackTrace();
+            }
+        }
+    }
+
     // Getters y Setters
-    public int getIdUsuario() {
-        return idUsuario;
-    }
+    public int getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public String getNombreUsuario() { return nombreUsuario; }
+    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
+    public String getContrasenia() { return contrasenia; }
+    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

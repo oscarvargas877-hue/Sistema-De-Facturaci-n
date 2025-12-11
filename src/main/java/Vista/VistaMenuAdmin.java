@@ -39,6 +39,7 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
         btnCerrarSesion = new javax.swing.JButton();
         btnHistorialVentas = new javax.swing.JButton();
         btnProductosMasVendidos = new javax.swing.JButton();
+        btnGestionarUsuarios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,6 +92,13 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnGestionarUsuarios.setText("Gestionar Usuarios");
+        btnGestionarUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionarUsuariosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,7 +114,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
                             .addComponent(btnProductosMasVendidos)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(136, 136, 136)
-                                .addComponent(btnCerrarSesion))))
+                                .addComponent(btnCerrarSesion))
+                            .addComponent(btnGestionarUsuarios)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(179, 179, 179)
                         .addComponent(lblTitulo)))
@@ -125,7 +134,9 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
                 .addComponent(btnHistorialVentas)
                 .addGap(18, 18, 18)
                 .addComponent(btnProductosMasVendidos)
-                .addGap(56, 56, 56)
+                .addGap(18, 18, 18)
+                .addComponent(btnGestionarUsuarios)
+                .addGap(15, 15, 15)
                 .addComponent(btnCerrarSesion)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
@@ -168,6 +179,13 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
+    private void btnGestionarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarUsuariosActionPerformed
+        // TODO add your handling code here:
+         if (controladorAdmin != null) {
+        controladorAdmin.abrirVentanaGestionUsuarios();
+    }
+    }//GEN-LAST:event_btnGestionarUsuariosActionPerformed
+
    
     /**
      * @param args the command line arguments
@@ -207,6 +225,7 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnGestionStock;
+    private javax.swing.JButton btnGestionarUsuarios;
     private javax.swing.JButton btnHistorialVentas;
     private javax.swing.JButton btnProductosMasVendidos;
     private javax.swing.JButton btnRegistrarUsuario;

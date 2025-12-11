@@ -9,6 +9,7 @@ import Vista.VistaLogin;
 import Vista.VistaMenuAdmin;
 import Vista.VistaRegistrarUsuario;
 import Vista.VistaGestionStock;
+import Vista.VistaGestionUsuarios;
 import Vista.VistaHistorialVentas;
 import Vista.VistaProductosMasVendidos;
 
@@ -56,7 +57,17 @@ public class ControladorAdmin {
         VistaProductosMasVendidos vista = new VistaProductosMasVendidos();
         vista.setVisible(true);
     }
+    
+        public void abrirVentanaGestionUsuarios() {
+        vistaMenuAdmin.dispose();
+        VistaGestionUsuarios vista = new VistaGestionUsuarios();
+        ControladorGestionUsuarios controlador = new ControladorGestionUsuarios(vista, vistaMenuAdmin);
+        vista.establecerControlador(controlador);
+        vista.setVisible(true);
+        controlador.cargarUsuarios(); // Cargar los usuarios al abrir
+    }
 
+        
     // Cierra la sesión del administrador y regresa al login
     public void cerrarSesion() {
         vistaMenuAdmin.dispose(); // Cierra la ventana del menú
