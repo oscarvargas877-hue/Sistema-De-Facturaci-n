@@ -38,7 +38,7 @@ public class FacturaModelo {
 
         conexion.setAutoCommit(false);
 
-        // 1. Crear factura con tu SP real
+        // 1. Crear factura con el SP
         stmtFactura = conexion.prepareCall("{CALL sp_crear_factura(?,?,?,?)}");
         stmtFactura.setInt(1, this.idCajero);
         stmtFactura.setString(2, this.cliente);
@@ -49,21 +49,21 @@ public class FacturaModelo {
         int idFactura = stmtFactura.getInt(4);
         this.idFactura = idFactura;
 
-        // Preparar SP de detalle y stock (los que sí tienes)
+        // Preparar SP de detalle y stock 
         stmtDetalle = conexion.prepareCall("{CALL sp_crear_detalle_factura(?,?,?,?,?,?)}");
         stmtStock = conexion.prepareCall("{CALL sp_actualizar_stock(?,?)}");
 
         for (DetalleFacturaModelo d : detalles) {
-            // Insertar detalle con tu SP real
+            // Insertar detalle con el sp
             stmtDetalle.setInt(1, idFactura);
             stmtDetalle.setInt(2, d.getIdProducto());
             stmtDetalle.setInt(3, d.getCantidad());
             stmtDetalle.setDouble(4, d.getPrecioUnitario());
-            stmtDetalle.setDouble(5, d.getDescuentoAplicado());  // 0.10 o 0.00
+            stmtDetalle.setDouble(5, d.getDescuentoAplicado());  
             stmtDetalle.setDouble(6, d.getSubtotal());
             stmtDetalle.executeUpdate();
 
-            // RESTAR STOCK (tu SP ya resta y controla insuficiente)
+            // RESTAR STOCK 
             stmtStock.setInt(1, d.getIdProducto());
             stmtStock.setInt(2, d.getCantidad());
             stmtStock.executeUpdate();

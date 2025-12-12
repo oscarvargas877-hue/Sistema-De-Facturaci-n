@@ -13,7 +13,7 @@
     </properties>
      <!-- conexion a base datos -->
     <dependencies>
-          <!-- ✅ Añadimos la dependencia de jBCrypt aquí -->
+          <!--  Añadimos la dependencia de jBCrypt aquí -->
    
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -27,6 +27,20 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.3.0</version>
         </dependency>
+        
+        <!-- JFreeChart para gráficos -->
+    <dependency>
+        <groupId>org.jfree</groupId>
+        <artifactId>jfreechart</artifactId>
+        <version>1.5.3</version>
+    </dependency>
+    
+    <!-- JCommon (requerido por JFreeChart) -->
+    <dependency>
+        <groupId>org.jfree</groupId>
+        <artifactId>jcommon</artifactId>
+        <version>1.0.24</version>
+    </dependency>
         
     </dependencies>
 

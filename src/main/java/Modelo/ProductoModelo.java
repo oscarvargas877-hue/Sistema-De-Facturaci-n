@@ -116,7 +116,7 @@ public class ProductoModelo {
         return listaProductos;
     }
 
-    // Método para actualizar el stock (usa el SP sp_actualizar_stock)
+    // Método para actualizar el stock  resta la cantidad del producto cuando se vende
     public static void actualizarStock(int idProducto, int cantidad) {
       System.out.println(" Actualizando stock: idProducto" + idProducto + ", cantidad" + cantidad);
 
@@ -158,6 +158,35 @@ public class ProductoModelo {
         return null;
     }
     
+    
+    // Método para reabastecer el producto
+    public static void reabastecerStock(int idProducto, int cantidad) {
+        System.out.println(" REABASTECIENDO stock: idProducto=" + idProducto + ", cantidad a sumar=" + cantidad);
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+        if (conexion == null) {
+            System.out.println(" ERROR: Conexión nula");
+            return;
+        }
+        try {
+            CallableStatement sentencia = conexion.prepareCall("{CALL sp_reabastecer_stock(?, ?)}");
+            sentencia.setInt(1, idProducto);
+            sentencia.setInt(2, cantidad);
+            sentencia.executeUpdate();
+            System.out.println("Stock reabastecido con éxito");
+        } catch (SQLException excepcion) {
+            System.out.println("ERROR en reabastecerStock: " + excepcion.getMessage());
+            excepcion.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (SQLException excepcion) {
+                excepcion.printStackTrace();
+            }
+        }
+    }
     // Getters y Setters
     public int getIdProducto() {
         return idProducto;

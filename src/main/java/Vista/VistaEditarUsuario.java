@@ -20,6 +20,10 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         initComponents();
         this.usuarioActual = usuario;
         cargarDatos();
+        // Crear un grupo de botones para que solo se pueda seleccionar uno
+        javax.swing.ButtonGroup grupoRol = new javax.swing.ButtonGroup();
+        grupoRol.add(RadioAdministrador);
+        grupoRol.add(RadioCajero);
     }
      // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorEditarUsuario controlador) {

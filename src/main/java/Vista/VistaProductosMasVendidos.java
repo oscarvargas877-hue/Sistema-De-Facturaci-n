@@ -3,13 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 /**
  *
  * @author Usuario
  */
 public class VistaProductosMasVendidos extends javax.swing.JFrame {
     private Controlador.ControladorProductosMasVendidos controladorProductos;
+    private ChartPanel panelGrafico;
 
     /**
      * Creates new form VistaProductosMasVendidos
@@ -23,7 +31,8 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     }
     
     // Método para mostrar la lista de productos más vendidos en la tabla
-    public void mostrarProductosMasVendidos(java.util.List<Modelo.ProductoMasVendidoModelo> listaProductos) {
+    // MÉTODO NUEVO MUESTRA TABLA GRÁFICO DE BARRAS
+     public void mostrarProductosMasVendidos(java.util.List<Modelo.ProductoMasVendidoModelo> listaProductos) {
         // Crear el modelo de la tabla
         javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
             new Object[]{"Producto", "Cantidad Total Vendida"}, 0
@@ -39,8 +48,51 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
 
         // Asignar el modelo a la tabla
         tablaProductos.setModel(modelo);
+        //  LLAMAR AL MÉTODO QUE CREA EL GRÁFICO
+        actualizarGraficoBarras(listaProductos);
     }
-    
+     
+     
+     // MÉTODO CREA Y MUESTRA EL GRÁFICO DE BARRAS
+    private void actualizarGraficoBarras(java.util.List<Modelo.ProductoMasVendidoModelo> listaProductos) {
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Modelo.ProductoMasVendidoModelo p : listaProductos) {
+            dataset.addValue(p.getCantidadTotalVendida(), "Cantidad Vendida", p.getNombreProducto());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+            "Productos Más Vendidos",
+            "Producto",
+            "Cantidad Vendida",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true, true, false
+        );
+
+        // Estilo profesional
+        chart.setBackgroundPaint(new Color(40, 40, 40));
+        chart.getTitle().setPaint(Color.WHITE);
+        chart.getCategoryPlot().setBackgroundPaint(new Color(60, 60, 60));
+        chart.getCategoryPlot().getDomainAxis().setLabelPaint(Color.WHITE);
+        chart.getCategoryPlot().getRangeAxis().setLabelPaint(Color.WHITE);
+        chart.getCategoryPlot().getDomainAxis().setTickLabelPaint(Color.CYAN);
+        chart.getCategoryPlot().getRenderer().setSeriesPaint(0, new Color(0, 170, 255));
+
+        // ZOOM QUE SÍ FUNCIONA EN JFreeChart 1.5.3
+        ChartPanel chartPanel = new ChartPanel(chart);
+
+        // ESTAS SON LAS LÍNEAS CORRECTAS (NO DAN ERROR)
+        chartPanel.setMouseWheelEnabled(true);           // RUEDA DEL MOUSE = ZOOM
+        chartPanel.setRangeZoomable(true);               // Permite zoom vertical
+        chartPanel.setDomainZoomable(true);              // Permite zoom horizontal
+        chartPanel.setZoomAroundAnchor(true);            // Zoom centrado en el cursor
+        chartPanel.setFillZoomRectangle(true);           // Rectángulo de zoom visible
+        chartPanel.setZoomFillPaint(new Color(100, 100, 255, 50)); // Color del rectángulo
+
+        // Poner el gráfico en el scroll
+        ScrollDiagramaDeBarras.setViewportView(chartPanel);
+    }
     // Método para mostrar mensajes de error (si ocurre algún problema)
     private void mostrarMensajeError(String mensaje) {
         javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -62,6 +114,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         tablaProductos = new javax.swing.JTable();
         btnRecargar = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
+        ScrollDiagramaDeBarras = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -119,24 +172,29 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
                         .addGap(119, 119, 119)
                         .addComponent(ScrollTablaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(153, 153, 153)
+                        .addGap(208, 208, 208)
                         .addComponent(btnRecargar)
-                        .addGap(228, 228, 228)
-                        .addComponent(btnAtras)))
-                .addContainerGap(328, Short.MAX_VALUE))
+                        .addGap(147, 147, 147)
+                        .addComponent(btnAtras))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(ScrollDiagramaDeBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 816, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(372, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addComponent(jLabel1)
-                .addGap(72, 72, 72)
-                .addComponent(ScrollTablaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addGap(66, 66, 66)
+                .addComponent(ScrollTablaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(ScrollDiagramaDeBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRecargar)
-                    .addComponent(btnAtras))
-                .addContainerGap(256, Short.MAX_VALUE))
+                    .addComponent(btnAtras)
+                    .addComponent(btnRecargar))
+                .addGap(100, 100, 100))
         );
 
         pack();
@@ -194,6 +252,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollDiagramaDeBarras;
     private javax.swing.JScrollPane ScrollTablaProductos;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnRecargar;

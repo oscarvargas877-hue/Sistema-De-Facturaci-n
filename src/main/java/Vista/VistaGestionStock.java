@@ -230,43 +230,73 @@ public class VistaGestionStock extends javax.swing.JFrame {
         }
       
     
-        // Método público para cargar los productos en la tabla y mostrar alerta si hay stock bajo
+    // Método público para cargar los productos en la tabla y mostrar alerta si hay stock bajo
     public void cargarProductos(java.util.List<Modelo.ProductoModelo> listaProductos) {
-        // Crear el modelo de la tabla
-        javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(
-            new Object[]{"Código", "Nombre", "Precio", "Stock"}, 0
-        );
+       // Crear el modelo de la tabla
+       javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(
+           new Object[]{"Código", "Nombre", "Precio", "Stock"}, 0
+       );
 
-        // Bandera para saber si hay stock bajo
-        boolean hayStockBajo = false;
+       // Bandera para saber si hay stock bajo
+       boolean hayStockBajo = false;
 
-        // Llenar la tabla con los productos
-        for (Modelo.ProductoModelo producto : listaProductos) {
-            modeloTabla.addRow(new Object[]{
-                producto.getCodigo(),
-                producto.getNombre(),
-                producto.getPrecio(),
-                producto.getCantidadStock()
-            });
+       // Llenar la tabla con los productos
+       for (Modelo.ProductoModelo producto : listaProductos) {
+           modeloTabla.addRow(new Object[]{
+               producto.getCodigo(),
+               producto.getNombre(),
+               producto.getPrecio(),
+               producto.getCantidadStock()
+           });
+           // Verificar si el stock es menor a 3
+           if (producto.getCantidadStock() < 3) {
+               hayStockBajo = true;
+           }
+       }
 
-            // Verificar si el stock es menor a 3
-            if (producto.getCantidadStock() < 3) {
-                hayStockBajo = true;
-            }
-        }
+       // Asignar el modelo a la tabla
+       TablaProductos.setModel(modeloTabla);
 
-        // Asignar el modelo a la tabla
-        TablaProductos.setModel(modeloTabla);
+       //AQUÍ VA EL COLOR ROJO 
+       TablaProductos.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+           @Override
+           public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                   boolean isSelected, boolean hasFocus, int row, int column) {
 
-        // Mostrar o ocultar el mensaje de alerta
-        if (hayStockBajo) {
-            lblMensajeDeError.setText("¡Alerta! Stock bajo (<3) en algunos productos.");
-            lblMensajeDeError.setForeground(java.awt.Color.RED);
-            lblMensajeDeError.setVisible(true);
-        } else {
-            lblMensajeDeError.setVisible(false);
-        }
-    }
+               java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+               // Obtener el stock de la fila actual (columna 3 = Stock)
+               int stock = (int) table.getValueAt(row, 3);
+
+               // Si el stock es menor a 3  ROJO Y NEGRITA
+               if (stock < 3) {
+                   celda.setForeground(java.awt.Color.RED);
+                   celda.setFont(celda.getFont().deriveFont(java.awt.Font.BOLD));
+               } else {
+                   // Color normal
+                   celda.setForeground(isSelected ? java.awt.Color.WHITE : java.awt.Color.BLACK);
+                   celda.setFont(celda.getFont().deriveFont(java.awt.Font.PLAIN));
+               }
+
+               // Fondo cuando seleccionas la fila
+               if (isSelected) {
+                   celda.setBackground(new java.awt.Color(0, 120, 215));
+               } else {
+                   celda.setBackground(java.awt.Color.WHITE);
+               }
+
+               return celda;
+           }
+       });
+       // Mostrar o ocultar el mensaje de alerta 
+       if (hayStockBajo) {
+           lblMensajeDeError.setText("¡Alerta! Stock bajo (<3) en algunos productos.");
+           lblMensajeDeError.setForeground(java.awt.Color.RED);
+           lblMensajeDeError.setVisible(true);
+       } else {
+           lblMensajeDeError.setVisible(false);
+       }
+   }
     
     /**
      * @param args the command line arguments

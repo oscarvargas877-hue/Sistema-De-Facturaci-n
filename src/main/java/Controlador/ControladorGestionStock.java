@@ -37,14 +37,13 @@ public class ControladorGestionStock {
             return;
         }
 
-        // Actualizar el stock en la base de datos (suma la cantidad)
-        ProductoModelo.actualizarStock(producto.getIdProducto(), cantidad);
-
+        // Actualizar el stock en la base de datos 
+        ProductoModelo.reabastecerStock(producto.getIdProducto(), cantidad);
         // Recargar la tabla para reflejar el cambio
         cargarProductos();
 
         // Mostrar mensaje de éxito
-        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente.", java.awt.Color.GREEN);
+        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente", java.awt.Color.GREEN);
     }
 
     // Método para volver al menú del administrador
