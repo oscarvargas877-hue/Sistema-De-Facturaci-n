@@ -118,30 +118,35 @@ public class ProductoModelo {
 
     // Método para actualizar el stock (usa el SP sp_actualizar_stock)
     public static void actualizarStock(int idProducto, int cantidad) {
-    ConexionBDD conexionBDD = new ConexionBDD();
-    Connection conexion = conexionBDD.conectar();
+      System.out.println(" Actualizando stock: idProducto" + idProducto + ", cantidad" + cantidad);
 
-    if (conexion == null) {
-        return;
-    }
+      ConexionBDD conexionBDD = new ConexionBDD();
+      Connection conexion = conexionBDD.conectar();
 
-    try {
-        CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_stock(?, ?)}");
-        sentencia.setInt(1, idProducto);
-        sentencia.setInt(2, cantidad);
-        sentencia.execute();
-    } catch (SQLException excepcion) {
-        excepcion.printStackTrace();
-    } finally {
-        try {
-            if (conexion != null && !conexion.isClosed()) {
-                conexion.close();
+      if (conexion == null) {
+          System.out.println(" ERROR: Conexión nula");
+          return;
+      }
+
+      try {
+          CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_stock(?, ?)}");
+          sentencia.setInt(1, idProducto);
+          sentencia.setInt(2, cantidad);
+          sentencia.execute();
+          System.out.println("Stock actualizado con éxito");
+      } catch (SQLException excepcion) {
+          System.out.println("ERROR en actualizarStock: " + excepcion.getMessage());
+          excepcion.printStackTrace();
+      } finally {
+          try {
+              if (conexion != null && !conexion.isClosed()) {
+                  conexion.close();
+              }
+          } catch (SQLException excepcion) {
+              excepcion.printStackTrace();
             }
-        } catch (SQLException excepcion) {
-            excepcion.printStackTrace();
         }
     }
-}
         // Método para obtener un producto por su nombre (para facturación)
     public static ProductoModelo obtenerProductoPorNombre(String nombre) {
         List<ProductoModelo> productos = obtenerTodosLosProductos();

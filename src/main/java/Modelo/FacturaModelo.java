@@ -8,10 +8,8 @@ package Modelo;
 import BDD.ConexionBDD;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
-// Clase que representa una factura y contiene la lógica para guardarla
 public class FacturaModelo {
 
     private int idFactura;
@@ -20,97 +18,78 @@ public class FacturaModelo {
     private String cliente;
     private double total;
 
-    // Constructor vacío
     public FacturaModelo() {}
 
-    // Constructor para crear una factura
     public FacturaModelo(int idCajero, String cliente, double total) {
         this.idCajero = idCajero;
         this.cliente = cliente;
         this.total = total;
-        // La fecha y hora se establecen al guardar en la BD (por defecto en MySQL)
     }
 
-    // Método para guardar la factura y sus detalles en la BD
-    public boolean guardarFacturaYDetalles(List<DetalleFacturaModelo> listaDetalles) {
-    ConexionBDD conexionBDD = new ConexionBDD();
-    Connection conexion = conexionBDD.conectar();
-
-    if (conexion == null) {
-        System.out.println("ERROR: No se pudo conectar a la base de datos.");
-        return false;
-    }
+  public boolean guardarFacturaYDetalles(List<DetalleFacturaModelo> detalles) {
+    Connection conexion = null;
+    CallableStatement stmtFactura = null;
+    CallableStatement stmtDetalle = null;
+    CallableStatement stmtStock = null;
 
     try {
+        conexion = new ConexionBDD().conectar();
+        if (conexion == null) return false;
+
         conexion.setAutoCommit(false);
 
-        // Crear la factura
-        CallableStatement stmtFactura = conexion.prepareCall("{CALL sp_crear_factura(?, ?, ?)}");
+        // 1. Crear factura con tu SP real
+        stmtFactura = conexion.prepareCall("{CALL sp_crear_factura(?,?,?,?)}");
         stmtFactura.setInt(1, this.idCajero);
         stmtFactura.setString(2, this.cliente);
         stmtFactura.setDouble(3, this.total);
-        stmtFactura.execute();
+        stmtFactura.registerOutParameter(4, java.sql.Types.INTEGER);
+        stmtFactura.executeUpdate();
 
-        // Obtener el ID de la factura creada
-        int idFacturaGenerada = obtenerUltimoIdFactura(conexion);
-        if (idFacturaGenerada == 0) {
-            throw new SQLException("No se pudo obtener el ID de la factura.");
-        }
+        int idFactura = stmtFactura.getInt(4);
+        this.idFactura = idFactura;
 
-        // Guardar cada detalle
-        for (DetalleFacturaModelo detalle : listaDetalles) {
-            // Validar stock antes de insertar
-            if (!ProductoModelo.verificarStockSuficiente(detalle.getIdProducto(), detalle.getCantidad())) {
-                conexion.rollback();
-                System.out.println("ERROR: Stock insuficiente para producto: " + detalle.getNombreProducto());
-                return false;
-            }
+        // Preparar SP de detalle y stock (los que sí tienes)
+        stmtDetalle = conexion.prepareCall("{CALL sp_crear_detalle_factura(?,?,?,?,?,?)}");
+        stmtStock = conexion.prepareCall("{CALL sp_actualizar_stock(?,?)}");
 
-            // Crear el detalle
-            CallableStatement stmtDetalle = conexion.prepareCall("{CALL sp_crear_detalle_factura(?, ?, ?, ?, ?, ?)}");
-            stmtDetalle.setInt(1, idFacturaGenerada);
-            stmtDetalle.setInt(2, detalle.getIdProducto());
-            stmtDetalle.setInt(3, detalle.getCantidad());
-            stmtDetalle.setDouble(4, detalle.getPrecioUnitario());
-            stmtDetalle.setDouble(5, detalle.getDescuentoAplicado());
-            stmtDetalle.setDouble(6, detalle.getSubtotal());
-            stmtDetalle.execute();
+        for (DetalleFacturaModelo d : detalles) {
+            // Insertar detalle con tu SP real
+            stmtDetalle.setInt(1, idFactura);
+            stmtDetalle.setInt(2, d.getIdProducto());
+            stmtDetalle.setInt(3, d.getCantidad());
+            stmtDetalle.setDouble(4, d.getPrecioUnitario());
+            stmtDetalle.setDouble(5, d.getDescuentoAplicado());  // 0.10 o 0.00
+            stmtDetalle.setDouble(6, d.getSubtotal());
+            stmtDetalle.executeUpdate();
 
-            // Actualizar el stock
-            ProductoModelo.actualizarStock(detalle.getIdProducto(), -detalle.getCantidad());
+            // RESTAR STOCK (tu SP ya resta y controla insuficiente)
+            stmtStock.setInt(1, d.getIdProducto());
+            stmtStock.setInt(2, d.getCantidad());
+            stmtStock.executeUpdate();
         }
 
         conexion.commit();
         return true;
 
-    } catch (SQLException e) {
-        try {
-            conexion.rollback();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+    } catch (Exception e) {
+        if (conexion != null) {
+            try { conexion.rollback(); } catch (Exception ex) {}
         }
         e.printStackTrace();
         return false;
     } finally {
         try {
-            conexion.setAutoCommit(true);
-            if (conexion != null && !conexion.isClosed()) {
+            if (stmtFactura != null) stmtFactura.close();
+            if (stmtDetalle != null) stmtDetalle.close();
+            if (stmtStock != null) stmtStock.close();
+            if (conexion != null) {
+                conexion.setAutoCommit(true);
                 conexion.close();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }
-    // Método auxiliar para obtener el último ID de factura (alternativa si el SP no devuelve OUT)
-    private int obtenerUltimoIdFactura(Connection conexion) throws SQLException {
-        java.sql.Statement stmt = conexion.createStatement();
-        java.sql.ResultSet rs = stmt.executeQuery("SELECT MAX(idFactura) AS ultimo_id FROM Factura");
-        if (rs.next()) {
-            return rs.getInt("ultimo_id");
-        }
-        return 0;
-    }
 
     // Getters y Setters
     public int getIdFactura() { return idFactura; }

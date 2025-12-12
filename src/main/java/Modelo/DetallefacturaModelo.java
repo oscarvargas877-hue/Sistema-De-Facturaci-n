@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-// Modelo/DetalleFacturaModelo.java
+
 package Modelo;
 
 // Clase que representa un ítem dentro de una factura
@@ -11,13 +11,12 @@ public class DetalleFacturaModelo {
     private int idDetalle;
     private int idFactura;
     private int idProducto;
-    private String nombreProducto; // Solo para mostrar en la vista
+    private String nombreProducto;
     private int cantidad;
     private double precioUnitario;
     private double descuentoAplicado; // 0.00 a 1.00 (ej: 0.10 = 10%)
     private double subtotal;
 
-    // Constructor vacío
     public DetalleFacturaModelo() {}
 
     // Constructor para crear un detalle desde la lógica de facturación
@@ -34,7 +33,7 @@ public class DetalleFacturaModelo {
             this.descuentoAplicado = 0.00;
         }
 
-        // Calcular subtotal: (precio * cantidad) * (1 - descuento)
+        //  Calcular subtotal: (precio * cantidad) * (1 - descuento)
         this.subtotal = (precioUnitario * cantidad) * (1 - this.descuentoAplicado);
     }
 
