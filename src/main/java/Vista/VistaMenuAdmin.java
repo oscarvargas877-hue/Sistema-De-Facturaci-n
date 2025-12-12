@@ -92,6 +92,8 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnGestionarUsuarios.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnGestionarUsuarios.setForeground(new java.awt.Color(0, 102, 102));
         btnGestionarUsuarios.setText("Gestionar Usuarios");
         btnGestionarUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +140,7 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
                 .addComponent(btnGestionarUsuarios)
                 .addGap(15, 15, 15)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();

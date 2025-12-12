@@ -46,16 +46,22 @@ public class ControladorAdmin {
 
     // Abre la ventana del historial de ventas
     public void abrirVentanaHistorialVentas() {
-        vistaMenuAdmin.dispose();
-        VistaHistorialVentas vista = new VistaHistorialVentas();
-        vista.setVisible(true);
+     vistaMenuAdmin.dispose();
+     VistaHistorialVentas vista = new VistaHistorialVentas();
+     ControladorHistorialVentas controlador = new ControladorHistorialVentas(vista, vistaMenuAdmin);
+     vista.establecerControlador(controlador); // ← ¡Este método debe existir!
+     vista.setVisible(true);
+     controlador.cargarHistorial(); // Cargar los datos al abrir
     }
 
     // Abre la ventana de productos más vendidos
     public void abrirVentanaProductosMasVendidos() {
-        vistaMenuAdmin.dispose();
-        VistaProductosMasVendidos vista = new VistaProductosMasVendidos();
-        vista.setVisible(true);
+       vistaMenuAdmin.dispose();
+       VistaProductosMasVendidos vista = new VistaProductosMasVendidos();
+       ControladorProductosMasVendidos controlador = new ControladorProductosMasVendidos(vista, vistaMenuAdmin);
+       vista.establecerControlador(controlador); // ← ¡Asignar el controlador!
+       vista.setVisible(true);
+       controlador.cargarProductosMasVendidos(); // ← Cargar los datos al abrir
     }
     
         public void abrirVentanaGestionUsuarios() {

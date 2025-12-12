@@ -11,6 +11,10 @@ package Vista;
 public class VistaFacturacion extends javax.swing.JFrame {
 // Atributo para guardar la referencia al controlador
 private Controlador.ControladorFacturacion controladorFacturacion;
+// Atributo para el diálogo de espera
+private javax.swing.JDialog dialogoEspera;
+// Atributo para el diálogo de espera
+
     /**
      * Creates new form VistaFacturacion
      */
@@ -21,10 +25,8 @@ private Controlador.ControladorFacturacion controladorFacturacion;
     public void establecerControlador(Controlador.ControladorFacturacion controlador) {
         this.controladorFacturacion = controlador;
     }
-    // Método para mostrar mensajes de error
-    public void mostrarMensajeError(String mensaje) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
+
+    
     // Método para cargar los productos en el combo
     public void cargarProductos(java.util.List<Modelo.ProductoModelo> productos) {
         ComboProductos.removeAllItems();
@@ -52,6 +54,29 @@ private Controlador.ControladorFacturacion controladorFacturacion;
 
         TablaDetalleVenta.setModel(modelo);
         txtTotal.setText(String.format("%.2f", total));
+    }
+      // Método para mostrar mensaje de espera
+    public void mostrarMensajeEspera(String mensaje) {
+        javax.swing.JOptionPane pane = new javax.swing.JOptionPane(
+            mensaje, 
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+        dialogoEspera = pane.createDialog(this, "Espere");
+        dialogoEspera.setModal(false);
+        dialogoEspera.setVisible(true);
+    }
+    
+
+    public void ocultarMensajeEspera() {
+        if (dialogoEspera != null && dialogoEspera.isVisible()) {
+            dialogoEspera.setVisible(false);
+            dialogoEspera.dispose();
+        }
+    }
+    
+    // Método público para mostrar mensajes de error (usado por el controlador)
+    public void mostrarMensajeError(String mensaje) {
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -199,7 +224,7 @@ private Controlador.ControladorFacturacion controladorFacturacion;
                                 .addComponent(lblTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 644, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(87, 87, 87)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,7 +247,7 @@ private Controlador.ControladorFacturacion controladorFacturacion;
                     .addGroup(layout.createSequentialGroup()
                         .addGap(238, 238, 238)
                         .addComponent(lblTitulo)))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

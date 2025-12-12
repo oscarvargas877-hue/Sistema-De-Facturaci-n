@@ -22,7 +22,7 @@ public class SistemaFacturacion {
             vista.establecerControlador(controlador);
             vista.setVisible(true);
         } else {
-            // Ya existe → mostrar login
+            // Ya existe  mostrar login
             ControladorLogin.verificarYConfigurarInicio();
         }
     }

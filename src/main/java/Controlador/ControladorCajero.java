@@ -2,27 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-// Controlador/ControladorCajero.java
+
 package Controlador;
 
 import Vista.VistaFacturacion;
 import Vista.VistaLogin;
 import Vista.VistaMenuCajero;
 
-// Clase que controla las acciones del menú del cajero
 public class ControladorCajero {
 
-    // Referencia al menú del cajero
     private VistaMenuCajero vistaMenuCajero;
+    private int idCajero; // ← ID del cajero logueado
 
-    // Constructor que recibe la vista
-    public ControladorCajero(VistaMenuCajero vista) {
+    // Constructor: recibe el ID del usuario logueado
+    public ControladorCajero(VistaMenuCajero vista, int idCajero) {
         this.vistaMenuCajero = vista;
+        this.idCajero = idCajero;
     }
 
-    // Abre la ventana de facturación (HU005)
+    // Abrir ventana de facturación con el ID correcto
     public void abrirVentanaFacturacion() {
-        int idCajero = 1; // ← ¡Este valor debe venir del login o de una sesión activa!
         vistaMenuCajero.dispose();
         VistaFacturacion vista = new VistaFacturacion();
         ControladorFacturacion controlador = new ControladorFacturacion(vista, vistaMenuCajero, idCajero);
@@ -31,9 +30,9 @@ public class ControladorCajero {
         controlador.cargarProductos();
     }
 
-    // Cierra la sesión del cajero y regresa al login (HU010, CA10)
+    // Cerrar sesión y volver al login
     public void cerrarSesion() {
-        vistaMenuCajero.dispose(); // Cierra la ventana del menú
+        vistaMenuCajero.dispose();
         VistaLogin vistaLogin = new VistaLogin();
         ControladorLogin controladorLogin = new ControladorLogin(vistaLogin);
         vistaLogin.establecerControlador(controladorLogin);

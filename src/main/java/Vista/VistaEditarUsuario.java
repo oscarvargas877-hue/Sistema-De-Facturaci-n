@@ -71,21 +71,33 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("EDITAR USUARIO");
 
+        lblIdUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblIdUsuario.setForeground(new java.awt.Color(0, 102, 102));
         lblIdUsuario.setText("ID Usuario");
 
         txtIdUsuario.setEditable(false);
+        txtIdUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        txtIdUsuario.setForeground(new java.awt.Color(0, 102, 102));
         txtIdUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIdUsuarioActionPerformed(evt);
             }
         });
 
+        lblRol.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblRol.setForeground(new java.awt.Color(0, 102, 102));
         lblRol.setText("Rol");
 
+        lblEstado.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblEstado.setForeground(new java.awt.Color(0, 102, 102));
         lblEstado.setText("Estado: ");
 
+        RadioAdministrador.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        RadioAdministrador.setForeground(new java.awt.Color(0, 102, 102));
         RadioAdministrador.setText("Administrador");
         RadioAdministrador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,6 +105,8 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
             }
         });
 
+        RadioCajero.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        RadioCajero.setForeground(new java.awt.Color(0, 102, 102));
         RadioCajero.setText("Cajero");
         RadioCajero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +114,8 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
             }
         });
 
+        btnGuardar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 102, 102));
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -107,6 +123,8 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
             }
         });
 
+        btnCancelar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(0, 102, 102));
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,8 +132,12 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
             }
         });
 
+        lblNombre.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblNombre.setForeground(new java.awt.Color(0, 102, 102));
         lblNombre.setText("Nombre");
 
+        txtNombre.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        txtNombre.setForeground(new java.awt.Color(0, 102, 102));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
@@ -157,7 +179,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNombre)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,8 +188,8 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
                 .addComponent(lblTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblIdUsuario)
-                    .addComponent(lblNombre))
+                    .addComponent(lblNombre)
+                    .addComponent(lblIdUsuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtIdUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -179,7 +201,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
                     .addComponent(RadioCajero))
                 .addGap(26, 26, 26)
                 .addComponent(lblEstado)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar))

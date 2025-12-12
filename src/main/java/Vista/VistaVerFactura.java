@@ -13,6 +13,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private String cliente;
     private java.util.List<Modelo.DetalleFacturaModelo> detalle;
     private double total;
+    // Atributo para guardar la referencia a la vista de facturación
+    private VistaFacturacion vistaFacturacion;
     /**
      * Creates new form VistaVerFactura
      */
@@ -62,6 +64,11 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
         // Asignar el modelo a la tabla
         tablaDetalle.setModel(modelo);
+    }
+    
+    // Método para establecer la vista de facturación
+    public void establecerVistaFacturacion(VistaFacturacion vista) {
+        this.vistaFacturacion = vista;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -185,8 +192,11 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
-          // Cerrar esta ventana y regresar al menú del cajero
-        this.dispose();
+    // Cerrar esta ventana y regresar al menú del cajero
+    if (vistaFacturacion != null) {
+    vistaFacturacion.setVisible(true); // Mostrar la ventana de facturación
+    }
+    this.dispose(); // Cerrar esta ventana
         
     }//GEN-LAST:event_btnAceptarActionPerformed
 

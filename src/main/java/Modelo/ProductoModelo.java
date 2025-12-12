@@ -34,18 +34,17 @@ public class ProductoModelo {
         this.cantidadStock = cantidadStock;
     }
 
-    // Método para verificar si hay suficiente stock
-    public static boolean verificarStockSuficiente(String codigoProducto, int cantidadRequerida) {
-    ProductoModelo producto = obtenerProductoPorCodigo(codigoProducto);
-    return producto != null && producto.getCantidadStock() >= cantidadRequerida;
+  // Método para verificar si hay suficiente stock usa idProducto
+    public static boolean verificarStockSuficiente(int idProducto, int cantidadRequerida) {
+        ProductoModelo producto = obtenerProductoPorId(idProducto);
+        return producto != null && producto.getCantidadStock() >= cantidadRequerida;
     }
 
-    // Método para obtener la cantidad disponible de un producto
-    public static int obtenerStockDisponible(String codigoProducto) {
-        ProductoModelo producto = obtenerProductoPorCodigo(codigoProducto);
+        // Método para obtener la cantidad disponible de un producto (usa idProducto)
+    public static int obtenerStockDisponible(int idProducto) {
+        ProductoModelo producto = obtenerProductoPorId(idProducto);
         return producto != null ? producto.getCantidadStock() : 0;
     }
-
     // Método para aplicar descuento si cantidad >= 5
     public static double calcularSubtotalConDescuento(double precioUnitario, int cantidad) {
         if (cantidad >= 5) {
@@ -58,8 +57,7 @@ public class ProductoModelo {
     public static double obtenerDescuentoAplicado(int cantidad) {
         return cantidad >= 5 ? 0.10 : 0.00;
     }
-
-    // Método para obtener un producto por su código (usando el SP sp_obtener_productos)
+    // Método para obtener un producto por su código (para facturación)
     public static ProductoModelo obtenerProductoPorCodigo(String codigo) {
         List<ProductoModelo> productos = obtenerTodosLosProductos();
         for (ProductoModelo p : productos) {
@@ -69,6 +67,17 @@ public class ProductoModelo {
         }
         return null;
     }
+
+    // Método para obtener un producto por su ID
+    public static ProductoModelo obtenerProductoPorId(int id) {
+     List<ProductoModelo> productos = obtenerTodosLosProductos();
+     for (ProductoModelo p : productos) {
+         if (p.getIdProducto() == id) {
+             return p;
+         }
+     }
+     return null;
+ }
 
     // Método para obtener todos los productos (usa el SP sp_obtener_productos)
     public static List<ProductoModelo> obtenerTodosLosProductos() {
@@ -109,31 +118,30 @@ public class ProductoModelo {
 
     // Método para actualizar el stock (usa el SP sp_actualizar_stock)
     public static void actualizarStock(int idProducto, int cantidad) {
-        ConexionBDD conexionBDD = new ConexionBDD();
-        Connection conexion = conexionBDD.conectar();
+    ConexionBDD conexionBDD = new ConexionBDD();
+    Connection conexion = conexionBDD.conectar();
 
-        if (conexion == null) {
-            return;
-        }
-
-        try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_stock(?, ?)}");
-            sentencia.setInt(1, idProducto);
-            sentencia.setInt(2, cantidad); // Puede ser positivo (reabastecer) o negativo (vender)
-            sentencia.execute();
-        } catch (SQLException excepcion) {
-            excepcion.printStackTrace();
-        } finally {
-            try {
-                if (conexion != null && !conexion.isClosed()) {
-                    conexion.close();
-                }
-            } catch (SQLException excepcion) {
-                excepcion.printStackTrace();
-            }
-        }
+    if (conexion == null) {
+        return;
     }
 
+    try {
+        CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_stock(?, ?)}");
+        sentencia.setInt(1, idProducto);
+        sentencia.setInt(2, cantidad);
+        sentencia.execute();
+    } catch (SQLException excepcion) {
+        excepcion.printStackTrace();
+    } finally {
+        try {
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
+            }
+        } catch (SQLException excepcion) {
+            excepcion.printStackTrace();
+        }
+    }
+}
         // Método para obtener un producto por su nombre (para facturación)
     public static ProductoModelo obtenerProductoPorNombre(String nombre) {
         List<ProductoModelo> productos = obtenerTodosLosProductos();
