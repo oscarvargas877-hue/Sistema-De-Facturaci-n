@@ -3,6 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 
 /**
  *
@@ -16,6 +29,125 @@ public class VistaGestionStock extends javax.swing.JFrame {
      */
     public VistaGestionStock() {
         initComponents();
+   // PANTALLA COMPLETA
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    // Fondo profesional
+    getContentPane().setBackground(new Color(30, 30, 40));
+
+    // Panel central con GridBagLayout
+    JPanel panelCentral = new JPanel(new GridBagLayout());
+    panelCentral.setOpaque(false);
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.insets = new Insets(20, 0, 10, 0);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
+    gbc.weighty = 0;
+
+    // TÍTULO 
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+    panelCentral.add(lblTitulo, gbc);
+
+    // Lista de Productos"
+    lblListaProductos.setFont(new Font("Arial Black", Font.BOLD, 28));
+    lblListaProductos.setForeground(Color.WHITE);
+    lblListaProductos.setHorizontalAlignment(JLabel.CENTER);
+    panelCentral.add(lblListaProductos, gbc);
+
+    //  TABLA 
+    TablaProductos.setFont(new Font("Arial", Font.PLAIN, 20));
+    TablaProductos.setRowHeight(50);
+    TablaProductos.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 24));
+    TablaProductos.getTableHeader().setForeground(Color.WHITE);
+    TablaProductos.getTableHeader().setBackground(new Color(0, 102, 102));
+    jScrollPane1.setPreferredSize(new Dimension(1000, 250)); // Altura controlada
+    gbc.insets = new Insets(10, 50, 20, 50);
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weighty = 0.6; // La tabla ocupa parte del espacio vertical
+    panelCentral.add(jScrollPane1, gbc);
+
+    // PANEL FORMULARIO Etiquetas a la izquierda, campos con espacio 
+    JPanel panelFormulario = new JPanel(new GridBagLayout());
+    panelFormulario.setOpaque(false);
+
+    GridBagConstraints gbcLabel = new GridBagConstraints();
+    gbcLabel.anchor = GridBagConstraints.WEST;
+    gbcLabel.insets = new Insets(10, 10, 10, 20); // Más espacio a la derecha de la etiqueta
+    gbcLabel.weightx = 0.0; // ← NO ocupa espacio extra
+    gbcLabel.fill = GridBagConstraints.NONE;
+
+    GridBagConstraints gbcField = new GridBagConstraints();
+    gbcField.gridwidth = GridBagConstraints.REMAINDER;
+    gbcField.anchor = GridBagConstraints.WEST; //  campo a la izquierda del espacio disponible
+    gbcField.insets = new Insets(10, 0, 10, 10);
+    gbcField.weightx = 1.0; //  el campo se expande horizontalmente
+    gbcField.fill = GridBagConstraints.HORIZONTAL;
+
+    // Etiqueta y campo Código
+    lblCodigo.setFont(new Font("Arial Black", Font.BOLD, 28));
+    lblCodigo.setForeground(Color.WHITE);
+    txtCodigo.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtCodigo.setPreferredSize(new Dimension(100, 50)); // ancho fijo
+    txtCodigo.setHorizontalAlignment(JTextField.CENTER);
+    txtCodigo.setBackground(Color.WHITE);
+    txtCodigo.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 80), 2)); // borde suave
+
+    panelFormulario.add(lblCodigo, gbcLabel);
+    panelFormulario.add(txtCodigo, gbcField);
+
+    // Etiqueta y campo Cantidad
+    lblCantidadSumar.setFont(new Font("Arial Black", Font.BOLD, 28));
+    lblCantidadSumar.setForeground(Color.WHITE);
+    txtCantidaSumar.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtCantidaSumar.setPreferredSize(new Dimension(100, 50));
+    txtCantidaSumar.setHorizontalAlignment(JTextField.CENTER);
+    txtCantidaSumar.setBackground(Color.WHITE);
+    txtCantidaSumar.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 80), 2));
+
+    panelFormulario.add(lblCantidadSumar, gbcLabel);
+    panelFormulario.add(txtCantidaSumar, gbcField);
+
+    // Agregar panel formulario al panel central
+    gbc.insets = new Insets(10, 100, 10, 100); // margen lateral generoso
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weighty = 0;
+    panelCentral.add(panelFormulario, gbc);
+
+    // BOTÓN Reabastecer tamaño normal
+    btnReabastecer.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnReabastecer.setPreferredSize(new Dimension(400, 60)); // Ancho normal
+    btnReabastecer.setBackground(new Color(46, 204, 113)); // Verde
+    btnReabastecer.setForeground(Color.WHITE);
+    gbc.insets = new Insets(10, 50, 10, 50);
+    gbc.fill = GridBagConstraints.NONE; // ← NO SE EXPANDE
+    panelCentral.add(btnReabastecer, gbc);
+
+    // BOTÓN Atrás tamaño normal
+    lblAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
+    lblAtras.setPreferredSize(new Dimension(400, 60)); // Ancho normal
+    lblAtras.setBackground(new Color(155, 89, 182)); // Morado
+    lblAtras.setForeground(Color.WHITE);
+    panelCentral.add(lblAtras, gbc);
+
+    //  MENSAJE DE ERROR/ALERTA  DEBAJO DEL BOTÓN ATRÁS
+    lblMensajeDeError.setFont(new Font("Arial Black", Font.BOLD, 26));
+    lblMensajeDeError.setForeground(Color.RED);
+    lblMensajeDeError.setHorizontalAlignment(JLabel.CENTER);
+    gbc.insets = new Insets(10, 50, 20, 50);
+    panelCentral.add(lblMensajeDeError, gbc);
+
+    // Aplicar panel central
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+    revalidate();
+    repaint();
+   
     }
         public void establecerControlador(Controlador.ControladorGestionStock controlador) {
         this.controladorGestionStock = controlador;

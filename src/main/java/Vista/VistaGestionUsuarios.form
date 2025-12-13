@@ -68,8 +68,8 @@
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Component id="lblListaUsuarios" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="ScrollTablaUsuarios" min="-2" pref="100" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Component id="ScrollTablaUsuarios" min="-2" pref="88" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnEditar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnActivar" alignment="3" min="-2" max="-2" attributes="0"/>

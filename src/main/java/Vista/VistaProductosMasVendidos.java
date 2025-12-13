@@ -3,14 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import java.awt.BorderLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author Usuario
@@ -23,7 +31,118 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
      * Creates new form VistaProductosMasVendidos
      */
     public VistaProductosMasVendidos() {
-        initComponents();
+        initComponents();//NO BORRAR
+        
+        // PANTALLA COMPLETA
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Fondo profesional
+        getContentPane().setBackground(new Color(30, 30, 40));
+
+        // Panel central
+        JPanel panelCentral = new JPanel();
+        panelCentral.setLayout(new GridBagLayout());
+        panelCentral.setOpaque(false);
+
+        GridBagConstraints normalGbc = new GridBagConstraints();
+        normalGbc.gridwidth = GridBagConstraints.REMAINDER;
+        normalGbc.anchor = GridBagConstraints.CENTER;
+        normalGbc.insets = new Insets(20, 0, 20, 0);
+        normalGbc.fill = GridBagConstraints.HORIZONTAL;
+        normalGbc.weightx = 1.0;
+        normalGbc.weighty = 0;
+
+        GridBagConstraints tableGbc = new GridBagConstraints();
+        tableGbc.gridwidth = GridBagConstraints.REMAINDER;
+        tableGbc.anchor = GridBagConstraints.CENTER;
+        tableGbc.insets = new Insets(10, 50, 20, 50);
+        tableGbc.fill = GridBagConstraints.BOTH;
+        tableGbc.weightx = 1.0;
+        tableGbc.weighty = 0.4; // Tabla alta pero controlada
+
+        GridBagConstraints chartGbc = new GridBagConstraints();
+        chartGbc.gridwidth = GridBagConstraints.REMAINDER;
+        chartGbc.anchor = GridBagConstraints.CENTER;
+        chartGbc.insets = new Insets(10, 50, 30, 50);
+        chartGbc.fill = GridBagConstraints.BOTH;
+        chartGbc.weightx = 1.0;
+        chartGbc.weighty = 0.6; // Gráfico ocupa más espacio (más grande)
+
+        GridBagConstraints buttonGbc = new GridBagConstraints();
+        buttonGbc.gridwidth = GridBagConstraints.REMAINDER;
+        buttonGbc.anchor = GridBagConstraints.CENTER;
+        buttonGbc.insets = new Insets(10, 0, 50, 0);
+        buttonGbc.fill = GridBagConstraints.HORIZONTAL;
+        buttonGbc.weightx = 1.0;
+        buttonGbc.weighty = 0;
+
+        // Título
+        panelCentral.add(jLabel1, normalGbc);
+
+        // Tabla
+        panelCentral.add(ScrollTablaProductos, tableGbc);
+
+        // Gráfico de barras (ocupa más espacio)
+        panelCentral.add(ScrollDiagramaDeBarras, chartGbc);
+
+        //  PANEL DE BOTONES: con GridBagLayout para que se vean completos
+        JPanel panelBotones = new JPanel(new GridBagLayout());
+        panelBotones.setOpaque(false);
+
+        GridBagConstraints gbcBoton = new GridBagConstraints();
+        gbcBoton.insets = new Insets(10, 20, 10, 20); // margen alrededor de cada botón
+        gbcBoton.fill = GridBagConstraints.HORIZONTAL;
+        gbcBoton.weightx = 1.0; // ← permite que el botón se expanda horizontalmente
+        gbcBoton.anchor = GridBagConstraints.CENTER;
+
+        // Botón Recargar
+        btnRecargar.setFont(new Font("Arial Black", Font.BOLD, 28));
+        btnRecargar.setPreferredSize(new Dimension(400, 80));
+        btnRecargar.setBackground(new Color(52, 152, 219)); // Azul
+        btnRecargar.setForeground(Color.WHITE);
+        panelBotones.add(btnRecargar, gbcBoton);
+
+        // Botón Atrás
+        btnAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
+        btnAtras.setPreferredSize(new Dimension(400, 80));
+        btnAtras.setBackground(new Color(155, 89, 182)); // Morado
+        btnAtras.setForeground(Color.WHITE);
+        panelBotones.add(btnAtras, gbcBoton);
+
+        // Agregar panel de botones al diseño principal
+        panelCentral.add(panelBotones, buttonGbc);
+
+        // Aplicar panel central
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+        // ESTILOS BRUTALES
+        jLabel1.setFont(new Font("Arial Black", Font.BOLD, 48));
+        jLabel1.setForeground(Color.WHITE);
+        jLabel1.setHorizontalAlignment(JLabel.CENTER);
+
+        tablaProductos.setFont(new Font("Arial", Font.PLAIN, 22));
+        tablaProductos.setRowHeight(50);
+        tablaProductos.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 26));
+        tablaProductos.getTableHeader().setForeground(Color.WHITE);
+        tablaProductos.getTableHeader().setBackground(new Color(0, 102, 102));
+
+        // Botones grandes y coloridos
+        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
+        Dimension tamañoBoton = new Dimension(400, 80);
+
+        btnRecargar.setFont(fontBotones);
+        btnRecargar.setPreferredSize(tamañoBoton);
+        btnRecargar.setBackground(new Color(52, 152, 219)); // Azul
+        btnRecargar.setForeground(Color.WHITE);
+
+        btnAtras.setFont(fontBotones);
+        btnAtras.setPreferredSize(tamañoBoton);
+        btnAtras.setBackground(new Color(155, 89, 182)); // Morado
+        btnAtras.setForeground(Color.WHITE);
+
+        revalidate();
+        repaint();
     }
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorProductosMasVendidos controlador) {

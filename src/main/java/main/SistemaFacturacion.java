@@ -16,7 +16,7 @@ public class SistemaFacturacion {
         
        // Verifica si existe un administrador
         if (!Modelo.UsuarioModelo.existeAdministrador()) {
-            // No existe → mostrar formulario para crear el primero
+            // No existe mostrar formulario para crear el primero
             Vista.VistaPrimerAdmin vista = new Vista.VistaPrimerAdmin();
             Controlador.ControladorPrimerAdmin controlador = new Controlador.ControladorPrimerAdmin(vista);
             vista.establecerControlador(controlador);

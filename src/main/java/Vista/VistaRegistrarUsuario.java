@@ -3,6 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -14,11 +25,115 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
      * Creates new form VistaRegistrarUsuario
      */
     public VistaRegistrarUsuario() {
-        initComponents();
+        initComponents();//NO BORRAR
     // Crear un grupo de botones para que solo se pueda seleccionar uno
     javax.swing.ButtonGroup grupoRol = new javax.swing.ButtonGroup();
     grupoRol.add(RadioAdministrador);
     grupoRol.add(RadioCajero);
+    
+ // PANTALLA COMPLETA
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    // Fondo profesional
+    getContentPane().setBackground(new Color(52, 73, 94));
+
+    // PANEL CENTRAL PARA CENTRAR TODO
+    JPanel panelCentral = new JPanel();
+    panelCentral.setLayout(new GridBagLayout());
+    panelCentral.setOpaque(false);
+
+    GridBagConstraints labelGbc = new GridBagConstraints();
+    labelGbc.anchor = GridBagConstraints.EAST; // Etiquetas a la derecha
+    labelGbc.insets = new Insets(20, 0, 20, 20);
+
+    GridBagConstraints fieldGbc = new GridBagConstraints();
+    fieldGbc.gridwidth = GridBagConstraints.REMAINDER;
+    fieldGbc.fill = GridBagConstraints.HORIZONTAL;
+    fieldGbc.weightx = 1.0;
+    fieldGbc.insets = new Insets(20, 0, 20, 100); // Margen derecho
+
+    // Título
+    panelCentral.add(lblTitulo, fieldGbc);
+
+    // Nombre de usuario
+    panelCentral.add(lblNombreUsuario, labelGbc);
+    panelCentral.add(txtNombreUsuario, fieldGbc);
+
+    // Contraseña
+    panelCentral.add(lblContrasenia, labelGbc);
+    panelCentral.add(jPContrasenia, fieldGbc);
+
+    // Rol
+    panelCentral.add(lblRol, labelGbc);
+
+    JPanel panelRadio = new JPanel();
+    panelRadio.setOpaque(false);
+    panelRadio.add(RadioAdministrador);
+    panelRadio.add(RadioCajero);
+    fieldGbc.gridwidth = GridBagConstraints.REMAINDER;
+    panelCentral.add(panelRadio, fieldGbc);
+
+    // Botones más arriba 
+    JPanel panelBotones = new JPanel();
+    panelBotones.setOpaque(false);
+    panelRadio.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 0));
+    panelBotones.add(btnRegistrar);
+    panelBotones.add(btnCancelar);
+    panelCentral.add(panelBotones, fieldGbc);
+
+    // Mensaje de error
+    panelCentral.add(lblMensajeError, fieldGbc);
+
+    // Aplicar panel central
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+    // ESTILOS FINALES
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+    lblNombreUsuario.setFont(new Font("Arial", Font.BOLD, 28));
+    lblNombreUsuario.setForeground(Color.WHITE);
+
+    lblContrasenia.setFont(new Font("Arial", Font.BOLD, 28));
+    lblContrasenia.setForeground(Color.WHITE);
+
+    lblRol.setFont(new Font("Arial", Font.BOLD, 28));
+    lblRol.setForeground(Color.WHITE);
+
+    txtNombreUsuario.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtNombreUsuario.setPreferredSize(new Dimension(600, 60)); // Ancho normal
+    txtNombreUsuario.setHorizontalAlignment(JTextField.CENTER);
+
+    jPContrasenia.setFont(new Font("Arial", Font.PLAIN, 28));
+    jPContrasenia.setPreferredSize(new Dimension(600, 60)); // Ancho normal
+
+    RadioAdministrador.setFont(new Font("Arial", Font.BOLD, 28));
+    RadioAdministrador.setForeground(Color.WHITE);
+    RadioAdministrador.setOpaque(false);
+
+    RadioCajero.setFont(new Font("Arial", Font.BOLD, 28));
+    RadioCajero.setForeground(Color.WHITE);
+    RadioCajero.setOpaque(false);
+
+    btnRegistrar.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnRegistrar.setBackground(new Color(46, 204, 113));
+    btnRegistrar.setForeground(Color.WHITE);
+    btnRegistrar.setPreferredSize(new Dimension(350, 80));
+
+    btnCancelar.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnCancelar.setBackground(new Color(231, 76, 60));
+    btnCancelar.setForeground(Color.WHITE);
+    btnCancelar.setPreferredSize(new Dimension(350, 80));
+
+    lblMensajeError.setFont(new Font("Arial", Font.BOLD, 26));
+    lblMensajeError.setForeground(Color.YELLOW);
+    lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
+
+    revalidate();
+    repaint();
+    
     }
         public void establecerControlador(Controlador.ControladorRegistrarUsuario controlador) {
         this.controladorRegistrar = controlador;
@@ -117,35 +232,36 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(44, 44, 44)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnRegistrar)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblNombreUsuario)
-                                    .addComponent(lblContrasenia)
-                                    .addComponent(lblRol)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnRegistrar)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(26, 26, 26)
-                                    .addComponent(RadioAdministrador)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(RadioCajero))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(143, 143, 143)
-                                    .addComponent(btnCancelar)))
-                            .addGap(61, 61, 61))
-                        .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lblNombreUsuario)
+                                        .addComponent(lblContrasenia)
+                                        .addComponent(lblRol)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(26, 26, 26)
+                                        .addComponent(RadioAdministrador)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(RadioCajero))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(143, 143, 143)
+                                        .addComponent(btnCancelar)))
+                                .addGap(61, 61, 61))
+                            .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(138, 138, 138)
                         .addComponent(lblTitulo)))
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(390, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +287,7 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
                     .addComponent(btnRegistrar))
                 .addGap(57, 57, 57)
                 .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
 
         pack();

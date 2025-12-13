@@ -4,6 +4,19 @@
  */
 package Vista;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Usuario
@@ -20,7 +33,11 @@ private javax.swing.JDialog dialogoEspera;
      */
     public VistaFacturacion() {
         initComponents();
+        
+ 
+   
     }
+    
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorFacturacion controlador) {
         this.controladorFacturacion = controlador;
@@ -92,9 +109,6 @@ private javax.swing.JDialog dialogoEspera;
         lblCliente = new javax.swing.JLabel();
         btnAgregarProducto = new javax.swing.JButton();
         lblDetalleVenta = new javax.swing.JLabel();
-        ScrollDetalleVenta = new javax.swing.JScrollPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        TablaDetalleVenta = new javax.swing.JTable();
         lblTotal = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         btnFinalizarVenta = new javax.swing.JButton();
@@ -105,6 +119,9 @@ private javax.swing.JDialog dialogoEspera;
         txtCliente = new javax.swing.JTextField();
         lblCantidad = new javax.swing.JLabel();
         txtCantidad = new javax.swing.JTextField();
+        ScrollDetalleFactura = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TablaDetalleVenta = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,23 +145,6 @@ private javax.swing.JDialog dialogoEspera;
         lblDetalleVenta.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblDetalleVenta.setForeground(new java.awt.Color(0, 102, 102));
         lblDetalleVenta.setText("Detalle Venta");
-
-        TablaDetalleVenta.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        TablaDetalleVenta.setForeground(new java.awt.Color(0, 102, 102));
-        TablaDetalleVenta.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
-            }
-        ));
-        jScrollPane2.setViewportView(TablaDetalleVenta);
-
-        ScrollDetalleVenta.setViewportView(jScrollPane2);
 
         lblTotal.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblTotal.setForeground(new java.awt.Color(0, 102, 102));
@@ -210,6 +210,23 @@ private javax.swing.JDialog dialogoEspera;
             }
         });
 
+        TablaDetalleVenta.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        TablaDetalleVenta.setForeground(new java.awt.Color(0, 102, 102));
+        TablaDetalleVenta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
+            }
+        ));
+        jScrollPane2.setViewportView(TablaDetalleVenta);
+
+        ScrollDetalleFactura.setViewportView(jScrollPane2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -219,60 +236,65 @@ private javax.swing.JDialog dialogoEspera;
                     .addGroup(layout.createSequentialGroup()
                         .addGap(73, 73, 73)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDetalleVenta)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTotal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblTotal)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(14, 14, 14)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblProductos)
+                                            .addComponent(lblCliente)
+                                            .addComponent(lblCantidad))
+                                        .addGap(45, 45, 45)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtCliente)
+                                            .addComponent(ComboProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtCantidad)
+                                            .addComponent(btnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(lblDetalleVenta)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(80, 80, 80)
+                                        .addComponent(btnFinalizarVenta)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(btnCancelar)))
+                                .addGap(1204, 1204, 1204)
+                                .addComponent(btnAtras))
+                            .addComponent(ScrollDetalleFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblProductos)
-                            .addComponent(lblCliente)
-                            .addComponent(lblCantidad))
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtCliente)
-                            .addComponent(ComboProductos, 0, 250, Short.MAX_VALUE)
-                            .addComponent(txtCantidad)
-                            .addComponent(btnAgregarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(153, 153, 153)
-                        .addComponent(btnFinalizarVenta)
-                        .addGap(36, 36, 36)
-                        .addComponent(btnCancelar)
-                        .addGap(32, 32, 32)
-                        .addComponent(btnAtras))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(238, 238, 238)
+                        .addGap(247, 247, 247)
                         .addComponent(lblTitulo)))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(lblTitulo)
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCliente)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblProductos)
-                    .addComponent(ComboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCantidad)
-                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addComponent(btnAgregarProducto)
-                .addGap(39, 39, 39)
-                .addComponent(lblDetalleVenta)
-                .addGap(26, 26, 26)
-                .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addComponent(lblCliente)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblProductos)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblCantidad)
+                        .addGap(60, 60, 60)
+                        .addComponent(lblDetalleVenta))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(lblTitulo)
+                        .addGap(32, 32, 32)
+                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(ComboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)
+                        .addComponent(btnAgregarProducto)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ScrollDetalleFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal)
                     .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -281,7 +303,7 @@ private javax.swing.JDialog dialogoEspera;
                     .addComponent(btnFinalizarVenta)
                     .addComponent(btnCancelar)
                     .addComponent(btnAtras))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(216, Short.MAX_VALUE))
         );
 
         pack();
@@ -397,7 +419,7 @@ private javax.swing.JDialog dialogoEspera;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ComboProductos;
-    private javax.swing.JScrollPane ScrollDetalleVenta;
+    private javax.swing.JScrollPane ScrollDetalleFactura;
     private javax.swing.JTable TablaDetalleVenta;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnAtras;

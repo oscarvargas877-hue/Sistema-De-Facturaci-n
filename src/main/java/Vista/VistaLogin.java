@@ -4,6 +4,19 @@
  */
 package Vista;
 
+import Controlador.ControladorLogin;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Usuario
@@ -16,11 +29,75 @@ public class VistaLogin extends javax.swing.JFrame {
      * Creates new form VistaLogin
      */
     public VistaLogin() {
-        initComponents();
-    }
-     // Método setter para inyectar el controlador desde fuera
-    public void establecerControlador(Controlador.ControladorLogin controlador) {
-        this.controladorLogin = controlador;
+        initComponents();//NO BORRAR
+ 
+    // PANTALLA COMPLETA
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    // Fondo profesional
+    getContentPane().setBackground(new Color(52, 73, 94));
+
+    // ESTILOS BRUTALES (sin tocar el layout)
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER); // Centrado
+
+    jLabel1.setFont(new Font("Arial", Font.BOLD, 24));
+    jLabel1.setForeground(Color.WHITE);
+
+    lblContrasenia.setFont(new Font("Arial", Font.BOLD, 24));
+    lblContrasenia.setForeground(Color.WHITE);
+
+    txtUsuario.setFont(new Font("Arial", Font.PLAIN, 24));
+    txtUsuario.setPreferredSize(new Dimension(500, 60));
+    txtUsuario.setHorizontalAlignment(JTextField.CENTER);
+
+    jPContrasenia.setFont(new Font("Arial", Font.PLAIN, 24));
+    jPContrasenia.setPreferredSize(new Dimension(500, 60));
+    jPContrasenia.setHorizontalAlignment(JPasswordField.CENTER);
+
+    btnIniciarSesion.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnIniciarSesion.setBackground(new Color(46, 204, 113));
+    btnIniciarSesion.setForeground(Color.WHITE);
+    btnIniciarSesion.setPreferredSize(new Dimension(350, 70));
+
+    btnCerrar.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnCerrar.setBackground(new Color(231, 76, 60));
+    btnCerrar.setForeground(Color.WHITE);
+    btnCerrar.setPreferredSize(new Dimension(350, 70));
+
+    lblMensajeError.setFont(new Font("Arial", Font.BOLD, 22));
+    lblMensajeError.setForeground(Color.YELLOW);
+    lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
+
+    // Centrar todo el panel principal (el que genera NetBeans)
+    JPanel panelPrincipal = (JPanel) getContentPane();
+    panelPrincipal.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.insets = new Insets(20, 0, 20, 0);
+
+    // Reagregar todos los componentes al nuevo layout
+    panelPrincipal.removeAll();
+    panelPrincipal.add(lblTitulo, gbc);
+    panelPrincipal.add(jLabel1, gbc);
+    panelPrincipal.add(txtUsuario, gbc);
+    panelPrincipal.add(lblContrasenia, gbc);
+    panelPrincipal.add(jPContrasenia, gbc);
+
+    JPanel panelBotones = new JPanel();
+    panelBotones.setOpaque(false);
+    panelBotones.add(btnIniciarSesion);
+    panelBotones.add(btnCerrar);
+    panelPrincipal.add(panelBotones, gbc);
+
+    panelPrincipal.add(lblMensajeError, gbc);
+
+    revalidate();
+    repaint();
+ 
+     
     }
 
 
@@ -187,6 +264,10 @@ public class VistaLogin extends javax.swing.JFrame {
         txtUsuario.setText("");
         jPContrasenia.setText("");
         lblMensajeError.setVisible(false);
+    }
+    // Método para inyectar el controlador desde fuera
+    public void establecerControlador(ControladorLogin controlador) {
+        this.controladorLogin = controlador;
     }
 
     /**

@@ -4,6 +4,17 @@
  */
 package Vista;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author Usuario
@@ -17,6 +28,108 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
      */
     public VistaHistorialVentas() {
         initComponents();
+        // PANTALLA COMPLETA
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Fondo profesional
+        getContentPane().setBackground(new Color(30, 30, 40));
+
+        // Panel central
+        JPanel panelCentral = new JPanel();
+        panelCentral.setLayout(new GridBagLayout());
+        panelCentral.setOpaque(false);
+
+        // gbc para título
+        GridBagConstraints normalGbc = new GridBagConstraints();
+        normalGbc.gridwidth = GridBagConstraints.REMAINDER;
+        normalGbc.anchor = GridBagConstraints.CENTER;
+        normalGbc.insets = new Insets(30, 0, 30, 0);
+        normalGbc.fill = GridBagConstraints.HORIZONTAL;
+        normalGbc.weightx = 1.0;
+        normalGbc.weighty = 0;
+
+        // gbc para la tabla (ENORME Y ALTA)
+        GridBagConstraints tableGbc = new GridBagConstraints();
+        tableGbc.gridwidth = GridBagConstraints.REMAINDER;
+        tableGbc.anchor = GridBagConstraints.CENTER;
+        tableGbc.insets = new Insets(10, 50, 30, 50);
+        tableGbc.fill = GridBagConstraints.BOTH;
+        tableGbc.weightx = 1.0;
+        tableGbc.weighty = 1.0; // ← TABLA OCUPA TODO EL ESPACIO VERTICAL DISPONIBLE
+
+        // gbc para botones
+        GridBagConstraints buttonGbc = new GridBagConstraints();
+        buttonGbc.gridwidth = GridBagConstraints.REMAINDER;
+        buttonGbc.anchor = GridBagConstraints.CENTER;
+        buttonGbc.insets = new Insets(10, 0, 50, 0);
+        buttonGbc.fill = GridBagConstraints.HORIZONTAL;
+        buttonGbc.weightx = 1.0;
+        buttonGbc.weighty = 0;
+
+        // Título
+        panelCentral.add(lblTitulo, normalGbc);
+
+        // Tabla ENORME
+        panelCentral.add(ScrollHistorial, tableGbc);
+
+        //  PANEL DE BOTONES con GridBagLayout para control total
+        JPanel panelBotones = new JPanel(new GridBagLayout());
+        panelBotones.setOpaque(false);
+
+        GridBagConstraints gbcBoton = new GridBagConstraints();
+        gbcBoton.insets = new Insets(10, 20, 10, 20); // margen alrededor de cada botón
+        gbcBoton.fill = GridBagConstraints.HORIZONTAL;
+        gbcBoton.weightx = 1.0; // ← permite que el botón se expanda horizontalmente
+        gbcBoton.anchor = GridBagConstraints.CENTER;
+
+        // Botón Recargar
+        btnRecargar.setFont(new Font("Arial Black", Font.BOLD, 28));
+        btnRecargar.setPreferredSize(new Dimension(400, 80));
+        btnRecargar.setBackground(new Color(52, 152, 219)); // Azul
+        btnRecargar.setForeground(Color.WHITE);
+        panelBotones.add(btnRecargar, gbcBoton);
+
+        // Botón Atrás
+        btnAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
+        btnAtras.setPreferredSize(new Dimension(400, 80));
+        btnAtras.setBackground(new Color(155, 89, 182)); // Morado
+        btnAtras.setForeground(Color.WHITE);
+        panelBotones.add(btnAtras, gbcBoton);
+
+        // Agregar panel de botones al diseño principal
+        panelCentral.add(panelBotones, buttonGbc);
+        
+        // Aplicar panel central
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+        // ESTILOS BRUTALES
+        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+        tablaHistorial.setFont(new Font("Arial", Font.PLAIN, 22));
+        tablaHistorial.setRowHeight(50); // Filas altas
+        tablaHistorial.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 26));
+        tablaHistorial.getTableHeader().setForeground(Color.WHITE);
+        tablaHistorial.getTableHeader().setBackground(new Color(0, 102, 102));
+
+        // Botones grandes y coloridos
+        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
+        Dimension tamañoBoton = new Dimension(400, 80);
+
+        btnRecargar.setFont(fontBotones);
+        btnRecargar.setPreferredSize(tamañoBoton);
+        btnRecargar.setBackground(new Color(52, 152, 219)); // Azul
+        btnRecargar.setForeground(Color.WHITE);
+
+        btnAtras.setFont(fontBotones);
+        btnAtras.setPreferredSize(tamañoBoton);
+        btnAtras.setBackground(new Color(155, 89, 182)); // Morado
+        btnAtras.setForeground(Color.WHITE);
+
+        revalidate();
+        repaint();
     }
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorHistorialVentas controlador) {

@@ -4,6 +4,20 @@
  */
 package Vista;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Usuario
@@ -24,6 +38,151 @@ public class VistaVerFactura extends javax.swing.JFrame {
         this.detalle = detalle;
         this.total = total;
         cargarDatos();
+        
+  
+        // === ESTILO PROFESIONAL ===
+        // Pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Fondo oscuro
+        getContentPane().setBackground(new Color(30, 30, 40));
+
+        // Limpiar layout viejo de NetBeans
+        getContentPane().removeAll();
+        getContentPane().setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(15, 20, 15, 20);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        // === TÍTULO GRANDE ===
+        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        getContentPane().add(lblTitulo, gbc);
+
+        // === INFORMACIÓN CLIENTE Y FECHA ===
+        lblCliente.setFont(new Font("Arial Black", Font.BOLD, 36));
+        lblCliente.setForeground(Color.WHITE);
+        lblCliente.setText("Cliente: " + (cliente != null ? cliente : "Desconocido"));
+
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(30, 100, 10, 0);
+        getContentPane().add(lblCliente, gbc);
+
+        lblFechaHora.setFont(new Font("Arial Black", Font.BOLD, 36));
+        lblFechaHora.setForeground(Color.WHITE);
+        lblFechaHora.setText("Fecha: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(30, 0, 10, 100);
+        getContentPane().add(lblFechaHora, gbc);
+
+        // === DETALLE VENTA ===
+        lblDetalleVenta.setFont(new Font("Arial Black", Font.BOLD, 40));
+        lblDetalleVenta.setForeground(Color.WHITE);
+        lblDetalleVenta.setHorizontalAlignment(JLabel.CENTER);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(40, 0, 20, 0);
+        getContentPane().add(lblDetalleVenta, gbc);
+        
+        // === TABLA DETALLE VENTA ===
+        tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 28));
+        tablaDetalle.setRowHeight(60);
+        tablaDetalle.setBackground(Color.WHITE);
+        tablaDetalle.setForeground(Color.BLACK);
+        tablaDetalle.setGridColor(Color.LIGHT_GRAY);
+        tablaDetalle.setShowGrid(true);
+
+        tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 32));
+        tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
+        tablaDetalle.getTableHeader().setForeground(Color.WHITE);
+        tablaDetalle.getTableHeader().setReorderingAllowed(false);
+
+        // Definir columnas explícitamente
+        String[] columnas = {"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"};
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
+        tablaDetalle.setModel(modelo);
+
+        // Cargar los datos reales o una fila de ejemplo
+        if (detalle != null && !detalle.isEmpty()) {
+            for (Modelo.DetalleFacturaModelo item : detalle) {
+                String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+                modelo.addRow(new Object[]{
+                    item.getNombreProducto(),
+                    item.getCantidad(),
+                    String.format("%.2f", item.getPrecioUnitario()),
+                    descuentoStr,
+                    String.format("%.2f", item.getSubtotal())
+                });
+            }
+        } else {
+            modelo.addRow(new Object[]{"-", "-", "-", "-", "-"});
+        }
+
+        // Forzar que el JScrollPane tenga tamaño visible
+        jScrollPane1.setPreferredSize(new Dimension(1200, 300)); // ← Altura fija de 300px
+        jScrollPane1.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
+
+        gbc.gridy = 3;
+        gbc.insets = new Insets(0, 100, 40, 100);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 0.5; // ← La tabla ocupa el 50% del espacio vertical
+        getContentPane().add(jScrollPane1, gbc);
+
+        // === TOTAL GRANDE ===
+        JPanel panelTotal = new JPanel();
+        panelTotal.setOpaque(false);
+
+        lblTotal.setFont(new Font("Arial Black", Font.BOLD, 48));
+        lblTotal.setForeground(Color.YELLOW);
+        lblTotal.setText("Total: ");
+
+        txtTotal.setFont(new Font("Arial Black", Font.BOLD, 48));
+        txtTotal.setForeground(Color.YELLOW);
+        txtTotal.setBackground(Color.WHITE);
+        txtTotal.setHorizontalAlignment(JTextField.CENTER);
+        txtTotal.setPreferredSize(new Dimension(500, 90));
+        txtTotal.setEditable(false);
+        txtTotal.setText(String.format("%.2f", total));
+
+        panelTotal.add(lblTotal);
+        panelTotal.add(txtTotal);
+
+        gbc.gridy = 4;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(0, 0, 50, 0);
+        getContentPane().add(panelTotal, gbc);
+
+        // === BOTÓN ACEPTAR ===
+        btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 36));
+        btnAceptar.setBackground(new Color(46, 204, 113));  // Verde
+        btnAceptar.setForeground(Color.WHITE);
+        btnAceptar.setPreferredSize(new Dimension(500, 100));
+        btnAceptar.setFocusPainted(false);
+
+        gbc.gridy = 5;
+        gbc.insets = new Insets(0, 0, 100, 0);
+        getContentPane().add(btnAceptar, gbc);
+
+        // Refrescar
+        revalidate();
+        repaint();
     }
 
          // Método para cargar los datos en la vista

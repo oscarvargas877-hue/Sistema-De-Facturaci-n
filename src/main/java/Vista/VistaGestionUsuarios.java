@@ -3,7 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 /**
  *
  * @author Usuario
@@ -17,7 +26,100 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
      * Creates new form VistaGestionUsuarios
      */
     public VistaGestionUsuarios() {
-        initComponents();
+        initComponents(); // no borrar
+    // PANTALLA COMPLETA
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    // Fondo profesional
+    getContentPane().setBackground(new Color(30, 30, 40));
+
+    // Panel central
+    JPanel panelCentral = new JPanel();
+    panelCentral.setLayout(new GridBagLayout());
+    panelCentral.setOpaque(false);
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.weightx = 1.0;
+
+    // TÍTULO 
+    gbc.insets = new Insets(20, 0, 10, 0);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weighty = 0;
+    panelCentral.add(lblTitulo, gbc);
+
+    // Lista de usuarios
+    gbc.insets = new Insets(10, 0, 20, 0);
+    panelCentral.add(lblListaUsuarios, gbc);
+
+    //  TABLA altura reducida y controlada 
+    gbc.insets = new Insets(0, 50, 20, 50); // margen lateral y debajo
+    gbc.fill = GridBagConstraints.HORIZONTAL; // solo horizontal
+    gbc.weighty = 0; //  NO SE EXPANDE VERTICALMENTE
+    ScrollTablaUsuarios.setPreferredSize(new Dimension(1200, 250)); // ALTURA FIJA DE 250
+    ScrollTablaUsuarios.setMaximumSize(new Dimension(1200, 300)); // EVITA QUE SE HAGA MÁS GRANDE
+    panelCentral.add(ScrollTablaUsuarios, gbc);
+
+    //  PANEL DE BOTONES
+    JPanel panelBotones = new JPanel();
+    panelBotones.setOpaque(false);
+    panelBotones.add(btnEditar);
+    panelBotones.add(btnActivar);
+    panelBotones.add(btnInactivar);
+    panelBotones.add(btnAtras);
+
+    gbc.insets = new Insets(0, 0, 30, 0); // espacio inferior
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.weighty = 0;
+    gbc.anchor = GridBagConstraints.CENTER;
+    panelCentral.add(panelBotones, gbc);
+
+    // Aplicar panel central
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+    // ESTILOS VISUALES 
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+    lblListaUsuarios.setFont(new Font("Arial Black", Font.BOLD, 28));
+    lblListaUsuarios.setForeground(Color.WHITE);
+    lblListaUsuarios.setHorizontalAlignment(JLabel.CENTER);
+
+    tablaUsuarios.setFont(new Font("Arial", Font.PLAIN, 20));
+    tablaUsuarios.setRowHeight(50);
+    tablaUsuarios.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 24));
+    tablaUsuarios.getTableHeader().setForeground(Color.WHITE);
+    tablaUsuarios.getTableHeader().setBackground(new Color(0, 102, 102));
+
+    // Botones grandes y coloridos
+    Font fontBotones = new Font("Arial Black", Font.BOLD, 24);
+    Dimension tamañoBoton = new Dimension(300, 70);
+
+    btnEditar.setFont(fontBotones);
+    btnEditar.setPreferredSize(tamañoBoton);
+    btnEditar.setBackground(new Color(52, 152, 219));
+    btnEditar.setForeground(Color.WHITE);
+
+    btnActivar.setFont(fontBotones);
+    btnActivar.setPreferredSize(tamañoBoton);
+    btnActivar.setBackground(new Color(46, 204, 113));
+    btnActivar.setForeground(Color.WHITE);
+
+    btnInactivar.setFont(fontBotones);
+    btnInactivar.setPreferredSize(tamañoBoton);
+    btnInactivar.setBackground(new Color(231, 76, 60));
+    btnInactivar.setForeground(Color.WHITE);
+
+    btnAtras.setFont(fontBotones);
+    btnAtras.setPreferredSize(tamañoBoton);
+    btnAtras.setBackground(new Color(155, 89, 182));
+    btnAtras.setForeground(Color.WHITE);
+
+    revalidate();
+    repaint();
     }
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorGestionUsuarios controlador) {
@@ -171,8 +273,8 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addComponent(lblListaUsuarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditar)
                     .addComponent(btnActivar)

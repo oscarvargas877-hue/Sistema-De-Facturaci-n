@@ -3,8 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  *
@@ -16,9 +23,74 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
      * Creates new form VistaMenuAdmin
      */
     public VistaMenuAdmin() {
-        initComponents();
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // ← ESTA LÍNEA
+        initComponents();//NO BORRAR
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         pack(); 
+        
+        // PANTALLA COMPLETA
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Fondo profesional
+        getContentPane().setBackground(new Color(30, 30, 40));
+
+        // ESTILOS BRUTALES (sin quitar nada)
+        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
+        Dimension tamañoBoton = new Dimension(600, 80);
+
+        btnRegistrarUsuario.setFont(fontBotones);
+        btnRegistrarUsuario.setPreferredSize(tamañoBoton);
+        btnRegistrarUsuario.setBackground(new Color(52, 152, 219));
+        btnRegistrarUsuario.setForeground(Color.WHITE);
+
+        btnGestionarUsuarios.setFont(fontBotones);
+        btnGestionarUsuarios.setPreferredSize(tamañoBoton);
+        btnGestionarUsuarios.setBackground(new Color(155, 89, 182));
+        btnGestionarUsuarios.setForeground(Color.WHITE);
+
+        btnGestionStock.setFont(fontBotones);
+        btnGestionStock.setPreferredSize(tamañoBoton);
+        btnGestionStock.setBackground(new Color(46, 204, 113));
+        btnGestionStock.setForeground(Color.WHITE);
+
+        btnHistorialVentas.setFont(fontBotones);
+        btnHistorialVentas.setPreferredSize(tamañoBoton);
+        btnHistorialVentas.setBackground(new Color(241, 196, 15));
+        btnHistorialVentas.setForeground(Color.WHITE);
+
+        btnProductosMasVendidos.setFont(fontBotones);
+        btnProductosMasVendidos.setPreferredSize(tamañoBoton);
+        btnProductosMasVendidos.setBackground(new Color(230, 126, 34));
+        btnProductosMasVendidos.setForeground(Color.WHITE);
+
+        btnCerrarSesion.setFont(fontBotones);
+        btnCerrarSesion.setPreferredSize(tamañoBoton);
+        btnCerrarSesion.setBackground(new Color(231, 76, 60));
+        btnCerrarSesion.setForeground(Color.WHITE);
+
+        // Centrar todo el panel principal (el que genera NetBeans)
+        JPanel panelPrincipal = (JPanel) getContentPane();
+        panelPrincipal.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(25, 0, 25, 0);
+
+        // Reagregar los componentes al nuevo layout
+        panelPrincipal.removeAll();
+        panelPrincipal.add(lblTitulo, gbc);
+        panelPrincipal.add(btnRegistrarUsuario, gbc);
+        panelPrincipal.add(btnGestionarUsuarios, gbc);
+        panelPrincipal.add(btnGestionStock, gbc);
+        panelPrincipal.add(btnHistorialVentas, gbc);
+        panelPrincipal.add(btnProductosMasVendidos, gbc);
+        panelPrincipal.add(btnCerrarSesion, gbc);
+
+        revalidate();
+        repaint();
     }
 
     public void establecerControlador(Controlador.ControladorAdmin controlador) {
@@ -114,13 +186,13 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
                             .addComponent(btnGestionStock)
                             .addComponent(btnHistorialVentas)
                             .addComponent(btnProductosMasVendidos)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(136, 136, 136)
-                                .addComponent(btnCerrarSesion))
                             .addComponent(btnGestionarUsuarios)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(179, 179, 179)
-                        .addComponent(lblTitulo)))
+                        .addComponent(lblTitulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(87, 87, 87)
+                        .addComponent(btnCerrarSesion)))
                 .addContainerGap(99, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -138,9 +210,9 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
                 .addComponent(btnProductosMasVendidos)
                 .addGap(18, 18, 18)
                 .addComponent(btnGestionarUsuarios)
-                .addGap(15, 15, 15)
+                .addGap(18, 18, 18)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();

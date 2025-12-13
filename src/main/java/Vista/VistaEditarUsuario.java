@@ -4,6 +4,18 @@
  */
 package Vista;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Usuario
@@ -24,6 +36,161 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         javax.swing.ButtonGroup grupoRol = new javax.swing.ButtonGroup();
         grupoRol.add(RadioAdministrador);
         grupoRol.add(RadioCajero);
+        
+
+        // PANTALLA COMPLETA
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Fondo profesional
+        getContentPane().setBackground(new Color(52, 73, 94));
+
+        // Panel central para centrar todo
+        JPanel panelCentral = new JPanel(new GridBagLayout());
+        panelCentral.setOpaque(false);
+
+        //  CONSTRAINTS 
+
+        // Título
+        GridBagConstraints gbcTitulo = new GridBagConstraints();
+        gbcTitulo.gridwidth = GridBagConstraints.REMAINDER;
+        gbcTitulo.anchor = GridBagConstraints.CENTER;
+        gbcTitulo.insets = new Insets(30, 0, 40, 0);
+        gbcTitulo.fill = GridBagConstraints.HORIZONTAL;
+        gbcTitulo.weightx = 1.0;
+        gbcTitulo.weighty = 0;
+
+        // Etiquetas izquierda
+        GridBagConstraints gbcLabel = new GridBagConstraints();
+        gbcLabel.anchor = GridBagConstraints.EAST;
+        gbcLabel.insets = new Insets(15, 50, 15, 20);
+        gbcLabel.weightx = 0.0;
+        gbcLabel.fill = GridBagConstraints.NONE;
+
+        // Campos de texto derecha, ancho controlado
+        GridBagConstraints gbcField = new GridBagConstraints();
+        gbcField.gridwidth = GridBagConstraints.REMAINDER;
+        gbcField.anchor = GridBagConstraints.WEST;
+        gbcField.insets = new Insets(15, 0, 15, 100);
+        gbcField.weightx = 0.0;
+        gbcField.fill = GridBagConstraints.NONE;
+
+        // Panel de rol centrado
+        GridBagConstraints gbcRol = new GridBagConstraints();
+        gbcRol.gridwidth = GridBagConstraints.REMAINDER;
+        gbcRol.anchor = GridBagConstraints.CENTER;
+        gbcRol.insets = new Insets(20, 0, 20, 0);
+        gbcRol.fill = GridBagConstraints.NONE;
+        gbcRol.weightx = 1.0;
+        gbcRol.weighty = 0;
+
+        // Estado centrado
+        GridBagConstraints gbcEstado = new GridBagConstraints();
+        gbcEstado.gridwidth = GridBagConstraints.REMAINDER;
+        gbcEstado.anchor = GridBagConstraints.CENTER;
+        gbcEstado.insets = new Insets(20, 0, 30, 0);
+        gbcEstado.fill = GridBagConstraints.NONE;
+        gbcEstado.weightx = 1.0;
+        gbcEstado.weighty = 0;
+
+        // Botones centrados, completos
+        GridBagConstraints gbcBotones = new GridBagConstraints();
+        gbcBotones.gridwidth = GridBagConstraints.REMAINDER;
+        gbcBotones.anchor = GridBagConstraints.CENTER;
+        gbcBotones.insets = new Insets(20, 0, 50, 0);
+        gbcBotones.fill = GridBagConstraints.NONE;
+        gbcBotones.weightx = 1.0;
+        gbcBotones.weighty = 0;
+
+        //  TÍTULO 
+        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+        panelCentral.add(lblTitulo, gbcTitulo);
+
+        //  ID USUARIO 
+        lblIdUsuario.setFont(new Font("Arial Black", Font.BOLD, 28));
+        lblIdUsuario.setForeground(Color.WHITE);
+        txtIdUsuario.setFont(new Font("Arial", Font.PLAIN, 28));
+        txtIdUsuario.setPreferredSize(new Dimension(400, 60)); // ← Ancho controlado (era 600)
+        txtIdUsuario.setHorizontalAlignment(JTextField.CENTER);
+        txtIdUsuario.setEditable(false); // opcional: ID no editable
+        txtIdUsuario.setBackground(Color.WHITE);
+        txtIdUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(70, 70, 80), 2));
+
+        panelCentral.add(lblIdUsuario, gbcLabel);
+        panelCentral.add(txtIdUsuario, gbcField);
+
+        //  NOMBRE 
+        lblNombre.setFont(new Font("Arial Black", Font.BOLD, 28));
+        lblNombre.setForeground(Color.WHITE);
+        txtNombre.setFont(new Font("Arial", Font.PLAIN, 28));
+        txtNombre.setPreferredSize(new Dimension(400, 60)); // ← Ancho controlado
+        txtNombre.setHorizontalAlignment(JTextField.CENTER);
+        txtNombre.setBackground(Color.WHITE);
+        txtNombre.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(70, 70, 80), 2));
+
+        panelCentral.add(lblNombre, gbcLabel);
+        panelCentral.add(txtNombre, gbcField);
+
+        //  ROL 
+        lblRol.setFont(new Font("Arial Black", Font.BOLD, 28));
+        lblRol.setForeground(Color.WHITE);
+        RadioAdministrador.setFont(new Font("Arial Black", Font.BOLD, 28));
+        RadioAdministrador.setForeground(Color.WHITE);
+        RadioAdministrador.setOpaque(false);
+        RadioCajero.setFont(new Font("Arial Black", Font.BOLD, 28));
+        RadioCajero.setForeground(Color.WHITE);
+        RadioCajero.setOpaque(false);
+
+        JPanel panelRol = new JPanel();
+        panelRol.setOpaque(false);
+        panelRol.add(lblRol);
+        panelRol.add(RadioAdministrador);
+        panelRol.add(RadioCajero);
+        panelCentral.add(panelRol, gbcRol);
+
+        //  ESTADO 
+        lblEstado.setFont(new Font("Arial Black", Font.BOLD, 28));
+        lblEstado.setForeground(Color.CYAN);
+        lblEstado.setHorizontalAlignment(JLabel.CENTER);
+        panelCentral.add(lblEstado, gbcEstado);
+
+        //  BOTONES 
+        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
+        Dimension tamañoBoton = new Dimension(400, 80);
+
+        btnGuardar.setFont(fontBotones);
+        btnGuardar.setPreferredSize(tamañoBoton);
+        btnGuardar.setBackground(new Color(46, 204, 113)); // Verde
+        btnGuardar.setForeground(Color.WHITE);
+        btnGuardar.setFocusPainted(false);
+
+        btnCancelar.setFont(fontBotones);
+        btnCancelar.setPreferredSize(tamañoBoton);
+        btnCancelar.setBackground(new Color(231, 76, 60)); // Rojo
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFocusPainted(false);
+
+        // Panel de botones con GridBagLayout para evitar que se corten
+        JPanel panelBotones = new JPanel(new GridBagLayout());
+        panelBotones.setOpaque(false);
+
+        GridBagConstraints gbcBtn = new GridBagConstraints();
+        gbcBtn.insets = new Insets(10, 30, 10, 30);
+        gbcBtn.fill = GridBagConstraints.NONE;
+        gbcBtn.anchor = GridBagConstraints.CENTER;
+
+        panelBotones.add(btnGuardar, gbcBtn);
+        panelBotones.add(btnCancelar, gbcBtn);
+
+        panelCentral.add(panelBotones, gbcBotones);
+
+        // Aplicar panel central
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
      // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorEditarUsuario controlador) {

@@ -4,6 +4,17 @@
  */
 package Vista;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Usuario
@@ -17,6 +28,105 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
      */
     public VistaPrimerAdmin() {
         initComponents();
+        
+// Pantalla completa
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    // Fondo oscuro
+    getContentPane().setBackground(new Color(30, 30, 40));
+
+    // Limpiar layout viejo
+    getContentPane().removeAll();
+    getContentPane().setLayout(new GridBagLayout());
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(20, 20, 20, 20);
+
+    // === TÍTULO ===
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    getContentPane().add(lblTitulo, gbc);
+
+    // === PANEL CENTRAL (etiquetas a la izquierda, campos al lado) ===
+    JPanel panelFormulario = new JPanel(new GridBagLayout());
+    panelFormulario.setOpaque(false);
+
+    GridBagConstraints labelGbc = new GridBagConstraints();
+    labelGbc.anchor = GridBagConstraints.EAST;   // Etiquetas alineadas a la derecha (para que queden cerca del campo)
+    labelGbc.insets = new Insets(25, 50, 25, 20);
+    labelGbc.weightx = 0;
+
+    GridBagConstraints fieldGbc = new GridBagConstraints();
+    fieldGbc.fill = GridBagConstraints.HORIZONTAL;
+    fieldGbc.insets = new Insets(25, 0, 25, 50);
+    fieldGbc.weightx = 1.0;
+
+    // Usuario
+    lblPrimerUsuario.setFont(new Font("Arial Black", Font.BOLD, 36));
+    lblPrimerUsuario.setForeground(Color.WHITE);
+    labelGbc.gridx = 0;
+    labelGbc.gridy = 0;
+    panelFormulario.add(lblPrimerUsuario, labelGbc);
+
+    txtUsuario.setFont(new Font("Arial", Font.PLAIN, 32));
+    txtUsuario.setPreferredSize(new Dimension(300, 50));
+    txtUsuario.setBackground(Color.WHITE);
+    fieldGbc.gridx = 1;
+    fieldGbc.gridy = 0;
+    panelFormulario.add(txtUsuario, fieldGbc);
+
+    // Contraseña
+    lblContrasenia.setFont(new Font("Arial Black", Font.BOLD, 36));
+    lblContrasenia.setForeground(Color.WHITE);
+    labelGbc.gridx = 0;
+    labelGbc.gridy = 1;
+    panelFormulario.add(lblContrasenia, labelGbc);
+
+    jPContrasenia.setFont(new Font("Arial", Font.PLAIN, 32));
+    jPContrasenia.setPreferredSize(new Dimension(300, 50));
+    jPContrasenia.setBackground(Color.WHITE);
+    fieldGbc.gridx = 1;
+    fieldGbc.gridy = 1;
+    panelFormulario.add(jPContrasenia, fieldGbc);
+
+    // Agregar panel formulario al centro
+    gbc.gridy = 1;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.insets = new Insets(80, 0, 50, 0);
+    getContentPane().add(panelFormulario, gbc);
+
+    // === MENSAJE DE ERROR ===
+    lblMensajeError.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblMensajeError.setForeground(Color.RED);
+    lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
+    lblMensajeError.setVisible(false);
+
+    gbc.gridy = 2;
+    gbc.insets = new Insets(0, 0, 40, 0);
+    getContentPane().add(lblMensajeError, gbc);
+
+    //  BOTÓN DE ANCHO NORMAL solo lo que ocupa el texto
+    btnCrearPrimerAdministrador.setFont(new Font("Arial Black", Font.BOLD, 36));
+    btnCrearPrimerAdministrador.setBackground(new Color(46, 204, 113));
+    btnCrearPrimerAdministrador.setForeground(Color.WHITE);
+    btnCrearPrimerAdministrador.setFocusPainted(false);
+    // Sin setPreferredSize → el botón toma el tamaño natural del texto (ancho normal)
+
+    gbc.gridy = 3;
+    gbc.insets = new Insets(0, 0, 100, 0);
+    gbc.anchor = GridBagConstraints.CENTER;
+    getContentPane().add(btnCrearPrimerAdministrador, gbc);
+
+    // Refrescar
+    revalidate();
+    repaint();
     }
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
