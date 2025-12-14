@@ -6,17 +6,19 @@ package Vista;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 
 /**
  *
@@ -37,152 +39,128 @@ public class VistaVerFactura extends javax.swing.JFrame {
          this.cliente = cliente;
         this.detalle = detalle;
         this.total = total;
-        cargarDatos();
         
-  
-        // === ESTILO PROFESIONAL ===
-        // Pantalla completa
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Fondo oscuro
-        getContentPane().setBackground(new Color(30, 30, 40));
+    // CONFIGURACIÓN GENERAL 
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+    getContentPane().setBackground(new Color(30, 30, 40));
 
-        // Limpiar layout viejo de NetBeans
-        getContentPane().removeAll();
-        getContentPane().setLayout(new GridBagLayout());
+    //  REMOVER LAYOUT ANTIGUO 
+    getContentPane().removeAll();
+    getContentPane().setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 40, 10, 40);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 20, 15, 20);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
+    // TÍTULO 
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 70));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+    gbc.gridx = 0; gbc.gridy = 0;
+    gbc.gridwidth = 1;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
+    getContentPane().add(lblTitulo, gbc);
 
-        // === TÍTULO GRANDE ===
-        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+    //  CLIENTE Y FECHA 
+    JPanel panelInfo = new JPanel();
+    panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.X_AXIS));
+    panelInfo.setOpaque(false);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        getContentPane().add(lblTitulo, gbc);
+    lblCliente.setFont(new Font("Arial Black", Font.BOLD, 36));
+    lblCliente.setForeground(Color.WHITE);
+    lblCliente.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panelInfo.add(Box.createHorizontalGlue());
+    panelInfo.add(lblCliente);
 
-        // === INFORMACIÓN CLIENTE Y FECHA ===
-        lblCliente.setFont(new Font("Arial Black", Font.BOLD, 36));
-        lblCliente.setForeground(Color.WHITE);
-        lblCliente.setText("Cliente: " + (cliente != null ? cliente : "Desconocido"));
+    panelInfo.add(Box.createHorizontalStrut(50));
 
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(30, 100, 10, 0);
-        getContentPane().add(lblCliente, gbc);
+    lblFechaHora.setFont(new Font("Arial Black", Font.BOLD, 36));
+    lblFechaHora.setForeground(Color.WHITE);
+    lblFechaHora.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    panelInfo.add(lblFechaHora);
+    panelInfo.add(Box.createHorizontalGlue());
 
-        lblFechaHora.setFont(new Font("Arial Black", Font.BOLD, 36));
-        lblFechaHora.setForeground(Color.WHITE);
-        lblFechaHora.setText("Fecha: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
+    getContentPane().add(panelInfo, gbc);
 
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.insets = new Insets(30, 0, 10, 100);
-        getContentPane().add(lblFechaHora, gbc);
+    //  DETALLE VENTA 
+    lblDetalleVenta.setFont(new Font("Arial Black", Font.BOLD, 45));
+    lblDetalleVenta.setForeground(Color.WHITE);
+    lblDetalleVenta.setHorizontalAlignment(JLabel.CENTER);
+    gbc.gridy = 2;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    getContentPane().add(lblDetalleVenta, gbc);
 
-        // === DETALLE VENTA ===
-        lblDetalleVenta.setFont(new Font("Arial Black", Font.BOLD, 40));
-        lblDetalleVenta.setForeground(Color.WHITE);
-        lblDetalleVenta.setHorizontalAlignment(JLabel.CENTER);
+    // TABLA 
+    tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 32));
+    tablaDetalle.setRowHeight(70);
+    tablaDetalle.setBackground(Color.WHITE);
+    tablaDetalle.setForeground(Color.BLACK);
+    tablaDetalle.setGridColor(Color.LIGHT_GRAY);
+    tablaDetalle.setShowGrid(true);
+    tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 34));
+    tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
+    tablaDetalle.getTableHeader().setForeground(Color.WHITE);
+    tablaDetalle.getTableHeader().setReorderingAllowed(false);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(40, 0, 20, 0);
-        getContentPane().add(lblDetalleVenta, gbc);
-        
-        // === TABLA DETALLE VENTA ===
-        tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 28));
-        tablaDetalle.setRowHeight(60);
-        tablaDetalle.setBackground(Color.WHITE);
-        tablaDetalle.setForeground(Color.BLACK);
-        tablaDetalle.setGridColor(Color.LIGHT_GRAY);
-        tablaDetalle.setShowGrid(true);
+    ScrollDetalleFactura.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 4));
+    ScrollDetalleFactura.setViewportView(tablaDetalle);
+    ScrollDetalleFactura.setMinimumSize(new Dimension(1200, 250)); // ← Más baja
 
-        tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 32));
-        tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
-        tablaDetalle.getTableHeader().setForeground(Color.WHITE);
-        tablaDetalle.getTableHeader().setReorderingAllowed(false);
+    gbc.gridy = 3;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 1.0;
+    gbc.weighty = 0.6;
+    getContentPane().add(ScrollDetalleFactura, gbc);
 
-        // Definir columnas explícitamente
-        String[] columnas = {"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"};
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
-        tablaDetalle.setModel(modelo);
+    
+    // TOTAL A LA IZQUIERDA 
+    JPanel panelTotal = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+    panelTotal.setOpaque(false);
 
-        // Cargar los datos reales o una fila de ejemplo
-        if (detalle != null && !detalle.isEmpty()) {
-            for (Modelo.DetalleFacturaModelo item : detalle) {
-                String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-                modelo.addRow(new Object[]{
-                    item.getNombreProducto(),
-                    item.getCantidad(),
-                    String.format("%.2f", item.getPrecioUnitario()),
-                    descuentoStr,
-                    String.format("%.2f", item.getSubtotal())
-                });
-            }
-        } else {
-            modelo.addRow(new Object[]{"-", "-", "-", "-", "-"});
-        }
+    lblTotal.setFont(new Font("Arial Black", Font.BOLD, 50));
+    lblTotal.setForeground(Color.WHITE);
+    panelTotal.add(lblTotal);
 
-        // Forzar que el JScrollPane tenga tamaño visible
-        jScrollPane1.setPreferredSize(new Dimension(1200, 300)); // ← Altura fija de 300px
-        jScrollPane1.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
+    txtTotal.setFont(new Font("Arial Black", Font.BOLD, 50));
+    txtTotal.setForeground(Color.WHITE);
+    txtTotal.setBackground(new Color(30, 30, 40));
+    txtTotal.setHorizontalAlignment(JTextField.CENTER);
+    txtTotal.setEditable(false);
+    txtTotal.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
+    txtTotal.setPreferredSize(new Dimension(200, 60)); // ← Un poco más pequeño
+    panelTotal.add(txtTotal);
 
-        gbc.gridy = 3;
-        gbc.insets = new Insets(0, 100, 40, 100);
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weighty = 0.5; // ← La tabla ocupa el 50% del espacio vertical
-        getContentPane().add(jScrollPane1, gbc);
+    gbc.gridy = 4;
+    gbc.weighty = 0.05;
+    gbc.fill = GridBagConstraints.HORIZONTAL; // ← Ocupa todo el ancho
+    gbc.anchor = GridBagConstraints.WEST;     // ← Pegado a la izquierda
+    getContentPane().add(panelTotal, gbc);
 
-        // === TOTAL GRANDE ===
-        JPanel panelTotal = new JPanel();
-        panelTotal.setOpaque(false);
+   //  BOTÓN ACEPTAR 
+    btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 36));
+    btnAceptar.setBackground(new Color(46, 204, 113));
+    btnAceptar.setForeground(Color.WHITE);
+    btnAceptar.setFocusPainted(false);
+    btnAceptar.setPreferredSize(new Dimension(280, 70)); // Ancho fijo de 280px
 
-        lblTotal.setFont(new Font("Arial Black", Font.BOLD, 48));
-        lblTotal.setForeground(Color.YELLOW);
-        lblTotal.setText("Total: ");
+    gbc.gridy = 5;
+    gbc.weighty = 0.02;
+    gbc.fill = GridBagConstraints.NONE; // ⭐️ ESTO ES CLAVE: evita que se estire
+    gbc.anchor = GridBagConstraints.WEST; // Alineado a la izquierda
+    gbc.insets = new Insets(5, 40, 30, 40);
+    getContentPane().add(btnAceptar, gbc);
+   
+    //  CARGAR DATOS 
+    cargarDatos();
 
-        txtTotal.setFont(new Font("Arial Black", Font.BOLD, 48));
-        txtTotal.setForeground(Color.YELLOW);
-        txtTotal.setBackground(Color.WHITE);
-        txtTotal.setHorizontalAlignment(JTextField.CENTER);
-        txtTotal.setPreferredSize(new Dimension(500, 90));
-        txtTotal.setEditable(false);
-        txtTotal.setText(String.format("%.2f", total));
+    //  FORZAR ACTUALIZACIÓN 
+    revalidate();
+    repaint();
 
-        panelTotal.add(lblTotal);
-        panelTotal.add(txtTotal);
-
-        gbc.gridy = 4;
-        gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(0, 0, 50, 0);
-        getContentPane().add(panelTotal, gbc);
-
-        // === BOTÓN ACEPTAR ===
-        btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 36));
-        btnAceptar.setBackground(new Color(46, 204, 113));  // Verde
-        btnAceptar.setForeground(Color.WHITE);
-        btnAceptar.setPreferredSize(new Dimension(500, 100));
-        btnAceptar.setFocusPainted(false);
-
-        gbc.gridy = 5;
-        gbc.insets = new Insets(0, 0, 100, 0);
-        getContentPane().add(btnAceptar, gbc);
-
-        // Refrescar
-        revalidate();
-        repaint();
     }
 
          // Método para cargar los datos en la vista
@@ -203,6 +181,7 @@ public class VistaVerFactura extends javax.swing.JFrame {
     }
     
            // Método para actualizar la tabla de detalle
+
     private void actualizarTablaDetalle() {
         // Crear el modelo de la tabla
         javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
@@ -210,19 +189,31 @@ public class VistaVerFactura extends javax.swing.JFrame {
         );
 
         // Llenar la tabla con los detalles
-        for (Modelo.DetalleFacturaModelo item : detalle) {
-            String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-            modelo.addRow(new Object[]{
-                item.getNombreProducto(),
-                item.getCantidad(),
-                String.format("%.2f", item.getPrecioUnitario()),
-                descuentoStr,
-                String.format("%.2f", item.getSubtotal())
-            });
+        if (detalle != null && !detalle.isEmpty()) {
+            for (Modelo.DetalleFacturaModelo item : detalle) {
+                String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+                modelo.addRow(new Object[]{
+                    item.getNombreProducto(),
+                    item.getCantidad(),
+                    String.format("%.2f", item.getPrecioUnitario()),
+                    descuentoStr,
+                    String.format("%.2f", item.getSubtotal())
+                });
+            }
+        } else {
+            modelo.addRow(new Object[]{"-", "-", "-", "-", "-"});
         }
 
         // Asignar el modelo a la tabla
         tablaDetalle.setModel(modelo);
+
+        // ️ Forzar que la tabla se redimensione y se vea completa
+        tablaDetalle.setPreferredScrollableViewportSize(new Dimension(800, 600));
+        tablaDetalle.setFillsViewportHeight(true);
+
+        // Refrescar el scrollpane
+        ScrollDetalleFactura.revalidate();
+        ScrollDetalleFactura.repaint();
     }
     
     // Método para establecer la vista de facturación
@@ -243,7 +234,7 @@ public class VistaVerFactura extends javax.swing.JFrame {
         lblFechaHora = new javax.swing.JLabel();
         lblDetalleVenta = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        ScrollDetalleFactura = new javax.swing.JScrollPane();
         tablaDetalle = new javax.swing.JTable();
         txtTotal = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
@@ -283,7 +274,7 @@ public class VistaVerFactura extends javax.swing.JFrame {
                 "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
             }
         ));
-        jScrollPane1.setViewportView(tablaDetalle);
+        ScrollDetalleFactura.setViewportView(tablaDetalle);
 
         txtTotal.setEditable(false);
 
@@ -301,33 +292,37 @@ public class VistaVerFactura extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDetalleVenta)
-                            .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ScrollDetalleFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDetalleVenta))
+                        .addGap(0, 280, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(229, 229, 229)
                         .addComponent(btnAceptar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(267, 267, 267)
-                        .addComponent(lblTitulo)))
-                .addContainerGap(137, Short.MAX_VALUE))
+                        .addComponent(lblTitulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTitulo)
                 .addGap(18, 18, 18)
                 .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,9 +330,9 @@ public class VistaVerFactura extends javax.swing.JFrame {
                 .addComponent(lblFechaHora)
                 .addGap(18, 18, 18)
                 .addComponent(lblDetalleVenta)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ScrollDetalleFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(103, 103, 103)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal)
                     .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -362,8 +357,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollDetalleFactura;
     private javax.swing.JButton btnAceptar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblDetalleVenta;
     private javax.swing.JLabel lblFechaHora;

@@ -13,7 +13,7 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 
 /**
  *
@@ -42,7 +42,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(20, 20, 20, 20);
 
-    // === TÍTULO ===
+    // TÍTULO 
     lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
     lblTitulo.setForeground(Color.WHITE);
     lblTitulo.setHorizontalAlignment(JLabel.CENTER);
@@ -53,7 +53,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     gbc.anchor = GridBagConstraints.CENTER;
     getContentPane().add(lblTitulo, gbc);
 
-    // === PANEL CENTRAL (etiquetas a la izquierda, campos al lado) ===
+    //  PANEL CENTRAL etiquetas a la izquierda, campos al lado
     JPanel panelFormulario = new JPanel(new GridBagLayout());
     panelFormulario.setOpaque(false);
 
@@ -102,7 +102,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     gbc.insets = new Insets(80, 0, 50, 0);
     getContentPane().add(panelFormulario, gbc);
 
-    // === MENSAJE DE ERROR ===
+    // MENSAJE DE ERROR 
     lblMensajeError.setFont(new Font("Arial Black", Font.BOLD, 32));
     lblMensajeError.setForeground(Color.RED);
     lblMensajeError.setHorizontalAlignment(JLabel.CENTER);

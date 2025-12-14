@@ -31,7 +31,7 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     grupoRol.add(RadioAdministrador);
     grupoRol.add(RadioCajero);
     
- // PANTALLA COMPLETA
+     // PANTALLA COMPLETA
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo profesional
@@ -128,7 +128,7 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     btnCancelar.setPreferredSize(new Dimension(350, 80));
 
     lblMensajeError.setFont(new Font("Arial", Font.BOLD, 26));
-    lblMensajeError.setForeground(Color.YELLOW);
+    lblMensajeError.setForeground(Color.RED);
     lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
 
     revalidate();

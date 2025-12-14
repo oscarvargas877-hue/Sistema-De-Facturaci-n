@@ -124,7 +124,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
     btnReabastecer.setBackground(new Color(46, 204, 113)); // Verde
     btnReabastecer.setForeground(Color.WHITE);
     gbc.insets = new Insets(10, 50, 10, 50);
-    gbc.fill = GridBagConstraints.NONE; // ← NO SE EXPANDE
+    gbc.fill = GridBagConstraints.NONE; //  NO SE EXPANDE
     panelCentral.add(btnReabastecer, gbc);
 
     // BOTÓN Atrás tamaño normal

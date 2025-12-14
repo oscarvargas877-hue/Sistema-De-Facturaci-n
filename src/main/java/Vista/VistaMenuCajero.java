@@ -41,9 +41,9 @@ public class VistaMenuCajero extends javax.swing.JFrame {
 
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(20, 20, 20, 20);
-    gbc.fill = GridBagConstraints.NONE;   // ← NO SE EXPANDEN HORIZONTALMENTE
-    gbc.weightx = 0.0;                   // ← NO OCUPAN TODO EL ANCHO
-    gbc.anchor = GridBagConstraints.CENTER; // ← CENTRADOS
+    gbc.fill = GridBagConstraints.NONE;   // NO SE EXPANDEN HORIZONTALMENTE
+    gbc.weightx = 0.0;                   // NO OCUPAN TODO EL ANCHO
+    gbc.anchor = GridBagConstraints.CENTER; //  CENTRADOS
 
     // Título grande y centrado
     Titulo.setFont(new Font("Arial Black", Font.BOLD, 60));
@@ -59,7 +59,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
     btnFacturacion.setFont(new Font("Arial Black", Font.BOLD, 36));
     btnFacturacion.setBackground(new Color(52, 152, 219));   // Azul vibrante
     btnFacturacion.setForeground(Color.WHITE);
-    btnFacturacion.setPreferredSize(new Dimension(500, 80)); // ← Ancho normal
+    btnFacturacion.setPreferredSize(new Dimension(500, 80)); //  Ancho normal
     btnFacturacion.setFocusPainted(false);
 
     gbc.gridy = 1;
@@ -70,7 +70,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
     btnCerrarSesion.setFont(new Font("Arial Black", Font.BOLD, 36));
     btnCerrarSesion.setBackground(new Color(231, 76, 60));   // Rojo
     btnCerrarSesion.setForeground(Color.WHITE);
-    btnCerrarSesion.setPreferredSize(new Dimension(400, 80)); // ← Ancho normal
+    btnCerrarSesion.setPreferredSize(new Dimension(400, 80)); // Ancho normal
     btnCerrarSesion.setFocusPainted(false);
 
     gbc.gridy = 2;

@@ -149,7 +149,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         this.controladorProductos = controlador;
     }
     
-    // Método para mostrar la lista de productos más vendidos en la tabla
+   
     // MÉTODO NUEVO MUESTRA TABLA GRÁFICO DE BARRAS
      public void mostrarProductosMasVendidos(java.util.List<Modelo.ProductoMasVendidoModelo> listaProductos) {
         // Crear el modelo de la tabla
