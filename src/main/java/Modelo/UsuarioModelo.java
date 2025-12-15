@@ -122,12 +122,13 @@ public class UsuarioModelo {
     }
 
     // Guarda este usuario en la base de datos (usado al registrar)
-    public void guardar() {
-        ConexionBDD conexionBDD = new ConexionBDD();
-        Connection conexion = conexionBDD.conectar();
-        if (conexion == null) {
-            return;
-        }
+ 
+    public void guardar() throws SQLException {
+    ConexionBDD conexionBDD = new ConexionBDD();
+    Connection conexion = conexionBDD.conectar();
+    if (conexion == null) {
+        throw new SQLException("No se pudo conectar a la base de datos.");
+    }
 
         try {
             CallableStatement llamada = conexion.prepareCall("{CALL sp_registrar_usuario(?, ?, ?)}");
@@ -135,8 +136,9 @@ public class UsuarioModelo {
             llamada.setString(2, this.contrasenia); // Ya está hasheada
             llamada.setString(3, this.rol);
             llamada.execute();
-        } catch (SQLException excepcion) {
-            excepcion.printStackTrace();
+        } catch (SQLException e) {
+            // Re-lanzar la excepción para que el controlador la maneje
+            throw e;
         } finally {
             try {
                 if (conexion != null && !conexion.isClosed()) {
@@ -144,9 +146,9 @@ public class UsuarioModelo {
                 }
             } catch (SQLException excepcion) {
                 excepcion.printStackTrace();
-            }
         }
     }
+}
 
     // Obtiene todos los usuarios (para gestión de usuarios)
     public static List<UsuarioModelo> obtenerTodosLosUsuarios() {

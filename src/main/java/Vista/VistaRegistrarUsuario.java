@@ -104,7 +104,7 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
 
     txtNombreUsuario.setFont(new Font("Arial", Font.PLAIN, 28));
     txtNombreUsuario.setPreferredSize(new Dimension(600, 60)); // Ancho normal
-    txtNombreUsuario.setHorizontalAlignment(JTextField.CENTER);
+    txtNombreUsuario.setHorizontalAlignment(JTextField.LEFT);
 
     jPContrasenia.setFont(new Font("Arial", Font.PLAIN, 28));
     jPContrasenia.setPreferredSize(new Dimension(600, 60)); // Ancho normal
