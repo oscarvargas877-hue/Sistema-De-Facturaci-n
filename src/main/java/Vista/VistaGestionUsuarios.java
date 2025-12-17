@@ -143,6 +143,8 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         }
 
         tablaUsuarios.setModel(modelo);
+        //PARA QUE LAS FILAS NO SEAN EDITABLES
+        tablaUsuarios.setDefaultEditor(Object.class, null);
     }
     
      // Método para obtener el ID del usuario seleccionado
@@ -177,7 +179,7 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
-        lblTitulo.setText("Gestión de Usuarios");
+        lblTitulo.setText("Gestión De Usuarios");
 
         lblListaUsuarios.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblListaUsuarios.setForeground(new java.awt.Color(0, 102, 102));

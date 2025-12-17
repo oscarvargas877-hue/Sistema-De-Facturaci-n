@@ -155,7 +155,11 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
 
         // Asignar el modelo a la tabla
         tablaHistorial.setModel(modelo);
+        //PARA QUE LAS FILAS NO SEAN EDITABLES
+        tablaHistorial.setDefaultEditor(Object.class, null);
     }
+    
+     
     
     // Método para mostrar mensajes de error
     private void mostrarMensajeError(String mensaje) {

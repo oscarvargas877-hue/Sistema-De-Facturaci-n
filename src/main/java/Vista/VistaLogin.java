@@ -149,7 +149,7 @@ public class VistaLogin extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
-        lblTitulo.setText("Inicio de Sesión");
+        lblTitulo.setText("Inicio De Sesión");
 
         jPContrasenia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

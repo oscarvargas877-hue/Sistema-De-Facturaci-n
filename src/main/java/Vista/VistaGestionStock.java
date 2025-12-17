@@ -178,7 +178,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
-        lblTitulo.setText("Gestión de Stock");
+        lblTitulo.setText("Gestión De Stock");
 
         lblListaProductos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblListaProductos.setForeground(new java.awt.Color(0, 102, 102));
@@ -196,7 +196,15 @@ public class VistaGestionStock extends javax.swing.JFrame {
             new String [] {
                 "Código", "Nombre", "Precio", "Stock"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaProductos);
 
         lblCodigo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
@@ -385,6 +393,11 @@ public class VistaGestionStock extends javax.swing.JFrame {
                hayStockBajo = true;
            }
        }
+       
+       //PARA QUE LAS FILAS NO SEAN EDITABLES
+       modeloTabla.isCellEditable(0, 0); 
+       TablaProductos.setDefaultEditor(Object.class, null); 
+     
 
        // Asignar el modelo a la tabla
        TablaProductos.setModel(modeloTabla);

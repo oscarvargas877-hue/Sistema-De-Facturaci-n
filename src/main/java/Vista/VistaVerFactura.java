@@ -206,6 +206,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
         // Asignar el modelo a la tabla
         tablaDetalle.setModel(modelo);
+        //PARA QUE LAS FILAS NO SEAN EDITABLES
+        tablaDetalle.setDefaultEditor(Object.class, null);
 
         // ️ Forzar que la tabla se redimensione y se vea completa
         tablaDetalle.setPreferredScrollableViewportSize(new Dimension(800, 600));

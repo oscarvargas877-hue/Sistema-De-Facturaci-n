@@ -244,7 +244,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
-        lblTitulo.setText("EDITAR USUARIO");
+        lblTitulo.setText("Editar Usuario");
 
         lblIdUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblIdUsuario.setForeground(new java.awt.Color(0, 102, 102));
@@ -350,7 +350,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNombre)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

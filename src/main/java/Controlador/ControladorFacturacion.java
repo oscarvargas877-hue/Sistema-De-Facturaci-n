@@ -102,6 +102,16 @@ public class ControladorFacturacion {
         vistaFacturacion.dispose();
         vistaMenuCajero.setVisible(true);
     }
+    
+         public void limpiarVenta() {
+        // Limpiar la lista de detalles en el modelo
+        listaDetalles.clear();
+
+        // Actualizar la vista usando el método público
+        java.awt.EventQueue.invokeLater(() -> {
+            vistaFacturacion.limpiarCamposParaNuevaVenta();
+        });
+    }
 
     private double calcularTotalActual() {
         double total = 0.0;
@@ -110,4 +120,5 @@ public class ControladorFacturacion {
         }
         return total;
     }
+    
 }

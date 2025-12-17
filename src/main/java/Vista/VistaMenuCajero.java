@@ -106,7 +106,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
 
         Titulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         Titulo.setForeground(new java.awt.Color(0, 102, 102));
-        Titulo.setText("Menú del cajero");
+        Titulo.setText("Menú Del Cajero");
 
         btnFacturacion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnFacturacion.setForeground(new java.awt.Color(0, 102, 102));

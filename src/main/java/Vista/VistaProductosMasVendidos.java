@@ -167,6 +167,8 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
 
         // Asignar el modelo a la tabla
         tablaProductos.setModel(modelo);
+       //PARA QUE LAS FILAS NO SEAN EDITABLES
+        tablaProductos.setDefaultEditor(Object.class, null);
         //  LLAMAR AL MÉTODO QUE CREA EL GRÁFICO
         actualizarGraficoBarras(listaProductos);
     }
@@ -201,7 +203,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         // ZOOM QUE SÍ FUNCIONA EN JFreeChart 1.5.3
         ChartPanel chartPanel = new ChartPanel(chart);
 
-        // ESTAS SON LAS LÍNEAS CORRECTAS (NO DAN ERROR)
+        // ESTAS SON LAS LÍNEAS CORRECTAS 
         chartPanel.setMouseWheelEnabled(true);           // RUEDA DEL MOUSE = ZOOM
         chartPanel.setRangeZoomable(true);               // Permite zoom vertical
         chartPanel.setDomainZoomable(true);              // Permite zoom horizontal

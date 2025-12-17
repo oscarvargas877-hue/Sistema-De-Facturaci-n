@@ -167,12 +167,12 @@ private javax.swing.JDialog dialogoEspera;
     btnFinalizarVenta.setPreferredSize(new Dimension(300, 50)); //  Más angosto
     panelBotones.add(btnFinalizarVenta);
 
-    btnCancelar.setFont(new Font("Arial Black", Font.BOLD, 22));
-    btnCancelar.setBackground(new Color(231, 76, 60));
-    btnCancelar.setForeground(Color.WHITE);
-    btnCancelar.setFocusPainted(false);
-    btnCancelar.setPreferredSize(new Dimension(200, 50));
-    panelBotones.add(btnCancelar);
+    btnBorrar.setFont(new Font("Arial Black", Font.BOLD, 22));
+    btnBorrar.setBackground(new Color(231, 76, 60));
+    btnBorrar.setForeground(Color.WHITE);
+    btnBorrar.setFocusPainted(false);
+    btnBorrar.setPreferredSize(new Dimension(200, 50));
+    panelBotones.add(btnBorrar);
 
     btnAtras.setFont(new Font("Arial Black", Font.BOLD, 22));
     btnAtras.setBackground(new Color(52, 73, 94));
@@ -233,6 +233,9 @@ private javax.swing.JDialog dialogoEspera;
 
         TablaDetalleVenta.setModel(modelo);
         txtTotal.setText(String.format("%.2f", total));
+        //PARA QUE LAS FILAS NO SEAN EDITABLES
+        TablaDetalleVenta.setDefaultEditor(Object.class, null);
+        txtTotal.setText(String.format("%.2f", total));
     }
       // Método para mostrar mensaje de espera
     public void mostrarMensajeEspera(String mensaje) {
@@ -274,7 +277,7 @@ private javax.swing.JDialog dialogoEspera;
         lblTotal = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         btnFinalizarVenta = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
         lblProductos = new javax.swing.JLabel();
         ComboProductos = new javax.swing.JComboBox<>();
@@ -327,12 +330,12 @@ private javax.swing.JDialog dialogoEspera;
             }
         });
 
-        btnCancelar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(0, 102, 102));
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnBorrar.setForeground(new java.awt.Color(0, 102, 102));
+        btnBorrar.setText("Borrar");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnBorrarActionPerformed(evt);
             }
         });
 
@@ -408,22 +411,23 @@ private javax.swing.JDialog dialogoEspera;
                                     .addComponent(txtCantidad)
                                     .addComponent(btnAgregarProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(75, 75, 75)
-                                .addComponent(btnFinalizarVenta)
-                                .addGap(42, 42, 42)
-                                .addComponent(btnCancelar))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lblDetalleVenta)
-                            .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(99, 99, 99)
+                                    .addComponent(btnFinalizarVenta)
+                                    .addGap(36, 36, 36)
+                                    .addComponent(btnBorrar)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnAtras))
+                                .addComponent(ScrollDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(247, 247, 247)
                         .addComponent(lblTitulo)))
-                .addGap(1150, 1150, 1150)
-                .addComponent(btnAtras)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(1201, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,16 +459,12 @@ private javax.swing.JDialog dialogoEspera;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal)
                     .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(btnAtras))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnFinalizarVenta)
-                            .addComponent(btnCancelar))))
-                .addContainerGap(331, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnFinalizarVenta)
+                    .addComponent(btnBorrar)
+                    .addComponent(btnAtras))
+                .addContainerGap(349, Short.MAX_VALUE))
         );
 
         pack();
@@ -529,12 +529,13 @@ private javax.swing.JDialog dialogoEspera;
         }
     }//GEN-LAST:event_btnFinalizarVentaActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
+      // Limpiar la venta actual para empezar una nueva
         if (controladorFacturacion != null) {
-        controladorFacturacion.volverAlMenu();
-    }
-    }//GEN-LAST:event_btnCancelarActionPerformed
+            controladorFacturacion.limpiarVenta();
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
@@ -542,7 +543,29 @@ private javax.swing.JDialog dialogoEspera;
         controladorFacturacion.volverAlMenu();
     }
     }//GEN-LAST:event_btnAtrasActionPerformed
-
+    
+     // Limpia todos los campos para empezar una nueva venta
+     
+    public void limpiarCamposParaNuevaVenta() {
+        txtCliente.setText("");
+        txtCantidad.setText("");
+        txtTotal.setText("0.00");
+        
+        // Limpiar la tabla (modelo vacío)
+        javax.swing.table.DefaultTableModel modeloVacio = new javax.swing.table.DefaultTableModel(
+            new Object[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+        );
+        TablaDetalleVenta.setModel(modeloVacio);
+        
+        // Seleccionar el primer producto si hay alguno
+        if (ComboProductos.getItemCount() > 0) {
+            ComboProductos.setSelectedIndex(0);
+        }
+        
+        // Poner foco en el campo cliente o cantidad para mayor comodidad
+        txtCliente.requestFocus();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -584,7 +607,7 @@ private javax.swing.JDialog dialogoEspera;
     private javax.swing.JTable TablaDetalleVenta;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnAtras;
-    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnFinalizarVenta;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblCliente;

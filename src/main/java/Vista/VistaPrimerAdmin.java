@@ -154,7 +154,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
-        lblTitulo.setText("Crear primer administrador ");
+        lblTitulo.setText("Crear Primer Administrador ");
 
         lblPrimerUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblPrimerUsuario.setForeground(new java.awt.Color(0, 102, 102));
