@@ -52,4 +52,43 @@ public class ServicioHistorial {
         }
         return historial;
     }
+    
+    
+        // Método para obtener el detalle de una factura específica usando el SP
+        public static List<DetalleFacturaModelo> obtenerDetalleFactura(int idFactura) {
+        List<DetalleFacturaModelo> detalle = new ArrayList<>();
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+
+        if (conexion == null) {
+            return detalle; // Lista vacía si no hay conexión
+        }
+
+        try {
+            CallableStatement stmt = conexion.prepareCall("{CALL sp_obtener_detalle_factura(?)}");
+            stmt.setInt(1, idFactura);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                DetalleFacturaModelo item = new DetalleFacturaModelo();
+                item.setNombreProducto(rs.getString("producto"));
+                item.setCantidad(rs.getInt("cantidad"));
+                item.setPrecioUnitario(rs.getDouble("precio"));
+                item.setDescuentoAplicado(rs.getDouble("descuento_porcentaje") / 100); // Convertir 10% → 0.10
+                item.setSubtotal(rs.getDouble("subtotal"));
+                detalle.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return detalle;
+    }
 }

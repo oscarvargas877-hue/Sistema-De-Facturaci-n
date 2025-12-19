@@ -1,6 +1,7 @@
 Vista\VistaRegistrarUsuario$5.class
 Vista\VistaMenuAdmin$4.class
 Vista\VistaPrimerAdmin$1.class
+Vista\VistaGestionStock$7.class
 Vista\VistaProductosMasVendidos$3.class
 Vista\VistaHistorialVentas$2.class
 Controlador\ControladorGestionStock.class
@@ -77,6 +78,7 @@ Vista\VistaMenuAdmin.class
 Modelo\HistorialVentaModelo.class
 Vista\VistaLogin$1.class
 Vista\VistaProductosMasVendidos.class
+Vista\VistaHistorialVentas$3.class
 Vista\VistaLogin.class
 Vista\VistaRegistrarUsuario$2.class
 Controlador\ControladorPrimerAdmin.class

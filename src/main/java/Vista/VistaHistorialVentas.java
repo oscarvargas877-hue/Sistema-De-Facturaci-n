@@ -157,6 +157,27 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         tablaHistorial.setModel(modelo);
         //PARA QUE LAS FILAS NO SEAN EDITABLES
         tablaHistorial.setDefaultEditor(Object.class, null);
+                // =============================================
+        // DOBLE CLIC EN LA TABLA PARA VER DETALLE DE FACTURA
+        // =============================================
+        tablaHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {  // Detecta doble clic
+                    int fila = tablaHistorial.getSelectedRow();
+                    if (fila != -1) {  // Si hay una fila seleccionada
+                        int idFactura = (Integer) tablaHistorial.getValueAt(fila, 0);  // Columna 0 = ID de factura
+                        if (controladorHistorial != null) {
+                            controladorHistorial.mostrarDetalleFactura(idFactura);
+                        }
+                    }
+                }
+            }
+        });
+        
+        
+        
+        
     }
     
      
