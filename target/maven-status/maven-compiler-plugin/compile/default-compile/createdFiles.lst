@@ -66,6 +66,7 @@ Controlador\ControladorLogin.class
 Vista\VistaMenuCajero$3.class
 Vista\VistaFacturacion$4.class
 Vista\VistaPrimerAdmin$2.class
+Modelo\ClienteModelo.class
 Vista\VistaGestionUsuarios$5.class
 BDD\ConexionBDD.class
 Controlador\ControladorFacturacion.class

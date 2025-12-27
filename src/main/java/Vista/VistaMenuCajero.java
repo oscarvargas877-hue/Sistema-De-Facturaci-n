@@ -25,7 +25,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
      */
     public VistaMenuCajero() {
         initComponents();
-        
+    // Si cerramos un diálogo de configuración, no queremos cerrar todo el sistema 
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     pack();
         
@@ -33,7 +33,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo oscuro profesional
-    getContentPane().setBackground(new Color(30, 30, 40));
+    getContentPane().setBackground(new Color(70, 130, 180));
 
     //  REDISEÑO COMPLETO CON GRIDBAGLAYOUT 
     getContentPane().removeAll();  // Limpiamos el GroupLayout viejo

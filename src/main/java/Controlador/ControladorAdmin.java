@@ -49,7 +49,7 @@ public class ControladorAdmin {
      vistaMenuAdmin.dispose();
      VistaHistorialVentas vista = new VistaHistorialVentas();
      ControladorHistorialVentas controlador = new ControladorHistorialVentas(vista, vistaMenuAdmin);
-     vista.establecerControlador(controlador); // ← ¡Este método debe existir!
+     vista.establecerControlador(controlador);
      vista.setVisible(true);
      controlador.cargarHistorial(); // Cargar los datos al abrir
     }
@@ -59,9 +59,9 @@ public class ControladorAdmin {
        vistaMenuAdmin.dispose();
        VistaProductosMasVendidos vista = new VistaProductosMasVendidos();
        ControladorProductosMasVendidos controlador = new ControladorProductosMasVendidos(vista, vistaMenuAdmin);
-       vista.establecerControlador(controlador); // ← ¡Asignar el controlador!
+       vista.establecerControlador(controlador); // Asignar el controlador
        vista.setVisible(true);
-       controlador.cargarProductosMasVendidos(); // ← Cargar los datos al abrir
+       controlador.cargarProductosMasVendidos(); //  Cargar los datos al abrir
     }
     
         public void abrirVentanaGestionUsuarios() {

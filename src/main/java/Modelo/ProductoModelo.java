@@ -40,7 +40,7 @@ public class ProductoModelo {
         return producto != null && producto.getCantidadStock() >= cantidadRequerida;
     }
 
-        // Método para obtener la cantidad disponible de un producto (usa idProducto)
+        // Método para obtener la cantidad disponible de un producto
     public static int obtenerStockDisponible(int idProducto) {
         ProductoModelo producto = obtenerProductoPorId(idProducto);
         return producto != null ? producto.getCantidadStock() : 0;
@@ -147,7 +147,7 @@ public class ProductoModelo {
             }
         }
     }
-        // Método para obtener un producto por su nombre (para facturación)
+    // Método para obtener un producto por su nombre (para facturación)
     public static ProductoModelo obtenerProductoPorNombre(String nombre) {
         List<ProductoModelo> productos = obtenerTodosLosProductos();
         for (ProductoModelo p : productos) {

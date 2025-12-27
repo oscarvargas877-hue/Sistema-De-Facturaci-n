@@ -31,7 +31,7 @@ public class ControladorLogin {
                 menuAdmin.establecerControlador(controladorAdmin);
                 menuAdmin.setVisible(true);
             } else if ("cajero".equals(usuario.getRol())) {
-                // ← PASAR EL ID DEL USUARIO LOGUEADO
+                // PASAR EL ID DEL USUARIO LOGUEADO
                 VistaMenuCajero menuCajero = new VistaMenuCajero();
                 ControladorCajero controladorCajero = new ControladorCajero(menuCajero, usuario.getIdUsuario());
                 menuCajero.establecerControlador(controladorCajero);
@@ -57,7 +57,7 @@ public class ControladorLogin {
         }
     }
 
-    public void cerrarAplicacion() {
+    public void cerrarSistema() {
         System.exit(0);
     }
 }

@@ -35,7 +35,7 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo profesional
-    getContentPane().setBackground(new Color(52, 73, 94));
+    getContentPane().setBackground(new Color(70, 130, 180));
 
     // PANEL CENTRAL PARA CENTRAR TODO
     JPanel panelCentral = new JPanel();

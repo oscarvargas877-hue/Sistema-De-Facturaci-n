@@ -42,7 +42,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Fondo profesional
-        getContentPane().setBackground(new Color(52, 73, 94));
+        getContentPane().setBackground(new Color(70, 130, 180));
 
         // Panel central para centrar todo
         JPanel panelCentral = new JPanel(new GridBagLayout());

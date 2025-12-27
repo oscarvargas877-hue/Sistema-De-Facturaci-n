@@ -37,7 +37,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Fondo profesional
-        getContentPane().setBackground(new Color(30, 30, 40));
+        getContentPane().setBackground(new Color(70, 130, 180));
 
         // Panel central
         JPanel panelCentral = new JPanel();

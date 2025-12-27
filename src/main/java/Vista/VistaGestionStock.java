@@ -33,7 +33,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo profesional
-    getContentPane().setBackground(new Color(30, 30, 40));
+    getContentPane().setBackground(new Color(70, 130, 180));
 
     // Panel central con GridBagLayout
     JPanel panelCentral = new JPanel(new GridBagLayout());

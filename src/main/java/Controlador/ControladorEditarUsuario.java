@@ -8,7 +8,7 @@ package Controlador;
 
 import Modelo.UsuarioModelo;
 import Vista.VistaEditarUsuario;
-import Vista.VistaGestionUsuarios;
+
 
 // Controlador para la edición de usuarios (HU003)
 public class ControladorEditarUsuario {

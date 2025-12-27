@@ -35,7 +35,7 @@ public class VistaLogin extends javax.swing.JFrame {
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo profesional
-    getContentPane().setBackground(new Color(52, 73, 94));
+    getContentPane().setBackground(new Color(70, 130, 180));
 
     // ESTILOS BRUTALES (sin tocar el layout)
     lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
@@ -247,9 +247,9 @@ public class VistaLogin extends javax.swing.JFrame {
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         // TODO add your handling code here:
-        // Llamar al controlador para cerrar la aplicación
+        // Llamar al controlador para cerrar el sistema
         if (controladorLogin != null) {
-            controladorLogin.cerrarAplicacion();
+            controladorLogin.cerrarSistema();
         }
     }//GEN-LAST:event_btnCerrarActionPerformed
 

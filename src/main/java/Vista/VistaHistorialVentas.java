@@ -32,7 +32,7 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Fondo profesional
-        getContentPane().setBackground(new Color(30, 30, 40));
+        getContentPane().setBackground(new Color(70, 130, 180));
 
         // Panel central
         JPanel panelCentral = new JPanel();
@@ -157,9 +157,9 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         tablaHistorial.setModel(modelo);
         //PARA QUE LAS FILAS NO SEAN EDITABLES
         tablaHistorial.setDefaultEditor(Object.class, null);
-                // =============================================
+               
         // DOBLE CLIC EN LA TABLA PARA VER DETALLE DE FACTURA
-        // =============================================
+     
         tablaHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -174,10 +174,7 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
                 }
             }
         });
-        
-        
-        
-        
+             
     }
     
      

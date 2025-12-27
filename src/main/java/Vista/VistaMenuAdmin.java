@@ -31,9 +31,9 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Fondo profesional
-        getContentPane().setBackground(new Color(30, 30, 40));
+        getContentPane().setBackground(new Color(70, 130, 180));
 
-        // ESTILOS BRUTALES (sin quitar nada)
+        // ESTILOS BRUTALES 
         lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setHorizontalAlignment(JLabel.CENTER);

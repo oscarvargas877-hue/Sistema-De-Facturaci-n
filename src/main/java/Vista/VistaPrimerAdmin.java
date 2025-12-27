@@ -33,7 +33,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo oscuro
-    getContentPane().setBackground(new Color(30, 30, 40));
+    getContentPane().setBackground(new Color(70, 130, 180));
 
     // Limpiar layout viejo
     getContentPane().removeAll();

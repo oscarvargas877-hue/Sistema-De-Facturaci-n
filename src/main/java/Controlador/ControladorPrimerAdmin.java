@@ -20,7 +20,7 @@ public class ControladorPrimerAdmin {
         this.vistaPrimerAdmin = vista;
     }
 
-    // Método llamado cuando el usuario hace clic en "Crear Primer Administrador"
+    // Método llamado cuando el usuario hace clic en Crear Primer Administrador
     public void crearPrimerAdministrador(String nombreUsuario, String contrasenia) {
         // Creamos un nuevo objeto UsuarioModelo con rol fijo "administrador"
         UsuarioModelo nuevoAdmin = new UsuarioModelo(nombreUsuario, contrasenia, "administrador");

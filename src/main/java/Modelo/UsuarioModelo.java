@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-// Modelo/UsuarioModelo.java
+
 package Modelo;
 
 import BDD.ConexionBDD;
@@ -102,8 +102,7 @@ public class UsuarioModelo {
                 usuario.setIdUsuario(id);
                 usuario.setNombreUsuario(nombreUsuario);
                 usuario.setRol(rol);
-                // Nota: no cargamos 'activo' aquí porque el login solo valida credenciales
-                // Pero si necesitas verificar 'activo', deberás modificar el SP
+              
                 return usuario;
             }
 

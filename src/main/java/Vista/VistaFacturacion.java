@@ -33,172 +33,62 @@ private javax.swing.JDialog dialogoEspera;
     public VistaFacturacion() {
         initComponents();
  
-     
-     // CONFIGURACIÓN GENERAL 
+     // CONFIGURACIÓN GENERAL
     setExtendedState(JFrame.MAXIMIZED_BOTH);
-    getContentPane().setBackground(new Color(30, 30, 40));
-    getContentPane().removeAll();
-    getContentPane().setLayout(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.insets = new Insets(10, 40, 10, 40);
+    getContentPane().setBackground(new Color(70, 130, 180));
 
-    // TÍTULO CENTRADO Y GRANDE 
+    // ESTILOS PERSONALIZADOS (puedes mantenerlos, pero ahora aplicados a componentes existentes)
     lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 50));
     lblTitulo.setForeground(Color.WHITE);
     lblTitulo.setHorizontalAlignment(JLabel.CENTER);
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.gridwidth = 3;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.weightx = 1.0;
-    getContentPane().add(lblTitulo, gbc);
 
-    //  CLIENTE 
-    lblCliente.setFont(new Font("Arial Black", Font.BOLD, 35));
-    lblCliente.setForeground(Color.WHITE);
-    gbc.gridy = 1;
-    gbc.gridx = 0;
-    gbc.gridwidth = 1;
-    gbc.anchor = GridBagConstraints.WEST;
-    getContentPane().add(lblCliente, gbc);
+    // Ejemplo: estilizar campos de cliente
+    txtCedula.setFont(new Font("Arial", Font.PLAIN, 24));
+    txtNombresApellidos.setFont(new Font("Arial", Font.PLAIN, 24));
+    txtDireccion.setFont(new Font("Arial", Font.PLAIN, 24));
 
-    txtCliente.setFont(new Font("Arial", Font.PLAIN, 24));
-    txtCliente.setPreferredSize(new Dimension(300, 40));
-    gbc.gridx = 1;
-    getContentPane().add(txtCliente, gbc);
+    // Botón Buscar
+    btnBuscarCedula.setFont(new Font("Arial Black", Font.BOLD, 18));
+    btnBuscarCedula.setBackground(new Color(0, 102, 102));
+    btnBuscarCedula.setForeground(Color.WHITE);
 
-    //  PRODUCTO 
-    lblProductos.setFont(new Font("Arial Black", Font.BOLD, 35));
-    lblProductos.setForeground(Color.WHITE);
-    gbc.gridy = 2;
-    gbc.gridx = 0;
-    getContentPane().add(lblProductos, gbc);
+    // Acción al hacer clic en Buscar o Enter en cédula
+    btnBuscarCedula.addActionListener(e -> {
+        if (controladorFacturacion != null) {
+            controladorFacturacion.buscarClientePorCedula();
+        }
+    });
 
-    ComboProductos.setFont(new Font("Arial", Font.PLAIN, 24));
-    ComboProductos.setPreferredSize(new Dimension(300, 40));
-    gbc.gridx = 1;
-    getContentPane().add(ComboProductos, gbc);
+    txtCedula.addActionListener(e -> {
+        if (controladorFacturacion != null) {
+            controladorFacturacion.buscarClientePorCedula();
+        }
+    });
 
-    // CANTIDAD 
-    lblCantidad.setFont(new Font("Arial Black", Font.BOLD, 35));
-    lblCantidad.setForeground(Color.WHITE);
-    gbc.gridy = 3;
-    gbc.gridx = 0;
-    getContentPane().add(lblCantidad, gbc);
+    // Enfocar cédula al abrir
+    java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
+    
 
-    txtCantidad.setFont(new Font("Arial", Font.PLAIN, 24));
-    txtCantidad.setPreferredSize(new Dimension(120, 40));
-    gbc.gridx = 1;
-    getContentPane().add(txtCantidad, gbc);
+    // 1. Al hacer clic en Buscaro presionar Enter en cédula  buscar cliente
+    btnBuscarCedula.addActionListener(e -> {
+        if (controladorFacturacion != null) {
+            controladorFacturacion.buscarClientePorCedula();
+        }
+    });
 
-    // BOTÓN AGREGAR 
-    btnAgregarProducto.setFont(new Font("Arial Black", Font.BOLD, 24));
-    btnAgregarProducto.setBackground(new Color(0, 102, 102));
-    btnAgregarProducto.setForeground(Color.WHITE);
-    btnAgregarProducto.setFocusPainted(false);
-    btnAgregarProducto.setPreferredSize(new Dimension(220, 50));
-    gbc.gridx = 2;
-    gbc.anchor = GridBagConstraints.WEST;
-    getContentPane().add(btnAgregarProducto, gbc);
+    txtCedula.addActionListener(e -> {
+        if (controladorFacturacion != null) {
+            controladorFacturacion.buscarClientePorCedula();
+        }
+    });
 
-    //  DETALLE VENTA 
-    lblDetalleVenta.setFont(new Font("Arial Black", Font.BOLD, 36));
-    lblDetalleVenta.setForeground(Color.WHITE);
-    gbc.gridy = 4;
-    gbc.gridx = 0;
-    gbc.gridwidth = 3;
-    gbc.anchor = GridBagConstraints.CENTER;
-    getContentPane().add(lblDetalleVenta, gbc);
-
-    // === TABLA ===
-    TablaDetalleVenta.setFont(new Font("Arial", Font.PLAIN, 22));
-    TablaDetalleVenta.setRowHeight(40);
-    TablaDetalleVenta.setBackground(Color.WHITE);
-    TablaDetalleVenta.setForeground(Color.BLACK);
-    TablaDetalleVenta.setGridColor(Color.LIGHT_GRAY);
-    TablaDetalleVenta.setShowGrid(true);
-    TablaDetalleVenta.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 24));
-    TablaDetalleVenta.getTableHeader().setBackground(new Color(0, 102, 102));
-    TablaDetalleVenta.getTableHeader().setForeground(Color.WHITE);
-    TablaDetalleVenta.getTableHeader().setReorderingAllowed(false);
-
-    ScrollDetalleVenta.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 4));
-    ScrollDetalleVenta.setViewportView(TablaDetalleVenta);
-    ScrollDetalleVenta.setMinimumSize(new Dimension(1000, 300));
-
-    gbc.gridy = 5;
-    gbc.gridx = 0;
-    gbc.gridwidth = 3;
-    gbc.fill = GridBagConstraints.BOTH;
-    gbc.weightx = 1.0;
-    gbc.weighty = 1.0;
-    getContentPane().add(ScrollDetalleVenta, gbc);
-
-   //  TOTAL 
-    lblTotal.setFont(new Font("Arial Black", Font.BOLD, 36));
-    lblTotal.setForeground(Color.WHITE);
-    txtTotal.setFont(new Font("Arial Black", Font.BOLD, 36));
-    txtTotal.setForeground(Color.WHITE);
-    txtTotal.setBackground(new Color(30, 30, 40));
-    txtTotal.setEditable(false);
-    txtTotal.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
-    txtTotal.setPreferredSize(new Dimension(200, 60)); // ← Más ancho
-
-    JPanel panelTotal = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-    panelTotal.setOpaque(false);
-    panelTotal.add(lblTotal);
-    panelTotal.add(txtTotal);
-
-    gbc.gridy = 6;
-    gbc.gridx = 0;
-    gbc.gridwidth = 3;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.weighty = 0.1;
-    getContentPane().add(panelTotal, gbc);
-
-   //  BOTONES A LA DERECHA 
-    JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10)); // ← DERECHA
-    panelBotones.setOpaque(false);
-
-    btnFinalizarVenta.setFont(new Font("Arial Black", Font.BOLD, 22)); //  Más pequeño
-    btnFinalizarVenta.setBackground(new Color(46, 204, 113));
-    btnFinalizarVenta.setForeground(Color.WHITE);
-    btnFinalizarVenta.setFocusPainted(false);
-    btnFinalizarVenta.setPreferredSize(new Dimension(300, 50)); //  Más angosto
-    panelBotones.add(btnFinalizarVenta);
-
-    btnBorrar.setFont(new Font("Arial Black", Font.BOLD, 22));
-    btnBorrar.setBackground(new Color(231, 76, 60));
-    btnBorrar.setForeground(Color.WHITE);
-    btnBorrar.setFocusPainted(false);
-    btnBorrar.setPreferredSize(new Dimension(200, 50));
-    panelBotones.add(btnBorrar);
-
-    btnAtras.setFont(new Font("Arial Black", Font.BOLD, 22));
-    btnAtras.setBackground(new Color(52, 73, 94));
-    btnAtras.setForeground(Color.WHITE);
-    btnAtras.setFocusPainted(false);
-    btnAtras.setPreferredSize(new Dimension(200, 50));
-    panelBotones.add(btnAtras);
-    // ️ Forzar que el panel tenga una altura mínima para que los botones no se corten
-    panelBotones.setMinimumSize(new Dimension(800, 80)); // Ancho mínimo 800px, Alto mínimo 80px
-    panelBotones.setPreferredSize(new Dimension(800, 80));
-
-
-    gbc.gridy = 6;
-    gbc.gridx = 0;
-    gbc.gridwidth = 3;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.weighty = 0.1;
-    gbc.insets = new Insets(10, 40, 40, 40); // Margen derecho para que no toquen el borde
-    getContentPane().add(panelBotones, gbc);
-
-
-    //  FORZAR ACTUALIZACIÓN 
-    revalidate();
-    repaint();
-   
+    // 2. Enfocar el campo cédula al abrir la ventana (para que el cajero empiece rápido)
+    java.awt.EventQueue.invokeLater(() -> {
+        txtCedula.requestFocusInWindow();
+    });
+     
     }
+    
     
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorFacturacion controlador) {
@@ -271,7 +161,7 @@ private javax.swing.JDialog dialogoEspera;
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
-        lblCliente = new javax.swing.JLabel();
+        lblNombresCompletos = new javax.swing.JLabel();
         btnAgregarProducto = new javax.swing.JButton();
         lblDetalleVenta = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
@@ -281,11 +171,16 @@ private javax.swing.JDialog dialogoEspera;
         btnAtras = new javax.swing.JButton();
         lblProductos = new javax.swing.JLabel();
         ComboProductos = new javax.swing.JComboBox<>();
-        txtCliente = new javax.swing.JTextField();
+        txtNombresApellidos = new javax.swing.JTextField();
         lblCantidad = new javax.swing.JLabel();
         txtCantidad = new javax.swing.JTextField();
         ScrollDetalleVenta = new javax.swing.JScrollPane();
         TablaDetalleVenta = new javax.swing.JTable();
+        lblCedula = new javax.swing.JLabel();
+        txtCedula = new javax.swing.JTextField();
+        lblDireccion = new javax.swing.JLabel();
+        txtDireccion = new javax.swing.JTextField();
+        btnBuscarCedula = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -293,9 +188,9 @@ private javax.swing.JDialog dialogoEspera;
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("Facturación");
 
-        lblCliente.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        lblCliente.setForeground(new java.awt.Color(0, 102, 102));
-        lblCliente.setText("Cliente");
+        lblNombresCompletos.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblNombresCompletos.setForeground(new java.awt.Color(0, 102, 102));
+        lblNombresCompletos.setText("Nombres Apellidos");
 
         btnAgregarProducto.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnAgregarProducto.setForeground(new java.awt.Color(0, 102, 102));
@@ -358,9 +253,10 @@ private javax.swing.JDialog dialogoEspera;
             }
         });
 
-        txtCliente.addActionListener(new java.awt.event.ActionListener() {
+        txtNombresApellidos.setEditable(false);
+        txtNombresApellidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtClienteActionPerformed(evt);
+                txtNombresApellidosActionPerformed(evt);
             }
         });
 
@@ -389,6 +285,14 @@ private javax.swing.JDialog dialogoEspera;
         ));
         ScrollDetalleVenta.setViewportView(TablaDetalleVenta);
 
+        lblCedula.setText("Cédula");
+
+        lblDireccion.setText("Dirección");
+
+        txtDireccion.setEditable(false);
+
+        btnBuscarCedula.setText("Buscar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -400,16 +304,23 @@ private javax.swing.JDialog dialogoEspera;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblProductos)
-                                    .addComponent(lblCliente)
-                                    .addComponent(lblCantidad))
+                                    .addComponent(lblNombresCompletos)
+                                    .addComponent(lblCantidad)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblCedula)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnBuscarCedula))
+                                    .addComponent(lblDireccion))
                                 .addGap(45, 45, 45)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtCliente)
+                                    .addComponent(txtNombresApellidos)
                                     .addComponent(ComboProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtCantidad)
-                                    .addComponent(btnAgregarProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(btnAgregarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                                    .addComponent(txtCedula)
+                                    .addComponent(txtDireccion)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -434,22 +345,34 @@ private javax.swing.JDialog dialogoEspera;
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
+                        .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCliente)
-                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblProductos)
-                            .addComponent(ComboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCantidad)
-                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblCedula)
+                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscarCedula)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(lblTitulo)))
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombresApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNombresCompletos))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDireccion)
+                        .addGap(11, 11, 11))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblProductos)
+                    .addComponent(ComboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCantidad))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAgregarProducto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDetalleVenta)
@@ -464,15 +387,15 @@ private javax.swing.JDialog dialogoEspera;
                     .addComponent(btnFinalizarVenta)
                     .addComponent(btnBorrar)
                     .addComponent(btnAtras))
-                .addContainerGap(349, Short.MAX_VALUE))
+                .addContainerGap(359, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClienteActionPerformed
+    private void txtNombresApellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombresApellidosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtClienteActionPerformed
+    }//GEN-LAST:event_txtNombresApellidosActionPerformed
 
     private void ComboProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboProductosActionPerformed
         // TODO add your handling code here:
@@ -519,7 +442,7 @@ private javax.swing.JDialog dialogoEspera;
 
     private void btnFinalizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarVentaActionPerformed
         // TODO add your handling code here:
-        String cliente = txtCliente.getText().trim();
+        String cliente = txtNombresApellidos.getText().trim();
         if (cliente.isEmpty()) {
             mostrarMensajeError("Por favor ingrese el nombre del cliente.");
             return;
@@ -546,25 +469,102 @@ private javax.swing.JDialog dialogoEspera;
     
      // Limpia todos los campos para empezar una nueva venta
      
-    public void limpiarCamposParaNuevaVenta() {
-        txtCliente.setText("");
+       public void limpiarCamposParaNuevaVenta() {
+        txtCedula.setText("");
+        txtNombresApellidos.setText("");
+        txtDireccion.setText("");
         txtCantidad.setText("");
         txtTotal.setText("0.00");
-        
-        // Limpiar la tabla (modelo vacío)
+
+        // Habilitar edición (por si estaba bloqueada)
+        habilitarEdicionCliente(true);
+
+        // Limpiar la tabla
         javax.swing.table.DefaultTableModel modeloVacio = new javax.swing.table.DefaultTableModel(
             new Object[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
         );
         TablaDetalleVenta.setModel(modeloVacio);
-        
-        // Seleccionar el primer producto si hay alguno
+
+        // Seleccionar primer producto
         if (ComboProductos.getItemCount() > 0) {
             ComboProductos.setSelectedIndex(0);
         }
-        
-        // Poner foco en el campo cliente o cantidad para mayor comodidad
-        txtCliente.requestFocus();
+
+        // Enfocar cédula para nueva venta rápida
+        enfocarCampoCedula();
     }
+    
+        // ==================== MÉTODOS PARA MANEJO DE CLIENTE ====================
+
+        // Enfocar el campo cédula al abrir la ventana
+        public void enfocarCampoCedula() {
+            txtCedula.requestFocusInWindow();
+        }
+
+        // Enfocar el campo nombres/apellidos (cuando el cliente no existe)
+        public void enfocarNombresApellidos() {
+            txtNombresApellidos.requestFocusInWindow();
+        }
+
+        // Obtener cédula ingresada
+        public String obtenerCedulaIngresada() {
+            return txtCedula.getText().trim();
+        }
+
+        // Obtener nombres/apellidos ingresados
+        public String obtenerNombresApellidosIngresado() {
+            return txtNombresApellidos.getText().trim();
+        }
+
+        // Obtener dirección ingresada
+        public String obtenerDireccionClienteIngresada() {
+            return txtDireccion.getText().trim();
+        }
+
+        // Mostrar datos del cliente encontrado
+        public void mostrarDatosCliente(String nombresApellidos, String direccion) {
+            txtNombresApellidos.setText(nombresApellidos);
+            txtDireccion.setText(direccion != null ? direccion : "");
+        }
+
+        // Limpiar solo los campos de cliente (nombre y dirección)
+        public void limpiarDatosCliente() {
+            txtNombresApellidos.setText("");
+            txtDireccion.setText("");
+            // NO limpiar txtCedula porque el cajero ya la escribió
+        }
+
+        // Habilitar o deshabilitar edición de nombre y dirección
+        public void habilitarEdicionCliente(boolean habilitar) {
+            txtNombresApellidos.setEditable(habilitar);
+            txtDireccion.setEditable(habilitar);
+
+            if (habilitar) {
+                // Fondo amarillo claro cuando es editable
+                txtNombresApellidos.setBackground(new java.awt.Color(255, 255, 200));
+                txtDireccion.setBackground(new java.awt.Color(255, 255, 200));
+            } else {
+                // Fondo verde claro cuando está cargado automáticamente
+                txtNombresApellidos.setBackground(new java.awt.Color(200, 255, 200));
+                txtDireccion.setBackground(new java.awt.Color(200, 255, 200));
+            }
+        }
+
+        // Mostrar mensaje con color (verde = éxito, naranja = advertencia)
+        public void mostrarMensajeConColor(String mensaje, java.awt.Color color) {
+            javax.swing.JOptionPane pane = new javax.swing.JOptionPane(mensaje, javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JDialog dialog = pane.createDialog(this, "Información");
+            dialog.getContentPane().setBackground(color);
+            // Cambiar color del texto
+            for (java.awt.Component comp : dialog.getContentPane().getComponents()) {
+                if (comp instanceof javax.swing.JPanel) {
+                    for (java.awt.Component inner : ((javax.swing.JPanel) comp).getComponents()) {
+                        inner.setForeground(java.awt.Color.WHITE);
+                    }
+                }
+            }
+            dialog.setVisible(true);
+        }
     
     /**
      * @param args the command line arguments
@@ -608,15 +608,20 @@ private javax.swing.JDialog dialogoEspera;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnBuscarCedula;
     private javax.swing.JButton btnFinalizarVenta;
     private javax.swing.JLabel lblCantidad;
-    private javax.swing.JLabel lblCliente;
+    private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblDetalleVenta;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblNombresCompletos;
     private javax.swing.JLabel lblProductos;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JTextField txtCantidad;
-    private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtNombresApellidos;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
