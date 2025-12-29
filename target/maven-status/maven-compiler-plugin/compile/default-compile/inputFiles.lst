@@ -1,34 +1,36 @@
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaLogin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorHistorialVentas.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaProductosMasVendidos.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaMenuAdmin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\HistorialVentaModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorPrimerAdmin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\DetalleFacturaModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaGestionStock.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ServicioProductosMasVendidos.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaFacturacion.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorEditarUsuario.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ServicioHistorial.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\FacturaModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ProductoMasVendidoModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\UsuarioModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorGestionUsuarios.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ClienteModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorCajero.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaGestionUsuarios.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\BDD\ConexionBDD.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaPrimerAdmin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorFacturacion.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaEditarUsuario.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorAdmin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorLogin.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ProductoModelo.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaHistorialVentas.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaMenuCajero.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorRegistrarUsuario.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaVerFactura.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaRegistrarUsuario.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\main\SistemaFacturacion.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorGestionStock.java
-E:\SISTEMA DE FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorProductosMasVendidos.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaVerFactura.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorFacturacion.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\UsuarioModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaMenuCajero.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaProductosMasVendidos.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorProductosMasVendidos.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorCajero.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ClienteModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\DetalleFacturaModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorGestionUsuarios.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorLogin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\Persona.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaPrimerAdmin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorPrimerAdmin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorRegistrarUsuario.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaLogin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaRegistrarUsuario.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaGestionUsuarios.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ServicioHistorial.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorGestionStock.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaHistorialVentas.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorEditarUsuario.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorHistorialVentas.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaFacturacion.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaMenuAdmin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Controlador\ControladorAdmin.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\FacturaModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\main\SistemaFacturacion.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaGestionStock.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Vista\VistaEditarUsuario.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\HistorialVentaModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ProductoMasVendidoModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ServicioProductosMasVendidos.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\ProductoModelo.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\BDD\ConexionBDD.java
+E:\SISTEMA FACTURACION\Sistema-De-Facturaci-n\src\main\java\Modelo\PaginadorTabla.java

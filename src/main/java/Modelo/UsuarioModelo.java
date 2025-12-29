@@ -15,7 +15,7 @@ import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
 // Clase que representa a un usuario y contiene toda la lógica de negocio relacionada
-public class UsuarioModelo {
+public class UsuarioModelo extends Persona {
 
     // Atributos del usuario
     private int idUsuario;
@@ -25,14 +25,17 @@ public class UsuarioModelo {
     private boolean activo; // true = activo, false = inactivo
 
     // Constructor vacío (necesario para instanciar sin datos)
-    public UsuarioModelo() {}
+    public UsuarioModelo() {
+        super();// Llama al constructor vacío de Persona
+    }
 
     // Constructor para crear un nuevo usuario (usado al registrar)
     public UsuarioModelo(String nombreUsuario, String contrasenia, String rol) {
-        this.nombreUsuario = nombreUsuario;
-        this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt(12)); // Hasheamos al crear
-        this.rol = rol;
-        this.activo = true; // Por defecto, todos los nuevos usuarios son activos
+     super(); // Inicializa los campos de Persona (por ahora en null/0)
+     this.nombreUsuario = nombreUsuario;
+     this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt());
+     this.rol = rol;
+     this.activo = true;
     }
 
     // Constructor para crear un usuario con estado activo explícito (usado en gestión)
@@ -121,33 +124,61 @@ public class UsuarioModelo {
     }
 
     // Guarda este usuario en la base de datos (usado al registrar)
- 
-    public void guardar() throws SQLException {
-    ConexionBDD conexionBDD = new ConexionBDD();
-    Connection conexion = conexionBDD.conectar();
-    if (conexion == null) {
-        throw new SQLException("No se pudo conectar a la base de datos.");
-    }
+        public void guardar() throws SQLException, IllegalArgumentException {
+        // Validación de cédula ANTES de cualquier operación con BD
+        if (this.getCedula() == null || this.getCedula().trim().isEmpty()) {
+            throw new IllegalArgumentException("La cédula es obligatoria.");
+        }
+
+        if (!validarCedulaEcuatoriana(this.getCedula())) {
+            throw new IllegalArgumentException("La cédula ecuatoriana no es válida.");
+        }
+
+        // Validaciones adicionales
+        if (this.nombreUsuario == null || this.nombreUsuario.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de usuario es obligatorio.");
+        }
+        if (this.contrasenia == null || this.contrasenia.isEmpty()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria.");
+        }
+
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+        
+        if (conexion == null) {
+            throw new SQLException("No se pudo conectar a la base de datos.");
+        }
 
         try {
-            CallableStatement llamada = conexion.prepareCall("{CALL sp_registrar_usuario(?, ?, ?)}");
-            llamada.setString(1, this.nombreUsuario);
-            llamada.setString(2, this.contrasenia); // Ya está hasheada
+            CallableStatement llamada = conexion.prepareCall(
+                "{CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?, ?)}"
+            );
+            
+            llamada.setString(1, this.nombreUsuario.trim());
+            llamada.setString(2, this.contrasenia);
             llamada.setString(3, this.rol);
-            llamada.execute();
+            llamada.setString(4, this.getCedula().trim());
+            llamada.setString(5, this.getDireccion() != null ? this.getDireccion().trim() : "");
+            llamada.setInt(6, this.getEdad());
+            llamada.setString(7, this.getGenero());
+
+            llamada.executeUpdate();
+
+            // Obtener ID generado
+            try (ResultSet rs = llamada.getGeneratedKeys()) {
+                if (rs.next()) {
+                    this.idUsuario = rs.getInt(1);
+                }
+            }
+
         } catch (SQLException e) {
-            // Re-lanzar la excepción para que el controlador la maneje
             throw e;
         } finally {
-            try {
-                if (conexion != null && !conexion.isClosed()) {
-                    conexion.close();
-                }
-            } catch (SQLException excepcion) {
-                excepcion.printStackTrace();
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
+            }
         }
     }
-}
 
     // Obtiene todos los usuarios (para gestión de usuarios)
     public static List<UsuarioModelo> obtenerTodosLosUsuarios() {
@@ -185,30 +216,39 @@ public class UsuarioModelo {
         return listaUsuarios;
     }
 
-    // Actualiza el nombre y rol de un usuario existente
+    
+  // Método para actualizar todos los datos del usuario en la base de datos
+   
     public void actualizar() {
-        ConexionBDD conexionBDD = new ConexionBDD();
-        Connection conexion = conexionBDD.conectar();
-        if (conexion == null) return;
+    ConexionBDD conexionBDD = new ConexionBDD();
+    Connection conexion = conexionBDD.conectar();
+    if (conexion == null) return;
 
+    try {
+        CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?)}");
+        sentencia.setInt(1, this.idUsuario);
+        sentencia.setString(2, this.nombreUsuario);
+        sentencia.setString(3, this.rol);
+        sentencia.setString(4, this.getCedula());
+        sentencia.setString(5, this.getDireccion());
+        sentencia.setInt(6, this.getEdad());
+        sentencia.setString(7, this.getGenero());
+        sentencia.execute();
+    } catch (SQLException excepcion) {
+        excepcion.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(null, 
+            "Error al actualizar el usuario: " + excepcion.getMessage(), 
+            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    } finally {
         try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?)}");
-            sentencia.setInt(1, this.idUsuario);
-            sentencia.setString(2, this.nombreUsuario);
-            sentencia.setString(3, this.rol);
-            sentencia.execute();
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
+            }
         } catch (SQLException excepcion) {
             excepcion.printStackTrace();
-        } finally {
-            try {
-                if (conexion != null && !conexion.isClosed()) {
-                    conexion.close();
-                }
-            } catch (SQLException excepcion) {
-                excepcion.printStackTrace();
-            }
         }
     }
+}
 
     // Cambia el estado de activo/inactivo de un usuario
     public void cambiarEstado(boolean nuevoEstado) {
@@ -249,4 +289,44 @@ public class UsuarioModelo {
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+    
+    
+        
+     // Valida una cédula ecuatoriana según el algoritmo oficial del Registro Civil
+    
+    public static boolean validarCedulaEcuatoriana(String cedula) {
+        cedula = cedula.trim();
+
+        // Longitud y solo números
+        if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
+            return false;
+        }
+
+        // Código de provincia (01-24)
+        int provincia = Integer.parseInt(cedula.substring(0, 2));
+        if (provincia < 1 || provincia > 24) {
+            return false;
+        }
+
+        // Tercer dígito (0-5 normales, 6 para sociedades)
+        int tercerDigito = Integer.parseInt(cedula.substring(2, 3));
+        if (tercerDigito > 6) {
+            return false;
+        }
+
+        // Algoritmo módulo 10
+        int[] coeficientes = {2, 1, 2, 1, 2, 1, 2, 1, 2};
+        int suma = 0;
+        for (int i = 0; i < 9; i++) {
+            int digito = Character.getNumericValue(cedula.charAt(i));
+            int valor = digito * coeficientes[i];
+            suma += (valor > 9) ? valor - 9 : valor;
+        }
+
+        int digitoVerificador = Integer.parseInt(cedula.substring(9));
+        int resultado = (suma % 10 == 0) ? 0 : 10 - (suma % 10);
+
+        return digitoVerificador == resultado;
+    }
 }
+

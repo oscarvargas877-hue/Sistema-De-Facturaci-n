@@ -7,12 +7,9 @@ package Vista;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.Timer;
 
 
 /**
@@ -29,109 +26,160 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     public VistaPrimerAdmin() {
         initComponents();
         
-// Pantalla completa
-    setExtendedState(JFrame.MAXIMIZED_BOTH);
+// Configuración básica
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        getContentPane().setBackground(new Color(70, 130, 180));
 
-    // Fondo oscuro
-    getContentPane().setBackground(new Color(70, 130, 180));
+        // ================== TÍTULO GRANDE ARRIBA ==================
+        lblTitulo.setText("CREAR PRIMER ADMINISTRADOR");
+        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
+        lblTitulo.setForeground(new Color(0, 102, 102));
+        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
 
-    // Limpiar layout viejo
-    getContentPane().removeAll();
-    getContentPane().setLayout(new GridBagLayout());
+        // ================== BOTÓN VERDE GRANDE ABAJO ==================
+        btnCrearPrimerAdministrador.setText("Crear Primer Administrador");
+        btnCrearPrimerAdministrador.setFont(new Font("Arial Black", Font.BOLD, 40));
+        btnCrearPrimerAdministrador.setBackground(new Color(46, 204, 113));
+        btnCrearPrimerAdministrador.setForeground(Color.WHITE);
+        btnCrearPrimerAdministrador.setFocusPainted(false);
+        btnCrearPrimerAdministrador.setPreferredSize(new Dimension(800, 100)); // Más ancho
 
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.insets = new Insets(20, 20, 20, 20);
+        // ================== MENSAJE DE ERROR Y ÉXITO ==================
+        lblMensajeError.setFont(new Font("Arial Black", Font.BOLD, 20));
+        lblMensajeError.setForeground(Color.RED);
+        lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
+        lblMensajeError.setVisible(false);
 
-    // TÍTULO 
-    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
-    lblTitulo.setForeground(Color.WHITE);
-    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+        // ================== ESTILO DE ETIQUETAS Y CAMPOS ==================
+        Font fontEtiqueta = new Font("Arial Black", Font.BOLD, 36);
+        Font fontCampo = new Font("Arial", Font.PLAIN, 32);
 
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.gridwidth = 2;
-    gbc.anchor = GridBagConstraints.CENTER;
-    getContentPane().add(lblTitulo, gbc);
+        lblNombreUsuario.setFont(fontEtiqueta);
+        lblNombreUsuario.setForeground(Color.WHITE);
+        lblContrasenia.setFont(fontEtiqueta);
+        lblContrasenia.setForeground(Color.WHITE);
+        lblCedula.setFont(fontEtiqueta);
+        lblCedula.setForeground(Color.WHITE);
+        lblDireccion.setFont(fontEtiqueta);
+        lblDireccion.setForeground(Color.WHITE);
+        lblEdad.setFont(fontEtiqueta);
+        lblEdad.setForeground(Color.WHITE);
+        lblGenero.setFont(fontEtiqueta);
+        lblGenero.setForeground(Color.WHITE);
 
-    //  PANEL CENTRAL etiquetas a la izquierda, campos al lado
-    JPanel panelFormulario = new JPanel(new GridBagLayout());
-    panelFormulario.setOpaque(false);
+        // Campos más anchos y altos
+        Dimension dimensionCampoAncho = new Dimension(600, 65);
+        Dimension dimensionEdad = new Dimension(200, 65);
 
-    GridBagConstraints labelGbc = new GridBagConstraints();
-    labelGbc.anchor = GridBagConstraints.EAST;   // Etiquetas alineadas a la derecha (para que queden cerca del campo)
-    labelGbc.insets = new Insets(25, 50, 25, 20);
-    labelGbc.weightx = 0;
+        txtNombreUsuario.setFont(fontCampo);
+        txtNombreUsuario.setPreferredSize(dimensionCampoAncho);
+        jPContrasenia.setFont(fontCampo);
+        jPContrasenia.setPreferredSize(dimensionCampoAncho);
+        txtCedula.setFont(fontCampo);
+        txtCedula.setPreferredSize(dimensionCampoAncho);
+        txtDireccion.setFont(fontCampo);
+        txtDireccion.setPreferredSize(dimensionCampoAncho);
+        txtEdad.setFont(fontCampo);
+        txtEdad.setPreferredSize(dimensionEdad);
 
-    GridBagConstraints fieldGbc = new GridBagConstraints();
-    fieldGbc.fill = GridBagConstraints.HORIZONTAL;
-    fieldGbc.insets = new Insets(25, 0, 25, 50);
-    fieldGbc.weightx = 1.0;
+        // Género más grande y bonito
+        RadioMasculino.setFont(new Font("Arial Black", Font.BOLD, 34));
+        RadioMasculino.setForeground(Color.WHITE);
+        RadioMasculino.setOpaque(false);
+        RadioMasculino.setSelected(true);
 
-    // Usuario
-    lblPrimerUsuario.setFont(new Font("Arial Black", Font.BOLD, 36));
-    lblPrimerUsuario.setForeground(Color.WHITE);
-    labelGbc.gridx = 0;
-    labelGbc.gridy = 0;
-    panelFormulario.add(lblPrimerUsuario, labelGbc);
+        RadioFemenino.setFont(new Font("Arial Black", Font.BOLD, 34));
+        RadioFemenino.setForeground(Color.WHITE);
+        RadioFemenino.setOpaque(false);
 
-    txtUsuario.setFont(new Font("Arial", Font.PLAIN, 32));
-    txtUsuario.setPreferredSize(new Dimension(300, 50));
-    txtUsuario.setBackground(Color.WHITE);
-    fieldGbc.gridx = 1;
-    fieldGbc.gridy = 0;
-    panelFormulario.add(txtUsuario, fieldGbc);
+        // ================== ACERCAR CÉDULA MÁS ARRIBA ==================
+        // Esto se logra ajustando el layout de NetBeans (no podemos cambiarlo directamente),
+        // pero podemos "empujar" visualmente los componentes con insets
+        // Lo mejor es confiar en el layout actual y solo ajustar tamaños
 
-    // Contraseña
-    lblContrasenia.setFont(new Font("Arial Black", Font.BOLD, 36));
-    lblContrasenia.setForeground(Color.WHITE);
-    labelGbc.gridx = 0;
-    labelGbc.gridy = 1;
-    panelFormulario.add(lblContrasenia, labelGbc);
-
-    jPContrasenia.setFont(new Font("Arial", Font.PLAIN, 32));
-    jPContrasenia.setPreferredSize(new Dimension(300, 50));
-    jPContrasenia.setBackground(Color.WHITE);
-    fieldGbc.gridx = 1;
-    fieldGbc.gridy = 1;
-    panelFormulario.add(jPContrasenia, fieldGbc);
-
-    // Agregar panel formulario al centro
-    gbc.gridy = 1;
-    gbc.gridwidth = 2;
-    gbc.anchor = GridBagConstraints.CENTER;
-    gbc.insets = new Insets(80, 0, 50, 0);
-    getContentPane().add(panelFormulario, gbc);
-
-    // MENSAJE DE ERROR 
-    lblMensajeError.setFont(new Font("Arial Black", Font.BOLD, 32));
-    lblMensajeError.setForeground(Color.RED);
-    lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
-    lblMensajeError.setVisible(false);
-
-    gbc.gridy = 2;
-    gbc.insets = new Insets(0, 0, 40, 0);
-    getContentPane().add(lblMensajeError, gbc);
-
-    //  BOTÓN DE ANCHO NORMAL solo lo que ocupa el texto
-    btnCrearPrimerAdministrador.setFont(new Font("Arial Black", Font.BOLD, 36));
-    btnCrearPrimerAdministrador.setBackground(new Color(46, 204, 113));
-    btnCrearPrimerAdministrador.setForeground(Color.WHITE);
-    btnCrearPrimerAdministrador.setFocusPainted(false);
-    // Sin setPreferredSize → el botón toma el tamaño natural del texto (ancho normal)
-
-    gbc.gridy = 3;
-    gbc.insets = new Insets(0, 0, 100, 0);
-    gbc.anchor = GridBagConstraints.CENTER;
-    getContentPane().add(btnCrearPrimerAdministrador, gbc);
-
-    // Refrescar
-    revalidate();
-    repaint();
+        revalidate();
+        repaint();
     }
-    // Método para inyectar el controlador desde fuera
-    public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
+       
+             public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
         this.controladorPrimerAdmin = controlador;
+
+        // Conectamos el botón al controlador
+        btnCrearPrimerAdministrador.addActionListener(e -> {
+            String nombreUsuario = txtNombreUsuario.getText().trim();
+            String contrasenia = new String(jPContrasenia.getPassword());
+            String cedula = txtCedula.getText().trim();
+            String direccion = txtDireccion.getText().trim();
+            String edadStr = txtEdad.getText().trim();
+            String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
+
+            // Validaciones
+            if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
+                direccion.isEmpty() || edadStr.isEmpty()) {
+                mostrarMensajeError("Todos los campos son obligatorios.", Color.RED);
+                return;
+            }
+
+            if (nombreUsuario.contains(" ")) {
+                mostrarMensajeError("El nombre de usuario no puede contener espacios.", Color.RED);
+                return;
+            }
+
+            int edad;
+            try {
+                edad = Integer.parseInt(edadStr);
+                if (edad < 18 || edad > 120) {
+                    mostrarMensajeError("Edad no válida (18-120 años).", Color.RED);
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                mostrarMensajeError("La edad debe ser un número válido.", Color.RED);
+                return;
+            }
+
+            // Si todo está bien, llamamos al controlador
+            try {
+                controlador.crearPrimerAdministrador(nombreUsuario, contrasenia, cedula, direccion, edad, genero);
+
+                // Mensaje de éxito en verde
+                mostrarMensajeExito("¡Primer Administrador creado exitosamente!");
+
+                // Pausa de 2 segundos para que el usuario vea el mensaje
+                Timer timer = new Timer(2000, ev -> {
+                    // Cerrar esta ventana y abrir el Login (el controlador ya lo hace, pero por seguridad)
+                    // Si ya lo hace el controlador, puedes quitar esto
+                });
+                timer.setRepeats(false);
+                timer.start();
+
+            } catch (Exception ex) {
+                mostrarMensajeError("Error al crear el administrador: " + ex.getMessage(), Color.RED);
+            }
+        });
     }
+
+    // Método auxiliar para errores (rojo)
+    private void mostrarMensajeError(String mensaje, Color color) {
+        lblMensajeError.setText(mensaje);
+        lblMensajeError.setForeground(color);
+        lblMensajeError.setVisible(true);
+        revalidate();
+        repaint();
+    }
+    // Sobrecarga solo mensaje 
+    public void mostrarMensajeError(String mensaje) {
+        mostrarMensajeError(mensaje, Color.RED);
+    }
+    // Método auxiliar para éxito (verde)
+    public void mostrarMensajeExito(String mensaje) {
+        lblMensajeError.setText(mensaje);
+        lblMensajeError.setForeground(new Color(46, 100, 113)); 
+        lblMensajeError.setVisible(true);
+        revalidate();
+        repaint();
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -143,12 +191,21 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
-        lblPrimerUsuario = new javax.swing.JLabel();
+        lblNombreUsuario = new javax.swing.JLabel();
         lblContrasenia = new javax.swing.JLabel();
-        txtUsuario = new javax.swing.JTextField();
+        txtNombreUsuario = new javax.swing.JTextField();
         jPContrasenia = new javax.swing.JPasswordField();
         lblMensajeError = new javax.swing.JLabel();
         btnCrearPrimerAdministrador = new javax.swing.JButton();
+        txtDireccion = new javax.swing.JTextField();
+        lblEdad = new javax.swing.JLabel();
+        RadioFemenino = new javax.swing.JRadioButton();
+        txtCedula = new javax.swing.JTextField();
+        lblCedula = new javax.swing.JLabel();
+        txtEdad = new javax.swing.JTextField();
+        lblGenero = new javax.swing.JLabel();
+        lblDireccion = new javax.swing.JLabel();
+        RadioMasculino = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,17 +213,17 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
         lblTitulo.setForeground(new java.awt.Color(0, 102, 102));
         lblTitulo.setText("Crear Primer Administrador ");
 
-        lblPrimerUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        lblPrimerUsuario.setForeground(new java.awt.Color(0, 102, 102));
-        lblPrimerUsuario.setText("Usuario");
+        lblNombreUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        lblNombreUsuario.setForeground(new java.awt.Color(0, 102, 102));
+        lblNombreUsuario.setText("Nombre De Usuario:");
 
         lblContrasenia.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblContrasenia.setForeground(new java.awt.Color(0, 102, 102));
-        lblContrasenia.setText("Contraseña");
+        lblContrasenia.setText("Contraseña:");
 
-        txtUsuario.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuarioActionPerformed(evt);
+                txtNombreUsuarioActionPerformed(evt);
             }
         });
 
@@ -185,48 +242,105 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
             }
         });
 
+        txtDireccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDireccionActionPerformed(evt);
+            }
+        });
+
+        lblEdad.setText("Edad:");
+
+        RadioFemenino.setText("Femenino");
+
+        lblCedula.setText("Cédula:");
+
+        txtEdad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEdadActionPerformed(evt);
+            }
+        });
+
+        lblGenero.setText("Género:");
+
+        lblDireccion.setText("Dirección: ");
+
+        RadioMasculino.setText("Masculino");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(128, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCrearPrimerAdministrador)
-                    .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(232, 232, 232))
             .addGroup(layout.createSequentialGroup()
                 .addGap(102, 102, 102)
+                .addComponent(lblTitulo)
+                .addContainerGap(208, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(91, 91, 91)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCrearPrimerAdministrador)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblMensajeError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNombreUsuario)
                             .addComponent(lblContrasenia)
-                            .addComponent(lblPrimerUsuario))
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(txtUsuario))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblCedula)
+                            .addComponent(lblDireccion)
+                            .addComponent(lblEdad)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblGenero)
+                                .addGap(43, 43, 43)
+                                .addComponent(RadioMasculino)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtEdad)
+                                    .addComponent(txtDireccion)
+                                    .addComponent(txtCedula)
+                                    .addComponent(jPContrasenia)
+                                    .addComponent(txtNombreUsuario)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(RadioFemenino)
+                                .addGap(0, 0, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(lblTitulo)
-                .addGap(62, 62, 62)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPrimerUsuario)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                    .addComponent(lblNombreUsuario)
+                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblContrasenia)
                     .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
-                .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCedula)
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDireccion)
+                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEdad)
+                    .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCrearPrimerAdministrador)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblGenero)
+                    .addComponent(RadioMasculino)
+                    .addComponent(RadioFemenino))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCrearPrimerAdministrador)
+                    .addComponent(lblMensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(62, 62, 62))
         );
 
         pack();
@@ -234,7 +348,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 // Acción del botón "Crear Primer Administrador"
     private void btnCrearPrimerAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPrimerAdministradorActionPerformed
         // TODO add your handling code here:
-    String nombreUsuario = txtUsuario.getText();
+    String nombreUsuario = txtNombreUsuario.getText();
     String contrasenia = new String(jPContrasenia.getPassword());
 
     // Validar que los campos no estén vacíos
@@ -251,10 +365,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
         return;
     }
 
-    // Llamar al controlador para crear el primer administrador
-    if (controladorPrimerAdmin != null) {
-        controladorPrimerAdmin.crearPrimerAdministrador(nombreUsuario, contrasenia);
-    }
+   
     }//GEN-LAST:event_btnCrearPrimerAdministradorActionPerformed
 // Acción al presionar Enter en el campo de contraseña (opcional pero útil)
     private void jPContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPContraseniaActionPerformed
@@ -262,20 +373,20 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
          btnCrearPrimerAdministrador.doClick();
     }//GEN-LAST:event_jPContraseniaActionPerformed
 // Acción al presionar Enter en el campo de usuario
-    private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
+    private void txtNombreUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUsuarioActionPerformed
         // TODO add your handling code here:
          jPContrasenia.requestFocus();
-    }//GEN-LAST:event_txtUsuarioActionPerformed
+    }//GEN-LAST:event_txtNombreUsuarioActionPerformed
 
-    // Método público para mostrar mensajes de error (usado por el controlador)
-    public void mostrarMensajeError(String mensaje) {
-        lblMensajeError.setText(mensaje);
-        lblMensajeError.setVisible(true);
-    }
-    // Si el usuario intenta cerrar la ventana con la X, salimos de la aplicación
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {
-        System.exit(0);
-    }
+    private void txtEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEdadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEdadActionPerformed
+
+    private void txtDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDireccionActionPerformed
+
+
 
     /**
      * @param args the command line arguments
@@ -313,12 +424,21 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton RadioFemenino;
+    private javax.swing.JRadioButton RadioMasculino;
     private javax.swing.JButton btnCrearPrimerAdministrador;
     private javax.swing.JPasswordField jPContrasenia;
+    private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblContrasenia;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblEdad;
+    private javax.swing.JLabel lblGenero;
     private javax.swing.JLabel lblMensajeError;
-    private javax.swing.JLabel lblPrimerUsuario;
+    private javax.swing.JLabel lblNombreUsuario;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JTextField txtUsuario;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtEdad;
+    private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

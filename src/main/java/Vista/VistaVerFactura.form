@@ -178,18 +178,11 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblNombreCliente" min="-2" pref="480" max="-2" attributes="0"/>
-                              <Component id="lblDireccion" alignment="0" min="-2" pref="363" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblCedula" min="-2" pref="281" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="lblNombreCliente" min="-2" pref="480" max="-2" attributes="0"/>
+                      <Component id="lblDireccion" alignment="0" min="-2" pref="363" max="-2" attributes="0"/>
+                      <Component id="lblCedula" alignment="0" min="-2" pref="281" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

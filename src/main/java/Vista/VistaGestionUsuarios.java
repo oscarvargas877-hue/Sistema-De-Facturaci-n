@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import Modelo.PaginadorTabla;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,9 +11,12 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 /**
  *
  * @author Usuario
@@ -20,8 +24,8 @@ import javax.swing.JPanel;
 public class VistaGestionUsuarios extends javax.swing.JFrame {
     // Atributo para guardar la referencia al controlador
     private Controlador.ControladorGestionUsuarios controladorGestion;
-
-
+    // === PAGINACIÓN DE USUARIOS ===
+    private PaginadorTabla<Modelo.UsuarioModelo> paginadorUsuarios;
     /**
      * Creates new form VistaGestionUsuarios
      */
@@ -117,6 +121,39 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     btnAtras.setPreferredSize(tamañoBoton);
     btnAtras.setBackground(new Color(155, 89, 182));
     btnAtras.setForeground(Color.WHITE);
+    
+        // ==================== BARRA DE PAGINACIÓN INFERIOR - GESTIÓN DE USUARIOS ====================
+
+    // Estilizar los botones y label de paginación que ya tienes en el .form
+    btnAnteriorGestion.setFont(new Font("Arial Black", Font.BOLD, 22));
+    btnAnteriorGestion.setForeground(new Color(0, 102, 102));
+    btnAnteriorGestion.setBackground(Color.WHITE);
+    btnAnteriorGestion.setPreferredSize(new Dimension(220, 70));
+    btnAnteriorGestion.setFocusPainted(false);
+
+    btnSiguienteGestion.setFont(new Font("Arial Black", Font.BOLD, 22));
+    btnSiguienteGestion.setForeground(new Color(0, 102, 102));
+    btnSiguienteGestion.setBackground(Color.WHITE);
+    btnSiguienteGestion.setPreferredSize(new Dimension(220, 70));
+    btnSiguienteGestion.setFocusPainted(false);
+
+    lblPagina.setFont(new Font("Arial Black", Font.BOLD, 24));
+    lblPagina.setForeground(Color.WHITE);
+    lblPagina.setHorizontalAlignment(SwingConstants.CENTER);
+
+    // Crear panel dedicado solo para la paginación (para mejor control)
+    JPanel panelPaginacion = new JPanel(new BorderLayout(60, 20));
+    panelPaginacion.setBackground(new Color(70, 130, 180));
+    panelPaginacion.setBorder(BorderFactory.createEmptyBorder(20, 80, 40, 80));
+    panelPaginacion.add(btnAnteriorGestion, BorderLayout.WEST);
+    panelPaginacion.add(lblPagina, BorderLayout.CENTER);
+    panelPaginacion.add(btnSiguienteGestion, BorderLayout.EAST);
+
+    // Agregar la barra de paginación al fondo de la ventana
+    getContentPane().add(panelPaginacion, BorderLayout.SOUTH);
+
+    // Inicializar el paginador con los componentes existentes
+    paginadorUsuarios = new PaginadorTabla<>(tablaUsuarios, lblPagina, btnAnteriorGestion, btnSiguienteGestion);
 
     revalidate();
     repaint();
@@ -126,27 +163,52 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         this.controladorGestion = controlador;
     }
     
-    // Método para cargar la lista de usuarios en la tabla
-    public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-            new Object[]{"ID", "Usuario", "Rol", "Estado"}, 0
-        );
 
-        for (Modelo.UsuarioModelo usuario : listaUsuarios) {
-            String estado = usuario.isActivo() ? "Activo" : "Inactivo";
-            modelo.addRow(new Object[]{
-                usuario.getIdUsuario(),
-                usuario.getNombreUsuario(),
-                usuario.getRol(),
-                estado
-            });
+  // Método público para cargar usuarios con paginación  colores en estado
+   public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
+    // Usar paginador para mostrar solo 5 por página
+    paginadorUsuarios.cargarDatos(listaUsuarios);
+
+    // Renderer personalizado para estado y colores
+    tablaUsuarios.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Color del texto: SIEMPRE NEGRO excepto si está seleccionado
+            if (isSelected) {
+                setForeground(Color.WHITE);
+            } else {
+                setForeground(Color.BLACK);
+            }
+
+            // La columna "Estado" es la 3 (índice 3) - colorear SOLO esa celda
+            if (column == 3 && value != null) {
+                String estado = value.toString();
+                
+                if ("Activo".equals(estado)) {
+                    setForeground(isSelected ? Color.WHITE : new Color(0, 153, 0)); // Verde
+                    setFont(getFont().deriveFont(Font.BOLD));
+                } else if ("Inactivo".equals(estado)) {
+                    setForeground(isSelected ? Color.WHITE : Color.RED); // Rojo
+                    setFont(getFont().deriveFont(Font.BOLD));
+                }
+            } else {
+                setFont(getFont().deriveFont(Font.PLAIN));
+            }
+
+            // Fondo de fila seleccionada
+            setBackground(isSelected ? new Color(0, 120, 215) : Color.WHITE);
+
+            return this;
         }
+    });
 
-        tablaUsuarios.setModel(modelo);
-        //PARA QUE LAS FILAS NO SEAN EDITABLES
-        tablaUsuarios.setDefaultEditor(Object.class, null);
-    }
-    
+    // Tabla no editable
+    tablaUsuarios.setDefaultEditor(Object.class, null);
+}
      // Método para obtener el ID del usuario seleccionado
     private int obtenerIdUsuarioSeleccionado() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
@@ -174,6 +236,9 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnInactivar = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
+        lblPagina = new javax.swing.JLabel();
+        btnAnteriorGestion = new javax.swing.JButton();
+        btnSiguienteGestion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -238,6 +303,22 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
             }
         });
 
+        lblPagina.setText("Pagina");
+
+        btnAnteriorGestion.setText("Anterior");
+        btnAnteriorGestion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorGestionActionPerformed(evt);
+            }
+        });
+
+        btnSiguienteGestion.setText("Siguiente");
+        btnSiguienteGestion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteGestionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -253,19 +334,25 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
                             .addComponent(lblListaUsuarios)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(btnEditar)
                                         .addGroup(layout.createSequentialGroup()
                                             .addGap(238, 238, 238)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(btnActivar)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                    .addComponent(btnAtras)
-                                                    .addGap(45, 45, 45)))))
-                                    .addGap(88, 88, 88)
-                                    .addComponent(btnInactivar))
+                                            .addComponent(btnActivar))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(105, 105, 105)
+                                            .addComponent(btnAnteriorGestion)
+                                            .addGap(67, 67, 67)
+                                            .addComponent(lblPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnSiguienteGestion)))
+                                    .addGap(81, 81, 81)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnAtras)
+                                        .addComponent(btnInactivar))
+                                    .addGap(45, 45, 45))
                                 .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,7 +369,11 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
                     .addComponent(btnActivar)
                     .addComponent(btnInactivar))
                 .addGap(18, 18, 18)
-                .addComponent(btnAtras)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAtras)
+                    .addComponent(lblPagina)
+                    .addComponent(btnAnteriorGestion)
+                    .addComponent(btnSiguienteGestion))
                 .addGap(87, 87, 87))
         );
 
@@ -332,6 +423,20 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
+    private void btnAnteriorGestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorGestionActionPerformed
+        // TODO add your handling code here:
+         if (paginadorUsuarios != null) {
+        paginadorUsuarios.irPaginaAnterior();
+    }
+    }//GEN-LAST:event_btnAnteriorGestionActionPerformed
+
+    private void btnSiguienteGestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteGestionActionPerformed
+        // TODO add your handling code here:
+         if (paginadorUsuarios != null) {
+        paginadorUsuarios.irPaginaSiguiente();
+    }
+    }//GEN-LAST:event_btnSiguienteGestionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -370,11 +475,14 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollTablaUsuarios;
     private javax.swing.JButton btnActivar;
+    private javax.swing.JButton btnAnteriorGestion;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnInactivar;
+    private javax.swing.JButton btnSiguienteGestion;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblListaUsuarios;
+    private javax.swing.JLabel lblPagina;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables

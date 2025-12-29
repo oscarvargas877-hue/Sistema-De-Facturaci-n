@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 
 /**
@@ -33,43 +34,190 @@ private javax.swing.JDialog dialogoEspera;
     public VistaFacturacion() {
         initComponents();
  
-     // CONFIGURACIÓN GENERAL
+    // ================== CONFIGURACIÓN GENERAL ==================
     setExtendedState(JFrame.MAXIMIZED_BOTH);
     getContentPane().setBackground(new Color(70, 130, 180));
-
-    // ESTILOS PERSONALIZADOS (puedes mantenerlos, pero ahora aplicados a componentes existentes)
-    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 50));
+    
+    // ================== CREAR PANEL PRINCIPAL CON LAYOUT ==================
+    JPanel panelPrincipal = new JPanel(new GridBagLayout());
+    panelPrincipal.setBackground(new Color(70, 130, 180));
+    panelPrincipal.setOpaque(true);
+    
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+    // ================== TÍTULO ==================
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.gridwidth = 3;
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 60));
     lblTitulo.setForeground(Color.WHITE);
     lblTitulo.setHorizontalAlignment(JLabel.CENTER);
-
-    // Ejemplo: estilizar campos de cliente
-    txtCedula.setFont(new Font("Arial", Font.PLAIN, 24));
-    txtNombresApellidos.setFont(new Font("Arial", Font.PLAIN, 24));
-    txtDireccion.setFont(new Font("Arial", Font.PLAIN, 24));
-
-    // Botón Buscar
-    btnBuscarCedula.setFont(new Font("Arial Black", Font.BOLD, 18));
-    btnBuscarCedula.setBackground(new Color(0, 102, 102));
-    btnBuscarCedula.setForeground(Color.WHITE);
-
-    // Acción al hacer clic en Buscar o Enter en cédula
-    btnBuscarCedula.addActionListener(e -> {
-        if (controladorFacturacion != null) {
-            controladorFacturacion.buscarClientePorCedula();
-        }
-    });
-
-    txtCedula.addActionListener(e -> {
-        if (controladorFacturacion != null) {
-            controladorFacturacion.buscarClientePorCedula();
-        }
-    });
-
-    // Enfocar cédula al abrir
-    java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
+    panelPrincipal.add(lblTitulo, gbc);
     
-
-    // 1. Al hacer clic en Buscaro presionar Enter en cédula  buscar cliente
+    // ================== CÉDULA ==================
+    gbc.gridwidth = 1;
+    gbc.gridy = 1;
+    gbc.gridx = 0;
+    lblCedula.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblCedula.setForeground(Color.WHITE);
+    panelPrincipal.add(lblCedula, gbc);
+    
+    gbc.gridx = 1;
+    txtCedula.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtCedula.setPreferredSize(new Dimension(350, 50));
+    panelPrincipal.add(txtCedula, gbc);
+    
+    gbc.gridx = 2;
+    btnBuscarCedula.setFont(new Font("Arial Black", Font.BOLD, 24));
+    btnBuscarCedula.setBackground(new Color(46, 204, 113));
+    btnBuscarCedula.setForeground(Color.WHITE);
+    btnBuscarCedula.setPreferredSize(new Dimension(200, 50));
+    btnBuscarCedula.setFocusPainted(false);
+    panelPrincipal.add(btnBuscarCedula, gbc);
+    
+    // ================== NOMBRES ==================
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    lblNombresCompletos.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblNombresCompletos.setForeground(Color.WHITE);
+    panelPrincipal.add(lblNombresCompletos, gbc);
+    
+    gbc.gridx = 1;
+    gbc.gridwidth = 2;
+    txtNombresApellidos.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtNombresApellidos.setEditable(false);
+    txtNombresApellidos.setPreferredSize(new Dimension(400, 50));
+    panelPrincipal.add(txtNombresApellidos, gbc);
+    
+    // ================== DIRECCIÓN ==================
+    gbc.gridx = 0;
+    gbc.gridy = 3;
+    gbc.gridwidth = 1;
+    lblDireccion.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblDireccion.setForeground(Color.WHITE);
+    panelPrincipal.add(lblDireccion, gbc);
+    
+    gbc.gridx = 1;
+    gbc.gridwidth = 2;
+    txtDireccion.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtDireccion.setEditable(false);
+    txtDireccion.setPreferredSize(new Dimension(400, 50));
+    panelPrincipal.add(txtDireccion, gbc);
+    
+    // ================== PRODUCTOS ==================
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    gbc.gridwidth = 1;
+    lblProductos.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblProductos.setForeground(Color.WHITE);
+    panelPrincipal.add(lblProductos, gbc);
+    
+    gbc.gridx = 1;
+    gbc.gridwidth = 2;
+    ComboProductos.setFont(new Font("Arial", Font.PLAIN, 28));
+    ComboProductos.setPreferredSize(new Dimension(400, 50));
+    panelPrincipal.add(ComboProductos, gbc);
+    
+    // ================== CANTIDAD ==================
+    gbc.gridx = 0;
+    gbc.gridy = 5;
+    gbc.gridwidth = 1;
+    lblCantidad.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblCantidad.setForeground(Color.WHITE);
+    panelPrincipal.add(lblCantidad, gbc);
+    
+    gbc.gridx = 1;
+    gbc.gridwidth = 2;
+    txtCantidad.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtCantidad.setPreferredSize(new Dimension(400, 50));
+    panelPrincipal.add(txtCantidad, gbc);
+    
+    // ================== BOTÓN AGREGAR ==================
+    gbc.gridx = 0;
+    gbc.gridy = 6;
+    gbc.gridwidth = 3;
+    btnAgregarProducto.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnAgregarProducto.setBackground(new Color(0, 102, 102));
+    btnAgregarProducto.setForeground(Color.WHITE);
+    btnAgregarProducto.setPreferredSize(new Dimension(600, 60));
+    btnAgregarProducto.setFocusPainted(false);
+    panelPrincipal.add(btnAgregarProducto, gbc);
+    
+    // ================== DETALLE VENTA ==================
+    gbc.gridx = 0;
+    gbc.gridy = 7;
+    lblDetalleVenta.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblDetalleVenta.setForeground(Color.WHITE);
+    panelPrincipal.add(lblDetalleVenta, gbc);
+    
+    gbc.gridy = 8;
+    ScrollDetalleVenta.setPreferredSize(new Dimension(300, 90));
+    panelPrincipal.add(ScrollDetalleVenta, gbc);
+    
+    // ================== TOTAL ==================
+    gbc.gridy = 9;
+    gbc.gridwidth = 1;
+    lblTotal.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblTotal.setForeground(Color.WHITE);
+    panelPrincipal.add(lblTotal, gbc);
+    
+    gbc.gridx = 1;
+    gbc.gridwidth = 2;
+    txtTotal.setFont(new Font("Arial", Font.PLAIN, 28));
+    txtTotal.setEditable(false);
+    txtTotal.setPreferredSize(new Dimension(400, 50));
+    panelPrincipal.add(txtTotal, gbc);
+    
+    // ================== BOTONES FINALES ==================
+    gbc.gridx = 0;
+    gbc.gridy = 10;
+    gbc.gridwidth = 3;
+    
+    JPanel panelBotones = new JPanel();
+    panelBotones.setBackground(new Color(70, 130, 180));
+    
+    Font fontBoton = new Font("Arial Black", Font.BOLD, 28);
+    
+    btnFinalizarVenta.setFont(fontBoton);
+    btnFinalizarVenta.setBackground(new Color(46, 204, 113));
+    btnFinalizarVenta.setForeground(Color.WHITE);
+    btnFinalizarVenta.setPreferredSize(new Dimension(400, 60));
+    btnFinalizarVenta.setFocusPainted(false);
+    panelBotones.add(btnFinalizarVenta);
+    
+    btnBorrar.setFont(fontBoton);
+    btnBorrar.setBackground(new Color(231, 76, 60));
+    btnBorrar.setForeground(Color.WHITE);
+    btnBorrar.setPreferredSize(new Dimension(200, 60));
+    btnBorrar.setFocusPainted(false);
+    panelBotones.add(btnBorrar);
+    
+    btnAtras.setFont(fontBoton);
+    btnAtras.setBackground(new Color(52, 152, 219));
+    btnAtras.setForeground(Color.WHITE);
+    btnAtras.setPreferredSize(new Dimension(200, 60));
+    btnAtras.setFocusPainted(false);
+    panelBotones.add(btnAtras);
+    
+    panelPrincipal.add(panelBotones, gbc);
+    
+    // ================== CENTRAR PANEL EN LA PANTALLA ==================
+    JPanel panelCentral = new JPanel(new GridBagLayout());
+    panelCentral.setBackground(new Color(70, 130, 180));
+    GridBagConstraints gbcCentral = new GridBagConstraints();
+    gbcCentral.anchor = GridBagConstraints.NORTH;
+    gbcCentral.weighty = 0.1;
+    panelCentral.add(panelPrincipal, gbcCentral);
+    
+    JScrollPane scrollPane = new JScrollPane(panelCentral);
+    scrollPane.setBackground(new Color(70, 130, 180));
+    scrollPane.getViewport().setBackground(new Color(70, 130, 180));
+    scrollPane.setBorder(null);
+    setContentPane(scrollPane);
+    
+    // ================== ACCIONES ==================
     btnBuscarCedula.addActionListener(e -> {
         if (controladorFacturacion != null) {
             controladorFacturacion.buscarClientePorCedula();
@@ -81,13 +229,11 @@ private javax.swing.JDialog dialogoEspera;
             controladorFacturacion.buscarClientePorCedula();
         }
     });
-
-    // 2. Enfocar el campo cédula al abrir la ventana (para que el cajero empiece rápido)
-    java.awt.EventQueue.invokeLater(() -> {
-        txtCedula.requestFocusInWindow();
-    });
+    
+    java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
      
     }
+    
     
     
     // Método para inyectar el controlador desde fuera
@@ -203,11 +349,11 @@ private javax.swing.JDialog dialogoEspera;
 
         lblDetalleVenta.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblDetalleVenta.setForeground(new java.awt.Color(0, 102, 102));
-        lblDetalleVenta.setText("Detalle Venta");
+        lblDetalleVenta.setText("Detalle Venta:");
 
         lblTotal.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         lblTotal.setForeground(new java.awt.Color(0, 102, 102));
-        lblTotal.setText("Total");
+        lblTotal.setText("Total:");
 
         txtTotal.setEditable(false);
         txtTotal.addActionListener(new java.awt.event.ActionListener() {

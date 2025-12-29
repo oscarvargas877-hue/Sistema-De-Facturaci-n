@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import Modelo.PaginadorTabla;
+import Modelo.ProductoModelo;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,7 +16,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 
 /**
@@ -24,16 +28,21 @@ import javax.swing.JTextField;
 public class VistaGestionStock extends javax.swing.JFrame {
      // Atributo para guardar la referencia al controlador
     private Controlador.ControladorGestionStock controladorGestionStock;
+    private PaginadorTabla<ProductoModelo> paginadorStock;
     /**
      * Creates new form VistaGestionStock
      */
     public VistaGestionStock() {
         initComponents();
-   // PANTALLA COMPLETA
+    // ==================== REPOSICIONAR BOTONES DE PAGINACIÓN ====================
+    // PANTALLA COMPLETA
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     // Fondo profesional
     getContentPane().setBackground(new Color(70, 130, 180));
+
+    // Limpiar el layout actual
+    getContentPane().removeAll();
 
     // Panel central con GridBagLayout
     JPanel panelCentral = new JPanel(new GridBagLayout());
@@ -42,7 +51,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridwidth = GridBagConstraints.REMAINDER;
     gbc.anchor = GridBagConstraints.CENTER;
-    gbc.insets = new Insets(20, 0, 10, 0);
+    gbc.insets = new Insets(15, 0, 5, 0);
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weightx = 1.0;
     gbc.weighty = 0;
@@ -53,49 +62,49 @@ public class VistaGestionStock extends javax.swing.JFrame {
     lblTitulo.setHorizontalAlignment(JLabel.CENTER);
     panelCentral.add(lblTitulo, gbc);
 
-    // Lista de Productos"
+    // Lista de Productos
     lblListaProductos.setFont(new Font("Arial Black", Font.BOLD, 28));
     lblListaProductos.setForeground(Color.WHITE);
     lblListaProductos.setHorizontalAlignment(JLabel.CENTER);
     panelCentral.add(lblListaProductos, gbc);
 
-    //  TABLA 
+    // TABLA - AUMENTADA DE TAMAÑO
     TablaProductos.setFont(new Font("Arial", Font.PLAIN, 20));
     TablaProductos.setRowHeight(50);
     TablaProductos.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 24));
     TablaProductos.getTableHeader().setForeground(Color.WHITE);
     TablaProductos.getTableHeader().setBackground(new Color(0, 102, 102));
-    jScrollPane1.setPreferredSize(new Dimension(1000, 250)); // Altura controlada
-    gbc.insets = new Insets(10, 50, 20, 50);
+    jScrollPane1.setPreferredSize(new Dimension(1200, 350)); // Aumentado de 250 a 350
+    gbc.insets = new Insets(10, 30, 10, 30);
     gbc.fill = GridBagConstraints.BOTH;
-    gbc.weighty = 0.6; // La tabla ocupa parte del espacio vertical
+    gbc.weighty = 0.5;
     panelCentral.add(jScrollPane1, gbc);
 
-    // PANEL FORMULARIO Etiquetas a la izquierda, campos con espacio 
+    // PANEL FORMULARIO
     JPanel panelFormulario = new JPanel(new GridBagLayout());
     panelFormulario.setOpaque(false);
 
     GridBagConstraints gbcLabel = new GridBagConstraints();
     gbcLabel.anchor = GridBagConstraints.WEST;
-    gbcLabel.insets = new Insets(10, 10, 10, 20); // Más espacio a la derecha de la etiqueta
-    gbcLabel.weightx = 0.0; // ← NO ocupa espacio extra
+    gbcLabel.insets = new Insets(10, 10, 10, 20);
+    gbcLabel.weightx = 0.0;
     gbcLabel.fill = GridBagConstraints.NONE;
 
     GridBagConstraints gbcField = new GridBagConstraints();
     gbcField.gridwidth = GridBagConstraints.REMAINDER;
-    gbcField.anchor = GridBagConstraints.WEST; //  campo a la izquierda del espacio disponible
+    gbcField.anchor = GridBagConstraints.WEST;
     gbcField.insets = new Insets(10, 0, 10, 10);
-    gbcField.weightx = 1.0; //  el campo se expande horizontalmente
+    gbcField.weightx = 1.0;
     gbcField.fill = GridBagConstraints.HORIZONTAL;
 
     // Etiqueta y campo Código
     lblCodigo.setFont(new Font("Arial Black", Font.BOLD, 28));
     lblCodigo.setForeground(Color.WHITE);
     txtCodigo.setFont(new Font("Arial", Font.PLAIN, 28));
-    txtCodigo.setPreferredSize(new Dimension(100, 50)); // ancho fijo
+    txtCodigo.setPreferredSize(new Dimension(100, 50));
     txtCodigo.setHorizontalAlignment(JTextField.CENTER);
     txtCodigo.setBackground(Color.WHITE);
-    txtCodigo.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 80), 2)); // borde suave
+    txtCodigo.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 80), 2));
 
     panelFormulario.add(lblCodigo, gbcLabel);
     panelFormulario.add(txtCodigo, gbcField);
@@ -112,38 +121,71 @@ public class VistaGestionStock extends javax.swing.JFrame {
     panelFormulario.add(lblCantidadSumar, gbcLabel);
     panelFormulario.add(txtCantidaSumar, gbcField);
 
-    // Agregar panel formulario al panel central
-    gbc.insets = new Insets(10, 100, 10, 100); // margen lateral generoso
+    gbc.insets = new Insets(5, 100, 5, 100);
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weighty = 0;
     panelCentral.add(panelFormulario, gbc);
 
-    // BOTÓN Reabastecer tamaño normal
+    // BOTÓN Reabastecer
     btnReabastecer.setFont(new Font("Arial Black", Font.BOLD, 28));
-    btnReabastecer.setPreferredSize(new Dimension(400, 60)); // Ancho normal
-    btnReabastecer.setBackground(new Color(46, 204, 113)); // Verde
+    btnReabastecer.setPreferredSize(new Dimension(400, 60));
+    btnReabastecer.setBackground(new Color(46, 204, 113));
     btnReabastecer.setForeground(Color.WHITE);
-    gbc.insets = new Insets(10, 50, 10, 50);
-    gbc.fill = GridBagConstraints.NONE; //  NO SE EXPANDE
+    gbc.insets = new Insets(5, 50, 5, 50);
+    gbc.fill = GridBagConstraints.NONE;
     panelCentral.add(btnReabastecer, gbc);
 
-    // BOTÓN Atrás tamaño normal
+    // BOTÓN Atrás
     lblAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
-    lblAtras.setPreferredSize(new Dimension(400, 60)); // Ancho normal
-    lblAtras.setBackground(new Color(155, 89, 182)); // Morado
+    lblAtras.setPreferredSize(new Dimension(400, 60));
+    lblAtras.setBackground(new Color(155, 89, 182));
     lblAtras.setForeground(Color.WHITE);
     panelCentral.add(lblAtras, gbc);
 
-    //  MENSAJE DE ERROR/ALERTA  DEBAJO DEL BOTÓN ATRÁS
+    // MENSAJE DE ERROR
     lblMensajeDeError.setFont(new Font("Arial Black", Font.BOLD, 26));
-    lblMensajeDeError.setForeground(Color.RED);
+    lblMensajeDeError.setForeground(Color.WHITE);
     lblMensajeDeError.setHorizontalAlignment(JLabel.CENTER);
-    gbc.insets = new Insets(10, 50, 20, 50);
+    gbc.insets = new Insets(5, 50, 5, 50);
     panelCentral.add(lblMensajeDeError, gbc);
 
-    // Aplicar panel central
+    // PANEL PAGINACIÓN - CON MÁS ESPACIO
+    JPanel panelPaginacion = new JPanel();
+    panelPaginacion.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 30, 15));
+    panelPaginacion.setOpaque(false);
+    
+    btnAnterior.setFont(new Font("Arial Black", Font.BOLD, 20));
+    btnAnterior.setForeground(new Color(0, 102, 102));
+    btnAnterior.setBackground(Color.WHITE);
+    btnAnterior.setPreferredSize(new Dimension(140, 60));
+    btnAnterior.setFocusPainted(false);
+    
+    btnSiguiente.setFont(new Font("Arial Black", Font.BOLD, 20));
+    btnSiguiente.setForeground(new Color(0, 102, 102));
+    btnSiguiente.setBackground(Color.WHITE);
+    btnSiguiente.setPreferredSize(new Dimension(180, 60));
+    btnSiguiente.setFocusPainted(false);
+    
+    lblPagina.setFont(new Font("Arial Black", Font.BOLD, 24));
+    lblPagina.setForeground(Color.WHITE);
+    lblPagina.setHorizontalAlignment(SwingConstants.CENTER);
+    lblPagina.setPreferredSize(new Dimension(200, 60)); // Aumentado de 150 a 200
+    
+    panelPaginacion.add(btnAnterior);
+    panelPaginacion.add(lblPagina);
+    panelPaginacion.add(btnSiguiente);
+    
+    gbc.insets = new Insets(10, 50, 20, 50);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weighty = 0;
+    panelCentral.add(panelPaginacion, gbc);
+
+    // Aplicar layout
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+    // Crear e inicializar el paginador
+    paginadorStock = new PaginadorTabla<>(TablaProductos, lblPagina, btnAnterior, btnSiguiente);
 
     revalidate();
     repaint();
@@ -173,6 +215,9 @@ public class VistaGestionStock extends javax.swing.JFrame {
         txtCantidaSumar = new javax.swing.JTextField();
         btnReabastecer = new javax.swing.JButton();
         lblAtras = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
+        lblPagina = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -245,6 +290,22 @@ public class VistaGestionStock extends javax.swing.JFrame {
             }
         });
 
+        btnAnterior.setText("Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
+
+        lblPagina.setText("Pagina");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -257,17 +318,28 @@ public class VistaGestionStock extends javax.swing.JFrame {
                             .addComponent(lblCodigo)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(82, 82, 82)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnReabastecer)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(46, 46, 46)
+                                            .addComponent(lblCantidadSumar)
+                                            .addGap(18, 18, Short.MAX_VALUE)
+                                            .addComponent(txtCantidaSumar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(lblMensajeDeError, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnReabastecer))
+                                            .addGap(0, 0, Short.MAX_VALUE)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(46, 46, 46)
-                                        .addComponent(lblCantidadSumar)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtCantidaSumar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(lblAtras)
-                                    .addComponent(lblMensajeDeError, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(120, 327, Short.MAX_VALUE))
+                                        .addComponent(lblAtras)
+                                        .addGap(49, 49, 49)
+                                        .addComponent(btnAnterior)
+                                        .addGap(86, 86, 86)
+                                        .addComponent(lblPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(70, 70, 70)
+                                        .addComponent(btnSiguiente)))))
+                        .addGap(326, 326, 326))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblListaProductos)
@@ -296,9 +368,13 @@ public class VistaGestionStock extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnReabastecer)
                 .addGap(18, 18, 18)
-                .addComponent(lblAtras)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblMensajeDeError, javax.swing.GroupLayout.DEFAULT_SIZE, 11, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAtras)
+                    .addComponent(lblPagina)
+                    .addComponent(btnAnterior)
+                    .addComponent(btnSiguiente))
+                .addGap(19, 19, 19)
+                .addComponent(lblMensajeDeError, javax.swing.GroupLayout.DEFAULT_SIZE, 4, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -356,6 +432,14 @@ public class VistaGestionStock extends javax.swing.JFrame {
             controladorGestionStock.volverAlMenu();
         }
     }//GEN-LAST:event_lblAtrasActionPerformed
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAnteriorActionPerformed
      
         // Método público para mostrar mensajes de error o éxito
       public void mostrarMensajeError(String mensaje) {
@@ -370,78 +454,67 @@ public class VistaGestionStock extends javax.swing.JFrame {
         }
       
     
-    // Método público para cargar los productos en la tabla y mostrar alerta si hay stock bajo
+  // Método público para cargar los productos con paginación + alerta stock bajo + color rojo
     public void cargarProductos(java.util.List<Modelo.ProductoModelo> listaProductos) {
-       // Crear el modelo de la tabla
-       javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(
-           new Object[]{"Código", "Nombre", "Precio", "Stock"}, 0
-       );
 
-       // Bandera para saber si hay stock bajo
-       boolean hayStockBajo = false;
+        // === USAR EL PAGINADOR PARA MANEJAR TODO: PAGINACIÓN + LLENADO DE TABLA ===
+        paginadorStock.cargarDatos(listaProductos);
 
-       // Llenar la tabla con los productos
-       for (Modelo.ProductoModelo producto : listaProductos) {
-           modeloTabla.addRow(new Object[]{
-               producto.getCodigo(),
-               producto.getNombre(),
-               producto.getPrecio(),
-               producto.getCantidadStock()
-           });
-           // Verificar si el stock es menor a 3
-           if (producto.getCantidadStock() < 3) {
-               hayStockBajo = true;
-           }
-       }
-       
-       //PARA QUE LAS FILAS NO SEAN EDITABLES
-       modeloTabla.isCellEditable(0, 0); 
-       TablaProductos.setDefaultEditor(Object.class, null); 
-     
+        // === DETECTAR SI HAY STOCK BAJO EN TODA LA LISTA (no solo en la página actual) ===
+        boolean hayStockBajo = false;
+        for (Modelo.ProductoModelo producto : listaProductos) {
+            if (producto.getCantidadStock() < 3) {
+                hayStockBajo = true;
+                break; // Optimización: salir temprano si ya encontramos uno
+            }
+        }
 
-       // Asignar el modelo a la tabla
-       TablaProductos.setModel(modeloTabla);
+        // === MOSTRAR ALERTA GENERAL DE STOCK BAJO ===
+        if (hayStockBajo) {
+            mostrarMensajeConColor("¡Alerta! Stock bajo (<3) en algunos productos.", Color.WHITE);
+        } else {
+            lblMensajeDeError.setVisible(false); // Ocultar si no hay alerta
+        }
 
-       //AQUÍ VA EL COLOR ROJO 
-       TablaProductos.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
-           @Override
-           public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
-                   boolean isSelected, boolean hasFocus, int row, int column) {
+        // === RENDERER PERSONALIZADO: RESALTAR STOCK BAJO EN ROJO Y NEGRITA ===
+        // Este renderer se aplica a la tabla cada vez que se carga una nueva página
+        TablaProductos.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
 
-               java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-               // Obtener el stock de la fila actual (columna 3 = Stock)
-               int stock = (int) table.getValueAt(row, 3);
+                // Obtener el valor de la columna Stock (índice 3)
+                Object valorStock = table.getValueAt(row, 3);
+                int stock = 0;
+                if (valorStock != null) {
+                    try {
+                        stock = Integer.parseInt(valorStock.toString());
+                    } catch (NumberFormatException e) {
+                        stock = 0;
+                    }
+                }
 
-               // Si el stock es menor a 3  ROJO Y NEGRITA
-               if (stock < 3) {
-                   celda.setForeground(java.awt.Color.RED);
-                   celda.setFont(celda.getFont().deriveFont(java.awt.Font.BOLD));
-               } else {
-                   // Color normal
-                   celda.setForeground(isSelected ? java.awt.Color.WHITE : java.awt.Color.BLACK);
-                   celda.setFont(celda.getFont().deriveFont(java.awt.Font.PLAIN));
-               }
+                // Aplicar estilo según stock
+                if (stock < 3) {
+                    celda.setForeground(Color.RED);
+                    celda.setFont(celda.getFont().deriveFont(Font.BOLD));
+                } else {
+                    celda.setForeground(isSelected ? Color.WHITE : Color.BLACK);
+                    celda.setFont(celda.getFont().deriveFont(Font.PLAIN));
+                }
 
-               // Fondo cuando seleccionas la fila
-               if (isSelected) {
-                   celda.setBackground(new java.awt.Color(0, 120, 215));
-               } else {
-                   celda.setBackground(java.awt.Color.WHITE);
-               }
+                // Fondo de selección bonito
+                celda.setBackground(isSelected ? new Color(0, 120, 215) : Color.WHITE);
 
-               return celda;
-           }
-       });
-       // Mostrar o ocultar el mensaje de alerta 
-       if (hayStockBajo) {
-           lblMensajeDeError.setText("¡Alerta! Stock bajo (<3) en algunos productos.");
-           lblMensajeDeError.setForeground(java.awt.Color.RED);
-           lblMensajeDeError.setVisible(true);
-       } else {
-           lblMensajeDeError.setVisible(false);
-       }
-   }
+                return celda;
+            }
+        });
+
+        // === HACER LA TABLA NO EDITABLE (buena práctica) ===
+        TablaProductos.setDefaultEditor(Object.class, null);
+    }
     
     /**
      * @param args the command line arguments
@@ -480,13 +553,16 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TablaProductos;
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnReabastecer;
+    private javax.swing.JButton btnSiguiente;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lblAtras;
     private javax.swing.JLabel lblCantidadSumar;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblListaProductos;
     private javax.swing.JLabel lblMensajeDeError;
+    private javax.swing.JLabel lblPagina;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTextField txtCantidaSumar;
     private javax.swing.JTextField txtCodigo;

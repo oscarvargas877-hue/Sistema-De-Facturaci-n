@@ -8,6 +8,8 @@ package Controlador;
 import Modelo.UsuarioModelo;
 import Vista.VistaMenuAdmin;
 import Vista.VistaRegistrarUsuario;
+import java.sql.SQLException;
+import javax.swing.Timer;
 
 // Controlador para el registro de nuevos usuarios (HU003)
 public class ControladorRegistrarUsuario {
@@ -23,37 +25,73 @@ public class ControladorRegistrarUsuario {
     }
 
     // Método para registrar un nuevo usuario
-    public void registrarUsuario(String nombreUsuario, String contrasenia, String rol) {
-        // Crear el objeto UsuarioModelo (el modelo hashea la contraseña automáticamente)
+          public void registrarUsuario(String nombreUsuario, String contrasenia, String rol,
+                                 String cedula, String direccion, int edad, String genero) {
+
+        // ================== VALIDACIONES BÁSICAS ==================
+        if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
+            direccion.isEmpty() || edad <= 0) {
+            vistaRegistrar.mostrarMensajeError("Todos los campos son obligatorios.");
+            return;
+        }
+
+        if (nombreUsuario.contains(" ")) {
+            vistaRegistrar.mostrarMensajeError("El nombre de usuario no puede contener espacios.");
+            return;
+        }
+
+        if (edad < 18 || edad > 120) {
+            vistaRegistrar.mostrarMensajeError("Edad no válida (18-120 años).");
+            return;
+        }
+
+        // ================== VALIDAR SELECCIÓN DE ROL ==================
+        if (rol == null || rol.isEmpty() || 
+            (!rol.equals("administrador") && !rol.equals("cajero"))) {
+            vistaRegistrar.mostrarMensajeError("Por favor seleccione un rol (Administrador o Cajero).");
+            return;
+        }
+
+        // ================== VALIDAR SELECCIÓN DE GÉNERO ==================
+        if (genero == null || genero.isEmpty() || 
+            (!genero.equals("Masculino") && !genero.equals("Femenino"))) {
+            vistaRegistrar.mostrarMensajeError("Por favor seleccione un género.");
+            return;
+        }
+
+        // ================== CREAR Y GUARDAR USUARIO ==================
         UsuarioModelo nuevoUsuario = new UsuarioModelo(nombreUsuario, contrasenia, rol);
+        nuevoUsuario.setCedula(cedula);
+        nuevoUsuario.setDireccion(direccion);
+        nuevoUsuario.setEdad(edad);
+        nuevoUsuario.setGenero(genero);
+        nuevoUsuario.setActivo(true);
 
         try {
-            // Guardar en la base de datos usando el stored procedure
-            nuevoUsuario.guardar();
+            nuevoUsuario.guardar(); // Aquí valida cédula y lanza excepción si inválida
 
-            // Mostrar mensaje de éxito
-            vistaRegistrar.mostrarMensaje("Usuario registrado correctamente.", true);
+            vistaRegistrar.mostrarMensajeExito("¡Usuario registrado exitosamente!");
 
-            // Cerrar esta ventana después de 2 segundos y volver al menú
-            new Thread(() -> {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            Timer timer = new Timer(2000, e -> {
                 vistaRegistrar.dispose();
                 vistaMenuAdmin.setVisible(true);
-            }).start();
+            });
+            timer.setRepeats(false);
+            timer.start();
 
-        } catch (Exception excepcion) {
-            // Manejar error de nombre duplicado (viene de la BD por la restricción UNIQUE)
-            if (excepcion.getMessage() != null && excepcion.getMessage().contains("Duplicate entry")) {
-                vistaRegistrar.mostrarMensaje("El nombre de usuario ya existe. Elija otro.", false);
-            } else {
-                // Otro error (ej: conexión)
-                vistaRegistrar.mostrarMensaje("Error al registrar el usuario. Intente de nuevo.", false);
-                excepcion.printStackTrace();
+        } catch (IllegalArgumentException ex) {
+            vistaRegistrar.mostrarMensajeError(ex.getMessage());
+
+        } catch (SQLException ex) {
+            String mensaje = "Error al guardar el usuario.";
+            if (ex.getMessage() != null && ex.getMessage().toLowerCase().contains("duplicate entry")) {
+                mensaje = "El nombre de usuario o la cédula ya existe.";
             }
+            vistaRegistrar.mostrarMensajeError(mensaje);
+
+        } catch (Exception ex) {
+            vistaRegistrar.mostrarMensajeError("Error inesperado.");
+            ex.printStackTrace();
         }
     }
 

@@ -2,12 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-// Controlador/ControladorPrimerAdmin.java
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Controlador;
 
 import Modelo.UsuarioModelo;
 import Vista.VistaLogin;
 import Vista.VistaPrimerAdmin;
+import java.sql.SQLException;
+import javax.swing.Timer;
 
 // Clase que controla el flujo de creación del primer administrador
 public class ControladorPrimerAdmin {
@@ -20,32 +25,56 @@ public class ControladorPrimerAdmin {
         this.vistaPrimerAdmin = vista;
     }
 
-    // Método llamado cuando el usuario hace clic en Crear Primer Administrador
-    public void crearPrimerAdministrador(String nombreUsuario, String contrasenia) {
-        // Creamos un nuevo objeto UsuarioModelo con rol fijo "administrador"
+    // Método actualizado: recibe todos los datos personales
+    public void crearPrimerAdministrador(String nombreUsuario, String contrasenia,
+                                         String cedula, String direccion, int edad, String genero) {
+
         UsuarioModelo nuevoAdmin = new UsuarioModelo(nombreUsuario, contrasenia, "administrador");
+        nuevoAdmin.setCedula(cedula);
+        nuevoAdmin.setDireccion(direccion);
+        nuevoAdmin.setEdad(edad);
+        nuevoAdmin.setGenero(genero);
+        nuevoAdmin.setActivo(true);
 
         try {
-            // Guardamos el usuario en la base de datos
-            nuevoAdmin.guardar();
+            nuevoAdmin.guardar(); // Aquí se valida la cédula y lanza excepción si inválida
 
-            // Si todo sale bien, cerramos la vista actual
-            vistaPrimerAdmin.dispose();
+            // ================== ÉXITO: solo si llega aquí ==================
+            vistaPrimerAdmin.mostrarMensajeExito("¡Primer Administrador creado exitosamente!");
 
-            // Mostramos la pantalla de login
-            VistaLogin vistaLogin = new VistaLogin();
-            ControladorLogin controladorLogin = new ControladorLogin(vistaLogin);
-            vistaLogin.establecerControlador(controladorLogin);
-            vistaLogin.setVisible(true);
+            Timer timer = new Timer(2000, e -> {
+                vistaPrimerAdmin.dispose();
+                VistaLogin vistaLogin = new VistaLogin();
+                ControladorLogin controladorLogin = new ControladorLogin(vistaLogin);
+                vistaLogin.establecerControlador(controladorLogin);
+                vistaLogin.setVisible(true);
+            });
+            timer.setRepeats(false);
+            timer.start();
 
-        } catch (Exception excepcion) {
-            // Si ocurre un error (ej: nombre de usuario duplicado), lo manejamos
-            if (excepcion.getMessage() != null && excepcion.getMessage().contains("Duplicate entry")) {
-                vistaPrimerAdmin.mostrarMensajeError("El nombre de usuario ya existe. Elija otro.");
-            } else {
-                vistaPrimerAdmin.mostrarMensajeError("Error al crear el administrador. Intente de nuevo.");
-                excepcion.printStackTrace();
+        } catch (IllegalArgumentException ex) {
+            // Errores de validación (cédula inválida, campos vacíos, etc.)
+            vistaPrimerAdmin.mostrarMensajeError(ex.getMessage());
+
+        } catch (SQLException ex) {
+            // Errores de base de datos (duplicados, conexión, etc.)
+            String mensajeError = "Error al guardar en la base de datos.";
+
+            if (ex.getMessage() != null && ex.getMessage().toLowerCase().contains("duplicate entry")) {
+                if (ex.getMessage().toLowerCase().contains("nombreusuario")) {
+                    mensajeError = "El nombre de usuario ya existe.";
+                } else if (ex.getMessage().toLowerCase().contains("cedula")) {
+                    mensajeError = "La cédula ya está registrada.";
+                } else {
+                    mensajeError = "El nombre de usuario o la cédula ya existe.";
+                }
             }
+
+            vistaPrimerAdmin.mostrarMensajeError(mensajeError);
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            vistaPrimerAdmin.mostrarMensajeError("Error inesperado: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

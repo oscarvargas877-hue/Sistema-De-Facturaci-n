@@ -4,6 +4,7 @@
  */
 package Vista;
 
+import Modelo.PaginadorTabla;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,7 +23,7 @@ import javax.swing.JPanel;
 public class VistaHistorialVentas extends javax.swing.JFrame {
 // Atributo para guardar la referencia al controlador
 private Controlador.ControladorHistorialVentas controladorHistorial;
-
+private PaginadorTabla<Modelo.HistorialVentaModelo> paginadorHistorial;
     /**
      * Creates new form VistaHistorialVentas
      */
@@ -52,19 +53,10 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         GridBagConstraints tableGbc = new GridBagConstraints();
         tableGbc.gridwidth = GridBagConstraints.REMAINDER;
         tableGbc.anchor = GridBagConstraints.CENTER;
-        tableGbc.insets = new Insets(10, 50, 30, 50);
+        tableGbc.insets = new Insets(10, 50, 20, 50);
         tableGbc.fill = GridBagConstraints.BOTH;
         tableGbc.weightx = 1.0;
         tableGbc.weighty = 1.0; // ← TABLA OCUPA TODO EL ESPACIO VERTICAL DISPONIBLE
-
-        // gbc para botones
-        GridBagConstraints buttonGbc = new GridBagConstraints();
-        buttonGbc.gridwidth = GridBagConstraints.REMAINDER;
-        buttonGbc.anchor = GridBagConstraints.CENTER;
-        buttonGbc.insets = new Insets(10, 0, 50, 0);
-        buttonGbc.fill = GridBagConstraints.HORIZONTAL;
-        buttonGbc.weightx = 1.0;
-        buttonGbc.weighty = 0;
 
         // Título
         panelCentral.add(lblTitulo, normalGbc);
@@ -72,7 +64,56 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         // Tabla ENORME
         panelCentral.add(ScrollHistorial, tableGbc);
 
-        //  PANEL DE BOTONES con GridBagLayout para control total
+        // ===== PANEL DE PAGINACIÓN =====
+        JPanel panelPaginacion = new JPanel(new GridBagLayout());
+        panelPaginacion.setOpaque(false);
+
+        GridBagConstraints gbcPag = new GridBagConstraints();
+        gbcPag.insets = new Insets(10, 30, 10, 30);
+        gbcPag.fill = GridBagConstraints.HORIZONTAL;
+        gbcPag.anchor = GridBagConstraints.CENTER;
+
+        // Botón Anterior
+        gbcPag.gridx = 0;
+        gbcPag.gridy = 0;
+        gbcPag.weightx = 0.3;
+        btnAnteriorHistorial.setPreferredSize(new Dimension(140, 50));
+        btnAnteriorHistorial.setBackground(new Color(0, 0, 0));
+        btnAnteriorHistorial.setForeground(Color.MAGENTA);
+        btnAnteriorHistorial.setFont(new Font("Arial Black", Font.BOLD, 30));
+        btnAnteriorHistorial.setFocusPainted(false);
+        panelPaginacion.add(btnAnteriorHistorial, gbcPag);
+
+        // Etiqueta de Página
+        gbcPag.gridx = 1;
+        gbcPag.weightx = 0.4;
+        lblPagina.setPreferredSize(new Dimension(200, 50));
+        lblPagina.setFont(new Font("Arial Black", Font.BOLD, 30));
+        lblPagina.setForeground(Color.WHITE);
+        lblPagina.setHorizontalAlignment(JLabel.CENTER);
+        panelPaginacion.add(lblPagina, gbcPag);
+
+        // Botón Siguiente
+        gbcPag.gridx = 2;
+        gbcPag.weightx = 0.3;
+        btnSiguienteHistorial.setPreferredSize(new Dimension(140, 50));
+        btnSiguienteHistorial.setBackground(new Color(0, 0, 0));
+        btnSiguienteHistorial.setForeground(Color.MAGENTA);
+        btnSiguienteHistorial.setFont(new Font("Arial Black", Font.BOLD, 30));
+        btnSiguienteHistorial.setFocusPainted(false);
+        panelPaginacion.add(btnSiguienteHistorial, gbcPag);
+
+        // Agregar panel paginación al central
+        GridBagConstraints paginacionGbc = new GridBagConstraints();
+        paginacionGbc.gridwidth = GridBagConstraints.REMAINDER;
+        paginacionGbc.anchor = GridBagConstraints.CENTER;
+        paginacionGbc.insets = new Insets(10, 50, 15, 50);
+        paginacionGbc.fill = GridBagConstraints.HORIZONTAL;
+        paginacionGbc.weightx = 1.0;
+        paginacionGbc.weighty = 0;
+        panelCentral.add(panelPaginacion, paginacionGbc);
+
+        // ===== PANEL DE BOTONES con GridBagLayout para control total
         JPanel panelBotones = new JPanel(new GridBagLayout());
         panelBotones.setOpaque(false);
 
@@ -97,8 +138,15 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         panelBotones.add(btnAtras, gbcBoton);
 
         // Agregar panel de botones al diseño principal
+        GridBagConstraints buttonGbc = new GridBagConstraints();
+        buttonGbc.gridwidth = GridBagConstraints.REMAINDER;
+        buttonGbc.anchor = GridBagConstraints.CENTER;
+        buttonGbc.insets = new Insets(10, 0, 50, 0);
+        buttonGbc.fill = GridBagConstraints.HORIZONTAL;
+        buttonGbc.weightx = 1.0;
+        buttonGbc.weighty = 0;
         panelCentral.add(panelBotones, buttonGbc);
-        
+
         // Aplicar panel central
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(panelCentral, BorderLayout.CENTER);
@@ -114,52 +162,28 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         tablaHistorial.getTableHeader().setForeground(Color.WHITE);
         tablaHistorial.getTableHeader().setBackground(new Color(0, 102, 102));
 
-        // Botones grandes y coloridos
-        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
-        Dimension tamañoBoton = new Dimension(400, 80);
-
-        btnRecargar.setFont(fontBotones);
-        btnRecargar.setPreferredSize(tamañoBoton);
-        btnRecargar.setBackground(new Color(52, 152, 219)); // Azul
-        btnRecargar.setForeground(Color.WHITE);
-
-        btnAtras.setFont(fontBotones);
-        btnAtras.setPreferredSize(tamañoBoton);
-        btnAtras.setBackground(new Color(155, 89, 182)); // Morado
-        btnAtras.setForeground(Color.WHITE);
-
         revalidate();
         repaint();
     }
+    
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorHistorialVentas controlador) {
         this.controladorHistorial = controlador;
-    }
-    // Método para cargar el historial de ventas en la tabla
+}
+  // Método para cargar el historial de ventas en la tabla
     public void cargarHistorial(java.util.List<Modelo.HistorialVentaModelo> listaHistorial) {
-        // Crear el modelo de la tabla
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-            new Object[]{"ID", "Fecha/Hora", "Cajero", "Cliente", "Total"}, 0
-        );
-
-        // Llenar la tabla con los datos
-        for (Modelo.HistorialVentaModelo venta : listaHistorial) {
-            modelo.addRow(new Object[]{
-                venta.getIdFactura(),
-                venta.getFechaHora(),
-                venta.getCajero(),
-                venta.getCliente(),
-                String.format("%.2f", venta.getTotal())
-            });
+        // Inicializar paginador si no existe
+        if (paginadorHistorial == null) {
+            paginadorHistorial = new PaginadorTabla<>(tablaHistorial, lblPagina, btnAnteriorHistorial, btnSiguienteHistorial);
         }
 
-        // Asignar el modelo a la tabla
-        tablaHistorial.setModel(modelo);
-        //PARA QUE LAS FILAS NO SEAN EDITABLES
+        // El paginador se encarga de mostrar los datos paginados (7 por página)
+        paginadorHistorial.cargarDatos(listaHistorial);
+
+        // PARA QUE LAS FILAS NO SEAN EDITABLES
         tablaHistorial.setDefaultEditor(Object.class, null);
-               
+
         // DOBLE CLIC EN LA TABLA PARA VER DETALLE DE FACTURA
-     
         tablaHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -174,12 +198,11 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
                 }
             }
         });
-             
     }
-    
      
     
-    // Método para mostrar mensajes de error
+  
+     // Método para mostrar mensajes de error
     private void mostrarMensajeError(String mensaje) {
         javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
@@ -200,6 +223,9 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
         tablaHistorial = new javax.swing.JTable();
         btnRecargar = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
+        lblPagina = new javax.swing.JLabel();
+        btnAnteriorHistorial = new javax.swing.JButton();
+        btnSiguienteHistorial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -242,6 +268,22 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
             }
         });
 
+        lblPagina.setText("Pagina");
+
+        btnAnteriorHistorial.setText("Anterior");
+        btnAnteriorHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorHistorialActionPerformed(evt);
+            }
+        });
+
+        btnSiguienteHistorial.setText("Siguiente");
+        btnSiguienteHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteHistorialActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -250,19 +292,28 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ScrollHistorial)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 258, Short.MAX_VALUE)
+                        .addGap(0, 207, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnRecargar)
-                                .addGap(246, 246, 246)
-                                .addComponent(btnAtras)
-                                .addGap(170, 170, 170))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblTitulo)
-                                .addGap(220, 220, 220))))))
+                                .addGap(220, 220, 220))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnRecargar)
+                                        .addGap(246, 246, 246))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnAnteriorHistorial)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(49, 49, 49)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnSiguienteHistorial)
+                                    .addComponent(btnAtras))
+                                .addGap(163, 163, 163))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(ScrollHistorial)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,7 +326,12 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtras)
                     .addComponent(btnRecargar))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPagina)
+                    .addComponent(btnAnteriorHistorial)
+                    .addComponent(btnSiguienteHistorial))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
@@ -293,19 +349,39 @@ private Controlador.ControladorHistorialVentas controladorHistorial;
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         // Llamar al controlador para volver al menú del administrador
-        if (controladorHistorial != null) {
+       if (controladorHistorial != null) {
         controladorHistorial.volverAlMenu();
+    }
     }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void btnAnteriorHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorHistorialActionPerformed
+        // TODO add your handling code here:
+       if (paginadorHistorial != null) {
+            paginadorHistorial.irPaginaAnterior();
+        }
+    }//GEN-LAST:event_btnAnteriorHistorialActionPerformed
+
+    private void btnSiguienteHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteHistorialActionPerformed
+        // TODO add your handling code here:
+        if (paginadorHistorial != null) {
+            paginadorHistorial.irPaginaSiguiente();
+        }
+    }//GEN-LAST:event_btnSiguienteHistorialActionPerformed
 
     
 
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollHistorial;
+    private javax.swing.JButton btnAnterior;
+    private javax.swing.JButton btnAnterior1;
+    private javax.swing.JButton btnAnteriorHistorial;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnRecargar;
+    private javax.swing.JButton btnSiguienteHistorial;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPagina;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tablaHistorial;
     // End of variables declaration//GEN-END:variables

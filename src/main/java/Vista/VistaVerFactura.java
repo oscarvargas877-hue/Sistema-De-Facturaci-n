@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.Date;  // ← Este es el correcto
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -35,111 +36,141 @@ public class VistaVerFactura extends javax.swing.JFrame {
     public VistaVerFactura(int numeroFactura, String nombresApellidos, String cedula, String direccion,
                            List<DetalleFacturaModelo> detalle, double totalSinIVA) {
         initComponents();
+      
+    // ================== ASIGNAR DATOS A VARIABLES ==================
        this.numeroFactura = numeroFactura;
-        this.nombresApellidos = nombresApellidos;
-        this.cedula = cedula;
-        this.direccion = direccion.isEmpty() ? "No registrada" : direccion;
-        this.detalle = detalle;
-        this.totalSinIVA = totalSinIVA;
+       this.nombresApellidos = nombresApellidos;
+       this.cedula = cedula;
+       this.direccion = direccion.isEmpty() ? "No registrada" : direccion;
+       this.detalle = detalle;
+       this.totalSinIVA = totalSinIVA;
 
-        getContentPane().setBackground(Color.WHITE);
+       // ================== CONFIGURACIÓN GENERAL ==================
+       setExtendedState(JFrame.MAXIMIZED_BOTH);
+       getContentPane().setBackground(Color.WHITE);
 
-        cargarFacturaCompleta();  // ← Este método sí lo mantienes
+       // ================== ENCABEZADO ==================
+       lblNombreNegocio.setFont(new Font("Arial Black", Font.BOLD, 40));
+       lblNombreNegocio.setForeground(new Color(0, 102, 102));
+       lblNombreNegocio.setHorizontalAlignment(JLabel.CENTER);
 
-        // Fondo blanco como factura real
-        getContentPane().setBackground(Color.WHITE);
+       lblRuc.setFont(new Font("Arial", Font.BOLD, 24));
+       lblRuc.setForeground(Color.BLACK);
+       lblRuc.setHorizontalAlignment(JLabel.CENTER);
 
-        // Cargar todos los datos dinámicos
-        cargarFacturaCompleta();
+       lblDireccionNegocio.setFont(new Font("Arial", Font.PLAIN, 20));
+       lblDireccionNegocio.setForeground(Color.BLACK);
+       lblDireccionNegocio.setHorizontalAlignment(JLabel.CENTER);
 
+       lblNumeroFechaHora.setFont(new Font("Arial", Font.BOLD, 22));
+       lblNumeroFechaHora.setForeground(Color.BLACK);
+       lblNumeroFechaHora.setHorizontalAlignment(JLabel.CENTER);
 
-    }
-          private void cargarFacturaCompleta() {
-        // === ENCABEZADO ===
-        lblNombreNegocio.setFont(new Font("Arial Black", Font.BOLD, 36));
-        lblNombreNegocio.setHorizontalAlignment(JLabel.CENTER);
-        lblNombreNegocio.setText("SUPERMERCADOS TUTI S.A.");
+       // ================== DATOS DEL CLIENTE ==================
+       lblNombreCliente.setFont(new Font("Arial", Font.BOLD, 20));
+       lblNombreCliente.setForeground(Color.BLACK);
 
-        lblRuc.setFont(new Font("Arial", Font.BOLD, 22));
-        lblRuc.setHorizontalAlignment(JLabel.CENTER);
-        lblRuc.setText("RUC: 1793000000001");
+       lblCedula.setFont(new Font("Arial", Font.BOLD, 20));
+       lblCedula.setForeground(Color.BLACK);
 
-        lblDireccionNegocio.setFont(new Font("Arial", Font.PLAIN, 20));
-        lblDireccionNegocio.setHorizontalAlignment(JLabel.CENTER);
-        lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
+       lblDireccion.setFont(new Font("Arial", Font.BOLD, 20));
+       lblDireccion.setForeground(Color.BLACK);
 
-        // Número de factura + fecha y hora actuales
-        String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String fecha = dateFormat.format(new Date());
-        String hora = timeFormat.format(new Date());
+       // ================== TABLA DETALLE ==================
+       tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 18));
+       tablaDetalle.setForeground(new Color(0, 102, 102));
+       tablaDetalle.setRowHeight(50);
+       tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 18));
+       tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
+       tablaDetalle.getTableHeader().setForeground(Color.WHITE);
 
-        lblNumeroFechaHora.setFont(new Font("Arial", Font.BOLD, 20));
-        lblNumeroFechaHora.setHorizontalAlignment(JLabel.CENTER);
-        lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + "     Fecha: " + fecha + "     Hora: " + hora);
+       javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
+       centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+       for (int i = 0; i < tablaDetalle.getColumnCount(); i++) {
+           tablaDetalle.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+       }
 
-        // === DATOS DEL CLIENTE ===
-        lblNombreCliente.setFont(new Font("Arial", Font.BOLD, 18));
-        lblNombreCliente.setText("Nombres y apellidos: " + nombresApellidos);
+       ScrollDetalleFactura.setPreferredSize(new Dimension(900, 250));
 
-        lblCedula.setFont(new Font("Arial", Font.BOLD, 18));
-        lblCedula.setText("Cédula: " + cedula);
+       // ================== TOTALES ==================
+       lblIva.setFont(new Font("Arial Black", Font.BOLD, 26));
+       lblIva.setForeground(Color.BLACK);
 
-        lblDireccion.setFont(new Font("Arial", Font.BOLD, 18));
-        lblDireccion.setText("Dirección: " + this.direccion);
+       lblTotal.setFont(new Font("Arial Black", Font.BOLD, 32));
+       lblTotal.setForeground(new Color(0, 130, 0));
 
-        // === TABLA DETALLE ===
-        DefaultTableModel modelo = new DefaultTableModel(
-            new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
-        );
+       // ================== MENSAJE DE GRACIAS ==================
+       lblGracias.setFont(new Font("Arial", Font.ITALIC, 28));
+       lblGracias.setForeground(new Color(0, 102, 102));
+       lblGracias.setHorizontalAlignment(JLabel.CENTER);
 
-        double subtotal = 0;
-        for (DetalleFacturaModelo item : detalle) {
-            String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-            modelo.addRow(new Object[]{
-                item.getNombreProducto(),
-                item.getCantidad(),
-                String.format("%.2f", item.getPrecioUnitario()),
-                descuentoStr,
-                String.format("%.2f", item.getSubtotal())
-            });
-            subtotal += item.getSubtotal();
-        }
+       // ================== BOTÓN ACEPTAR ==================
+       btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 26));
+       btnAceptar.setBackground(new Color(46, 204, 113));
+       btnAceptar.setForeground(Color.WHITE);
+       btnAceptar.setFocusPainted(false);
+       btnAceptar.setPreferredSize(new Dimension(200, 60));
 
-        tablaDetalle.setModel(modelo);
-        tablaDetalle.setRowHeight(40);
-        tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 20));
-        tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
-        tablaDetalle.getTableHeader().setForeground(Color.WHITE);
+       // ================== PANELES ==================
+       PanelEncabezado.setBackground(new Color(240, 240, 240));
+       PanelCliente.setBackground(new Color(250, 250, 250));
+       PanelTotales.setBackground(new Color(240, 240, 240));
+       
+      
+    // Alinear los paneles a la misma altura
+    getContentPane().revalidate();
+    getContentPane().repaint();
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < tablaDetalle.getColumnCount(); i++) {
-            tablaDetalle.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
+       // ================== CARGAR LA FACTURA CON DATOS ==================
+       // Número de factura + fecha y hora
+       String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
+       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+       SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+       String fecha = dateFormat.format(new Date());
+       String hora = timeFormat.format(new Date());
 
-        // === TOTALES CON IVA 15% ===
-        double iva = subtotal * 0.15;
-        double totalFinal = subtotal + iva;
+       lblNombreNegocio.setText("SUPERMERCADOS TUTI ");
+       lblRuc.setText("RUC: 1793000000001");
+       lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
+       lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + "     Fecha: " + fecha + "     Hora: " + hora);
 
-        lblIva.setFont(new Font("Arial Black", Font.BOLD, 24));
-        lblIva.setText("IVA 15%: $" + String.format("%.2f", iva));
+       // Datos del cliente
+       lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
+       lblCedula.setText("Cédula: " + this.cedula);
+       lblDireccion.setText("Dirección: " + this.direccion);
 
-        lblTotal.setFont(new Font("Arial Black", Font.BOLD, 30));
-        lblTotal.setForeground(new Color(0, 130, 0));
-        lblTotal.setText("Total: $" + String.format("%.2f", totalFinal));
+       // ================== LLENAR TABLA CON DETALLES ==================
+       DefaultTableModel modelo = new DefaultTableModel(
+           new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+       );
 
-        // === GRACIAS ===
-        lblGracias.setFont(new Font("Arial", Font.ITALIC, 28));
-        lblGracias.setForeground(new Color(0, 102, 102));
-        lblGracias.setHorizontalAlignment(JLabel.CENTER);
-        lblGracias.setText("Gracias por su compra");
+       double subtotal = 0;
+       if (detalle != null && !detalle.isEmpty()) {
+           for (DetalleFacturaModelo item : detalle) {
+               String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+               modelo.addRow(new Object[]{
+                   item.getNombreProducto(),
+                   item.getCantidad(),
+                   String.format("%.2f", item.getPrecioUnitario()),
+                   descuentoStr,
+                   String.format("%.2f", item.getSubtotal())
+               });
+               subtotal += item.getSubtotal();
+           }
+       }
 
-        // === BOTÓN ACEPTAR ===
-        btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 24));
-        btnAceptar.setBackground(new Color(46, 204, 113));
-        btnAceptar.setForeground(Color.WHITE);
+       tablaDetalle.setModel(modelo);
+       tablaDetalle.setDefaultEditor(Object.class, null);
+
+       // ================== CALCULAR Y MOSTRAR TOTALES ==================
+       double iva = subtotal * 0.15;
+       double totalFinal = subtotal + iva;
+
+       lblIva.setText("IVA 15%: $" + String.format("%.2f", iva));
+       lblTotal.setText("Total: $" + String.format("%.2f", totalFinal));
+
+       lblGracias.setText("Gracias por su compra");
+
     }
           
            // Método para actualizar la tabla de detalle
