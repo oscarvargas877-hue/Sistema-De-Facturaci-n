@@ -154,6 +154,16 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     RadioFemenino.setContentAreaFilled(false);
     panelGenero.add(RadioFemenino);
     
+    // ================== AGRUPAR RADIO BUTTONS PARA GÉNERO ==================
+    ButtonGroup grupoGenero = new ButtonGroup();
+    grupoGenero.add(RadioMasculino);
+    grupoGenero.add(RadioFemenino);
+
+    // ================== AGRUPAR RADIO BUTTONS PARA ROL ==================
+    ButtonGroup grupoRol = new ButtonGroup();
+    grupoRol.add(RadioAdministrador);
+    grupoRol.add(RadioCajero);
+    
     gbc.gridx = 1;
     panelFormulario.add(panelGenero, gbc);
     
@@ -243,56 +253,11 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
      // Método para inyectar el controlador desde fuera
        public void establecerControlador(Controlador.ControladorEditarUsuario controlador) {
         this.controladorEditar = controlador;
-
-        btnGuardar.addActionListener(e -> {
-            String nuevoNombre = txtNombre.getText().trim();
-            String nuevaCedula = txtCedula.getText().trim();
-            String nuevaDireccion = txtDireccion.getText().trim();
-            String edadStr = txtEdad.getText().trim();
-
-            // Validaciones
-            if (nuevoNombre.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre de usuario es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int nuevaEdad = 0;
-            try {
-                if (!edadStr.isEmpty()) {
-                    nuevaEdad = Integer.parseInt(edadStr);
-                    if (nuevaEdad < 0) throw new Exception();
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "La edad debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
-                JOptionPane.showMessageDialog(this, "Por favor seleccione un género.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            String nuevoGenero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
-
-            if (!RadioAdministrador.isSelected() && !RadioCajero.isSelected()) {
-                JOptionPane.showMessageDialog(this, "Por favor seleccione un rol.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            String nuevoRol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
-
-            // Actualizar objeto
-            usuarioActual.setNombreUsuario(nuevoNombre);
-            usuarioActual.setCedula(nuevaCedula);
-            usuarioActual.setDireccion(nuevaDireccion);
-            usuarioActual.setEdad(nuevaEdad);
-            usuarioActual.setGenero(nuevoGenero);
-            usuarioActual.setRol(nuevoRol);
-
-            // Guardar
-            controladorEditar.guardarCambios(usuarioActual);
-        });
-
+        
+        
         btnCancelar.addActionListener(e -> controladorEditar.cancelarEdicion());
-    }
+
+       }
 
     // Mensajes flotantes
     public void mostrarMensajeError(String mensaje) {
@@ -381,6 +346,11 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         btnGuardar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(0, 102, 102));
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         txtIdUsuario.setEditable(false);
         txtIdUsuario.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
@@ -507,13 +477,13 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(RadioMasculino)
-                            .addComponent(RadioFemenino))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(RadioFemenino, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(RadioMasculino))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(RadioAdministrador)
-                            .addComponent(RadioCajero))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(RadioCajero)
+                            .addComponent(RadioAdministrador))))
                 .addGap(12, 12, 12)
                 .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -542,6 +512,99 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     private void txtIdUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdUsuarioActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+   // ================== RECOGER Y LIMPIAR DATOS ==================
+    String nuevoNombre = txtNombre.getText().trim();
+    String nuevaCedula = txtCedula.getText().trim();
+    String nuevaDireccion = txtDireccion.getText().trim();
+    String edadStr = txtEdad.getText().trim();
+
+    // ================== VALIDACIÓN DE NOMBRE DE USUARIO ==================
+    if (nuevoNombre.isEmpty()) {
+        mostrarMensajeError("El nombre de usuario es obligatorio.");
+        return;
+    }
+    if (nuevoNombre.length() < 4) {
+        mostrarMensajeError("El nombre de usuario debe tener al menos 4 caracteres.");
+        return;
+    }
+    if (nuevoNombre.contains(" ")) {
+        mostrarMensajeError("El nombre de usuario no puede contener espacios.");
+        return;
+    }
+
+    // ================== VALIDACIÓN DE CÉDULA (LA MÁS IMPORTANTE) ==================
+    if (nuevaCedula.isEmpty()) {
+        mostrarMensajeError("La cédula es obligatoria.");
+        return;
+    }
+    if (nuevaCedula.length() != 10) {
+        mostrarMensajeError("La cédula debe tener exactamente 10 dígitos.");
+        return;
+    }
+    if (!nuevaCedula.matches("\\d{10}")) {
+        mostrarMensajeError("La cédula solo debe contener números.");
+        return;
+    }
+    if (!Modelo.UsuarioModelo.validarCedulaEcuatoriana(nuevaCedula)) {
+        mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
+        return;
+    }
+
+    // ================== VALIDACIÓN DE DIRECCIÓN ==================
+    if (nuevaDireccion.isEmpty()) {
+        mostrarMensajeError("La dirección es obligatoria.");
+        return;
+    }
+    if (nuevaDireccion.length() < 5) {
+        mostrarMensajeError("La dirección debe tener al menos 5 caracteres.");
+        return;
+    }
+
+    // ================== VALIDACIÓN DE EDAD ==================
+    if (edadStr.isEmpty()) {
+        mostrarMensajeError("La edad es obligatoria.");
+        return;
+    }
+    int nuevaEdad;
+    try {
+        nuevaEdad = Integer.parseInt(edadStr);
+        if (nuevaEdad < 16 || nuevaEdad > 120) {
+            mostrarMensajeError("La edad debe estar entre 16 y 120 años.");
+            return;
+        }
+    } catch (NumberFormatException ex) {
+        mostrarMensajeError("La edad debe ser un número válido.");
+        return;
+    }
+
+    // ================== VALIDACIÓN DE GÉNERO ==================
+    if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
+        mostrarMensajeError("Por favor seleccione un género.");
+        return;
+    }
+    String nuevoGenero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
+
+    // ================== VALIDACIÓN DE ROL ==================
+    if (!RadioAdministrador.isSelected() && !RadioCajero.isSelected()) {
+        mostrarMensajeError("Por favor seleccione un rol.");
+        return;
+    }
+    String nuevoRol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
+
+    // ================== SI TODAS LAS VALIDACIONES PASAN → ACTUALIZAR Y GUARDAR ==================
+    usuarioActual.setNombreUsuario(nuevoNombre);
+    usuarioActual.setCedula(nuevaCedula);
+    usuarioActual.setDireccion(nuevaDireccion);
+    usuarioActual.setEdad(nuevaEdad);
+    usuarioActual.setGenero(nuevoGenero);
+    usuarioActual.setRol(nuevoRol);
+
+    // Solo ahora llamamos al controlador
+    controladorEditar.guardarCambios(usuarioActual);
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
  
    // Variable para el grupo de género

@@ -24,28 +24,41 @@ public class ControladorEditarUsuario {
 
     // Método para guardar los cambios del usuario
     public void guardarCambios(UsuarioModelo usuarioModificado) {
-        try {
-            // Actualizar el usuario en la base de datos
-            usuarioModificado.actualizar();
+     try {
+         usuarioModificado.actualizar();
 
-            // Mostrar mensaje de éxito
-            javax.swing.JOptionPane.showMessageDialog(vistaEditar, "Usuario actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+         // Solo llega aquí si NO hubo excepción
+         javax.swing.JOptionPane.showMessageDialog(vistaEditar, 
+             "Usuario actualizado correctamente.", 
+             "Éxito", 
+             javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
-            // Volver a la vista de gestión y recargar la lista
-            vistaEditar.dispose();
-            controladorGestion.volverAlMenu();
-            controladorGestion.cargarUsuarios();
+         vistaEditar.dispose();
+         controladorGestion.volverAlMenu();
+         controladorGestion.cargarUsuarios();
 
-        } catch (Exception e) {
-            // Manejar error de nombre duplicado (viene de la BD por UNIQUE)
-            if (e.getMessage() != null && e.getMessage().contains("Duplicate entry")) {
-                javax.swing.JOptionPane.showMessageDialog(vistaEditar, "El nombre de usuario ya existe. Elija otro.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(vistaEditar, "Error al actualizar el usuario. Intente de nuevo.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
-        }
-    }
+     } catch (java.sql.SQLException e) {
+         String mensaje = "Error al actualizar el usuario.";
+         if (e.getMessage() != null && e.getMessage().contains("Duplicate entry")) {
+             if (e.getMessage().contains("nombreUsuario")) {
+                 mensaje = "El nombre de usuario ya existe.";
+             } else if (e.getMessage().contains("cedula")) {
+                 mensaje = "La cédula ya está registrada en otro usuario.";
+             } else {
+                 mensaje = "Dato duplicado (nombre de usuario o cédula).";
+             }
+         }
+         javax.swing.JOptionPane.showMessageDialog(vistaEditar, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+         e.printStackTrace();
+
+     } catch (Exception e) {
+         javax.swing.JOptionPane.showMessageDialog(vistaEditar, 
+             "Error inesperado al guardar.", 
+             "Error", 
+             javax.swing.JOptionPane.ERROR_MESSAGE);
+         e.printStackTrace();
+     }
+ }
 
     // Método para cancelar la edición y volver a la vista de gestión
     public void cancelarEdicion() {

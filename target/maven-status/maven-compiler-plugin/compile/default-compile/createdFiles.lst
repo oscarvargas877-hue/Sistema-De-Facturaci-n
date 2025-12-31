@@ -9,6 +9,7 @@ Controlador\ControladorAdmin.class
 Vista\VistaGestionStock$4.class
 Vista\VistaFacturacion$6.class
 Controlador\ControladorProductosMasVendidos.class
+Vista\VistaEditarUsuario$2.class
 Vista\VistaFacturacion$9.class
 Vista\VistaEditarUsuario.class
 Vista\VistaMenuAdmin$3.class

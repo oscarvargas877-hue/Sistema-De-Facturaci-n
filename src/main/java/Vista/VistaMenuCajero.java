@@ -59,7 +59,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
     btnFacturacion.setFont(new Font("Arial Black", Font.BOLD, 36));
     btnFacturacion.setBackground(new Color(52, 152, 219));   // Azul vibrante
     btnFacturacion.setForeground(Color.WHITE);
-    btnFacturacion.setPreferredSize(new Dimension(500, 80)); //  Ancho normal
+    btnFacturacion.setPreferredSize(new Dimension(600, 80)); //  Ancho normal
     btnFacturacion.setFocusPainted(false);
 
     gbc.gridy = 1;
@@ -110,7 +110,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
 
         btnFacturacion.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnFacturacion.setForeground(new java.awt.Color(0, 102, 102));
-        btnFacturacion.setText("Realizar Factura");
+        btnFacturacion.setText("Realizar Venta y Factura");
         btnFacturacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFacturacionActionPerformed(evt);
@@ -135,7 +135,7 @@ public class VistaMenuCajero extends javax.swing.JFrame {
                 .addComponent(Titulo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 129, Short.MAX_VALUE)
+                .addGap(0, 66, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnFacturacion)
                     .addComponent(btnCerrarSesion))

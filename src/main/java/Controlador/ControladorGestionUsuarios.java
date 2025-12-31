@@ -5,10 +5,15 @@
 // Controlador/ControladorGestionUsuarios.java
 package Controlador;
 
+import BDD.ConexionBDD;
 import Modelo.UsuarioModelo;
 import Vista.VistaEditarUsuario;
 import Vista.VistaGestionUsuarios;
 import Vista.VistaMenuAdmin;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 // Controlador para la gestión de usuarios (HU003)
 public class ControladorGestionUsuarios {
@@ -29,20 +34,22 @@ public class ControladorGestionUsuarios {
     }
 
     public void editarUsuario(int idUsuario) {
-     // Buscar el usuario por ID
-     Modelo.UsuarioModelo usuario = buscarUsuarioPorId(idUsuario);
-     if (usuario == null) {
-         javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-         return;
-     }
+    // Buscar el usuario completo con TODOS los datos desde la base de datos
+    Modelo.UsuarioModelo usuario = obtenerUsuarioCompletoPorId(idUsuario);
+    if (usuario == null) {
+        javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    
 
-     // Abrir la ventana de edición con el usuario ya cargado
-     vistaGestion.dispose();
-     VistaEditarUsuario vistaEditar = new VistaEditarUsuario(usuario); // ← Pasar el usuario al constructor
-     ControladorEditarUsuario controladorEditar = new ControladorEditarUsuario(vistaEditar, this);
-     vistaEditar.establecerControlador(controladorEditar);
-     vistaEditar.setVisible(true);
- }
+    // Abrir ventana de edición
+    vistaGestion.dispose();
+    VistaEditarUsuario vistaEditar = new VistaEditarUsuario(usuario);
+    ControladorEditarUsuario controladorEditar = new ControladorEditarUsuario(vistaEditar, this);
+    vistaEditar.establecerControlador(controladorEditar);
+    vistaEditar.setVisible(true);
+}
     // Método para activar un usuario
     public void activarUsuario(int idUsuario) {
         Modelo.UsuarioModelo usuario = buscarUsuarioPorId(idUsuario);
@@ -109,5 +116,40 @@ public class ControladorGestionUsuarios {
     // Método para recargar la lista de usuarios (usado desde VistaEditarUsuario)
     public void recargarLista() {
         cargarUsuarios();
+    }
+    
+    // Método nuevo: obtiene TODOS los datos del usuario desde la BD
+    private Modelo.UsuarioModelo obtenerUsuarioCompletoPorId(int idUsuario) {
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+        if (conexion == null) return null;
+
+        Modelo.UsuarioModelo usuario = null;
+        try {
+            CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuario_completo(?)}");
+            sentencia.setInt(1, idUsuario);
+            ResultSet rs = sentencia.executeQuery();
+
+            if (rs.next()) {
+                usuario = new Modelo.UsuarioModelo();
+                usuario.setIdUsuario(rs.getInt("idUsuario"));
+                usuario.setNombreUsuario(rs.getString("nombreUsuario"));
+                usuario.setRol(rs.getString("rol"));
+                usuario.setActivo(rs.getInt("activo") == 1);
+                usuario.setCedula(rs.getString("cedula"));
+                usuario.setDireccion(rs.getString("direccion"));
+                usuario.setEdad(rs.getInt("edad"));
+                usuario.setGenero(rs.getString("genero"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) conexion.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return usuario;
     }
 }

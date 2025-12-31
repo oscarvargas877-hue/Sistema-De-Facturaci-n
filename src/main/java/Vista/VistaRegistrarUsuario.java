@@ -124,58 +124,9 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
     }
          public void establecerControlador(Controlador.ControladorRegistrarUsuario controlador) {
         this.controladorRegistrar = controlador;
-        
-        btnRegistrar.addActionListener(e -> {
-            String nombreUsuario = txtNombreUsuario.getText().trim();
-            String contrasenia = new String(jPContrasenia.getPassword());
-            String cedula = txtCedula.getText().trim();
-            String direccion = txtDireccion.getText().trim();
-            String edadStr = txtEdad.getText().trim();
-
-            // Validaciones básicas
-            if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
-                direccion.isEmpty() || edadStr.isEmpty()) {
-                mostrarMensajeError("Todos los campos son obligatorios.");
-                return;
-            }
-
-            if (nombreUsuario.contains(" ")) {
-                mostrarMensajeError("El nombre de usuario no puede contener espacios.");
-                return;
-            }
-
-            int edad;
-            try {
-                edad = Integer.parseInt(edadStr);
-                if (edad < 18 || edad > 120) {
-                    mostrarMensajeError("Edad no válida (18-120 años).");
-                    return;
-                }
-            } catch (NumberFormatException ex) {
-                mostrarMensajeError("La edad debe ser un número válido.");
-                return;
-            }
-
-            // Validar género
-            if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
-                mostrarMensajeError("Por favor seleccione un género.");
-                return;
-            }
-            String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
-
-            // Validar rol
-            if (!RadioAdministrador.isSelected() && !RadioCajero.isSelected()) {
-                mostrarMensajeError("Por favor seleccione un rol (Administrador o Cajero).");
-                return;
-            }
-            String rol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
-
-            // Todo válido → llamar al controlador
-            controladorRegistrar.registrarUsuario(nombreUsuario, contrasenia, rol, cedula, direccion, edad, genero);
-        });
-    }
-                     
-
+         
+         
+         }
     // Mensaje de error flotante (rojo, icono de error)
     public void mostrarMensajeError(String mensaje) {
         JOptionPane.showMessageDialog(
@@ -431,25 +382,47 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
-            String nombreUsuario = txtNombreUsuario.getText().trim();
-            String contrasenia = new String(jPContrasenia.getPassword());
-            String cedula = txtCedula.getText().trim();
-            String direccion = txtDireccion.getText().trim();
-            String edadStr = txtEdad.getText().trim();
-            String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
-            String rol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
+    String nombreUsuario = txtNombreUsuario.getText().trim();
+    String contrasenia = new String(jPContrasenia.getPassword());
+    String cedula = txtCedula.getText().trim();
+    String direccion = txtDireccion.getText().trim();
+    String edadStr = txtEdad.getText().trim();
 
-            // NO validamos nada aquí → todo lo hace el modelo y controlador
-            // Solo recogemos datos y llamamos al controlador
-            controladorRegistrar.registrarUsuario(
-                nombreUsuario,
-                contrasenia,
-                rol,
-                cedula,
-                direccion,
-                edadStr.isEmpty() ? 0 : Integer.parseInt(edadStr), // Si vacío, el modelo lo detectará
-                genero
-            );
+    // === VALIDACIONES BÁSICAS EN LA VISTA (evitan llamar al controlador innecesariamente) ===
+    if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
+        direccion.isEmpty() || edadStr.isEmpty()) {
+        mostrarMensajeError("Todos los campos son obligatorios.");
+        return;
+    }
+
+    int edad;
+    try {
+        edad = Integer.parseInt(edadStr);
+        if (edad < 18 || edad > 120) {
+            mostrarMensajeError("Edad no válida (18-120 años).");
+            return;
+        }
+    } catch (NumberFormatException ex) {
+        mostrarMensajeError("La edad debe ser un número válido.");
+        return;
+    }
+
+    // === VALIDAR GÉNERO ===
+    if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
+        mostrarMensajeError("Por favor seleccione un género.");
+        return;
+    }
+    String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
+
+    // === VALIDAR ROL ===
+    if (!RadioAdministrador.isSelected() && !RadioCajero.isSelected()) {
+        mostrarMensajeError("Por favor seleccione un rol (Administrador o Cajero).");
+        return;
+    }
+    String rol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
+
+    // === SI TODO ESTÁ BIEN → LLAMAR AL CONTROLADOR ===
+    controladorRegistrar.registrarUsuario(nombreUsuario, contrasenia, rol, cedula, direccion, edad, genero);
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

@@ -219,36 +219,41 @@ public class UsuarioModelo extends Persona {
     
   // Método para actualizar todos los datos del usuario en la base de datos
    
-    public void actualizar() {
-    ConexionBDD conexionBDD = new ConexionBDD();
-    Connection conexion = conexionBDD.conectar();
-    if (conexion == null) return;
+    public void actualizar() throws SQLException {
+      ConexionBDD conexionBDD = new ConexionBDD();
+      Connection conexion = conexionBDD.conectar();
 
-    try {
-        CallableStatement sentencia = conexion.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?)}");
-        sentencia.setInt(1, this.idUsuario);
-        sentencia.setString(2, this.nombreUsuario);
-        sentencia.setString(3, this.rol);
-        sentencia.setString(4, this.getCedula());
-        sentencia.setString(5, this.getDireccion());
-        sentencia.setInt(6, this.getEdad());
-        sentencia.setString(7, this.getGenero());
-        sentencia.execute();
-    } catch (SQLException excepcion) {
-        excepcion.printStackTrace();
-        javax.swing.JOptionPane.showMessageDialog(null, 
-            "Error al actualizar el usuario: " + excepcion.getMessage(), 
-            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    } finally {
-        try {
-            if (conexion != null && !conexion.isClosed()) {
-                conexion.close();
-            }
-        } catch (SQLException excepcion) {
-            excepcion.printStackTrace();
-        }
-    }
-}
+      if (conexion == null) {
+          throw new SQLException("No se pudo conectar a la base de datos.");
+      }
+
+      CallableStatement sentencia = null;
+      try {
+          sentencia = conexion.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?)}");
+          sentencia.setInt(1, this.idUsuario);
+          sentencia.setString(2, this.nombreUsuario);
+          sentencia.setString(3, this.rol);
+          sentencia.setString(4, this.getCedula());
+          sentencia.setString(5, this.getDireccion());
+          sentencia.setInt(6, this.getEdad());
+          sentencia.setString(7, this.getGenero());
+
+          sentencia.executeUpdate();
+
+      } finally {
+          // Cerrar la conexión de forma segura
+          if (sentencia != null) {
+              try {
+                  sentencia.close();
+              } catch (SQLException ex) {
+                  ex.printStackTrace();
+              }
+          }
+          if (conexion != null && !conexion.isClosed()) {
+              conexion.close();
+          }
+      }
+  }
 
     // Cambia el estado de activo/inactivo de un usuario
     public void cambiarEstado(boolean nuevoEstado) {

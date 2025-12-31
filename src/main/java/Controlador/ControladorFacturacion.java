@@ -17,7 +17,6 @@ import java.util.List;
 
 public class ControladorFacturacion {
 
-    private Integer idClienteActual = null; // ID del cliente encontrado o creado
     private VistaFacturacion vistaFacturacion;
     private VistaMenuCajero vistaMenuCajero;
     private List<DetalleFacturaModelo> listaDetalles;
@@ -67,105 +66,150 @@ public class ControladorFacturacion {
 
     // NUEVO MÉTODO: Buscar cliente al presionar Enter en el campo cédula
     public void buscarClientePorCedula() {
-        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
+    String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
 
-        if (cedula.isEmpty()) {
-            vistaFacturacion.mostrarMensajeError("Por favor ingrese la cédula del cliente.");
-            return;
-        }
-
-        if (!cedula.matches("\\d{10}|\\d{13}")) {
-            vistaFacturacion.mostrarMensajeError("Cédula inválida. Debe tener 10 o 13 dígitos.");
-            return;
-        }
-
-        ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
-
-        if (cliente != null) {
-            // Cliente encontrado
-            this.idClienteActual = cliente.getIdCliente();
-            vistaFacturacion.mostrarDatosCliente(cliente.getNombresApellidos(), cliente.getDireccion() != null ? cliente.getDireccion() : "");
-            vistaFacturacion.mostrarMensajeConColor("Cliente encontrado: " + cliente.getNombresApellidos(), java.awt.Color.GREEN);
-            vistaFacturacion.habilitarEdicionCliente(false); // Bloquea edición
-        } else {
-            // Cliente NO encontrado
-            this.idClienteActual = null;
-            vistaFacturacion.limpiarDatosCliente(); // Limpia nombres y dirección
-            vistaFacturacion.mostrarMensajeConColor("Cliente no registrado. Ingrese nombres/apellidos y dirección.", java.awt.Color.ORANGE);
-            vistaFacturacion.habilitarEdicionCliente(true); // Permite edición
-            vistaFacturacion.enfocarNombresApellidos(); // Enfoca el campo de nombres
-        }
+    if (cedula.isEmpty()) {
+        vistaFacturacion.mostrarMensajeError("Por favor ingrese la cédula del cliente.");
+        return;
+    }
+    if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
+        vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
+        return;
     }
 
-    // MÉTODO FINALIZAR VENTA ACTUALIZADO
-    public void finalizarVenta(String clienteParametro) { // El parámetro ya no se usa mucho
-        if (listaDetalles.isEmpty()) {
-            vistaFacturacion.mostrarMensajeError("No hay productos en la factura.");
-            return;
-        }
+    ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
 
-        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
-        String nombresApellidos = vistaFacturacion.obtenerNombresApellidosIngresado().trim();
-        String direccion = vistaFacturacion.obtenerDireccionClienteIngresada().trim();
+    if (cliente != null) {
+        // Cliente encontrado → mostrar datos
+        vistaFacturacion.mostrarDatosCliente(
+            cliente.getNombresApellidos(),
+            cliente.getDireccion() != null ? cliente.getDireccion() : ""
+        );
+        vistaFacturacion.mostrarMensajeConColor(
+            "Cliente encontrado: " + cliente.getNombresApellidos(),
+            java.awt.Color.GREEN
+        );
+        vistaFacturacion.habilitarEdicionCliente(false); // Bloquear edición
 
-        if (cedula.isEmpty() || nombresApellidos.isEmpty()) {
-            vistaFacturacion.mostrarMensajeError("Cédula y nombres/apellidos son obligatorios.");
-            return;
-        }
+    } else {
+        // Cliente NO encontrado → permitir crear nuevo
+        vistaFacturacion.limpiarDatosCliente();
+        vistaFacturacion.mostrarMensajeConColor(
+            "Cliente no registrado. Ingrese nombres/apellidos y dirección.",
+            java.awt.Color.ORANGE
+        );
+        vistaFacturacion.habilitarEdicionCliente(true); // Permitir edición
+        vistaFacturacion.enfocarNombresApellidos();
+    }
+}
+    
+    // MÉTODO FINALIZAR VENTA - CON VALIDACIONES COMPLETAS Y SIN BUGS
+    public void finalizarVenta() {
+    if (listaDetalles.isEmpty()) {
+        vistaFacturacion.mostrarMensajeError("No hay productos en la factura. Agregue al menos uno.");
+        return;
+    }
 
-        vistaFacturacion.mostrarMensajeEspera("Procesando venta...");
+    String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
+    String nombresApellidos = vistaFacturacion.obtenerNombresApellidosIngresado().trim();
+    String direccion = vistaFacturacion.obtenerDireccionClienteIngresada().trim();
 
-        double total = calcularTotalActual();
+    // ================== VALIDACIONES OBLIGATORIAS ==================
+    if (cedula.isEmpty()) {
+        vistaFacturacion.mostrarMensajeError("La cédula del cliente es obligatoria.");
+        return;
+    }
+    if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
+        vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
+        return;
+    }
 
-        new Thread(() -> {
-            Integer idClienteFinal = idClienteActual;
+    if (nombresApellidos.isEmpty()) {
+        vistaFacturacion.mostrarMensajeError("Los nombres y apellidos del cliente son obligatorios.");
+        return;
+    }
 
-            // Si el cliente no existía → crearlo ahora
-            if (idClienteFinal == null) {
-                ClienteModelo nuevoCliente = new ClienteModelo();
-                nuevoCliente.setCedula(cedula);
-                nuevoCliente.setNombresApellidos(nombresApellidos);
-                nuevoCliente.setDireccion(direccion.isEmpty() ? null : direccion);
-                nuevoCliente.setTelefono(null);
-                nuevoCliente.setGenero(null);
+    if (direccion.isEmpty()) {
+        vistaFacturacion.mostrarMensajeError("La dirección del cliente es obligatoria.");
+        return;
+    }
 
-                if (nuevoCliente.guardar()) {
-                    // Obtener el ID del cliente recién creado
-                    ClienteModelo creado = ClienteModelo.buscarPorCedula(cedula);
-                    if (creado != null) {
-                        idClienteFinal = creado.getIdCliente();
-                    }
+    vistaFacturacion.mostrarMensajeEspera("Procesando venta...");
+
+    double total = calcularTotalActual();
+
+    new Thread(() -> {
+        try {
+            Integer idCliente = null;
+
+            // ================== SIEMPRE BUSCAR CLIENTE POR CÉDULA ==================
+            ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
+
+            if (cliente != null) {
+                // Cliente ya existe → usar su ID
+                idCliente = cliente.getIdCliente();
+            } else {
+                // Cliente no existe → crear nuevo
+                ClienteModelo nuevo = new ClienteModelo();
+                nuevo.setCedula(cedula);
+                nuevo.setNombresApellidos(nombresApellidos);
+                nuevo.setDireccion(direccion);
+                nuevo.setTelefono(null);
+                nuevo.setGenero(null);
+
+                if (!nuevo.guardar()) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        vistaFacturacion.ocultarMensajeEspera();
+                        vistaFacturacion.mostrarMensajeError("Error al crear el cliente nuevo. Puede que la cédula ya exista.");
+                    });
+                    return;
+                }
+
+                // Buscar de nuevo para obtener el ID
+                ClienteModelo creado = ClienteModelo.buscarPorCedula(cedula);
+                if (creado != null) {
+                    idCliente = creado.getIdCliente();
                 } else {
                     java.awt.EventQueue.invokeLater(() -> {
-                        vistaFacturacion.mostrarMensajeError("Error al registrar el nuevo cliente.");
+                        vistaFacturacion.ocultarMensajeEspera();
+                        vistaFacturacion.mostrarMensajeError("Cliente creado pero no se pudo obtener su ID.");
                     });
                     return;
                 }
             }
 
-            // Crear y guardar la factura
-            FacturaModelo factura = new FacturaModelo(idCajero, idClienteFinal, nombresApellidos, total);
+            // ================== GUARDAR FACTURA ==================
+            FacturaModelo factura = new FacturaModelo(idCajero, idCliente, nombresApellidos, total);
             boolean exito = factura.guardarFacturaYDetalles(listaDetalles);
 
             java.awt.EventQueue.invokeLater(() -> {
+                vistaFacturacion.ocultarMensajeEspera();
                 if (exito) {
-                   VistaVerFactura vistaVerFactura = new VistaVerFactura(
-        factura.getIdFactura(),                                    
-                    nombresApellidos,                                           
-                    cedula,                                                     
-                    direccion,                                                  
-                    listaDetalles,                                           
-                    total                                                      
-                );
-                vistaVerFactura.establecerVistaFacturacion(vistaFacturacion);
-                vistaVerFactura.setVisible(true);
-                vistaFacturacion.dispose();
+                    VistaVerFactura vistaVer = new VistaVerFactura(
+                        factura.getIdFactura(),
+                        nombresApellidos,
+                        cedula,
+                        direccion,
+                        listaDetalles,
+                        total
+                    );
+                    vistaVer.establecerVistaFacturacion(vistaFacturacion);
+                    vistaVer.setVisible(true);
+                    vistaFacturacion.dispose();
                 } else {
                     vistaFacturacion.mostrarMensajeError("Error al guardar la factura.");
                 }
             });
-        }).start();
-    }
+
+        } catch (Exception e) {
+            java.awt.EventQueue.invokeLater(() -> {
+                vistaFacturacion.ocultarMensajeEspera();
+                vistaFacturacion.mostrarMensajeError("Error inesperado: " + e.getMessage());
+                e.printStackTrace();
+            });
+        }
+    }).start();
+}
 
     public void volverAlMenu() {
         vistaFacturacion.dispose();
@@ -174,7 +218,6 @@ public class ControladorFacturacion {
 
     public void limpiarVenta() {
         listaDetalles.clear();
-        idClienteActual = null;
         java.awt.EventQueue.invokeLater(() -> {
             vistaFacturacion.limpiarCamposParaNuevaVenta();
             vistaFacturacion.limpiarDatosCliente();

@@ -14,7 +14,7 @@ public class ClienteModelo {
     
     private int idCliente;
     private String cedula;
-    private String nombresApellidos;  // ← CAMBIO AQUÍ
+    private String nombresApellidos;  
     private String direccion;
     private String telefono;
     private String genero;

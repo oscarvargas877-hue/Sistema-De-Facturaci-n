@@ -588,14 +588,9 @@ private javax.swing.JDialog dialogoEspera;
 
     private void btnFinalizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarVentaActionPerformed
         // TODO add your handling code here:
-        String cliente = txtNombresApellidos.getText().trim();
-        if (cliente.isEmpty()) {
-            mostrarMensajeError("Por favor ingrese el nombre del cliente.");
-            return;
-        }
-        if (controladorFacturacion != null) {
-            controladorFacturacion.finalizarVenta(cliente);
-        }
+       if (controladorFacturacion != null) {
+        controladorFacturacion.finalizarVenta();
+    }
     }//GEN-LAST:event_btnFinalizarVentaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
