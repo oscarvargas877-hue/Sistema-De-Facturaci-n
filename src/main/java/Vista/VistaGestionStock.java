@@ -34,7 +34,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
      */
     public VistaGestionStock() {
         initComponents();
-    // ==================== REPOSICIONAR BOTONES DE PAGINACIÓN ====================
+  // ==================== REPOSICIONAR BOTONES DE PAGINACIÓN ====================
     // PANTALLA COMPLETA
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -187,6 +187,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
     // Crear e inicializar el paginador
     paginadorStock = new PaginadorTabla<>(TablaProductos, lblPagina, btnAnterior, btnSiguiente);
 
+
     revalidate();
     repaint();
     
@@ -206,19 +207,51 @@ public class VistaGestionStock extends javax.swing.JFrame {
         }
     });
     
+ 
     // === NAVEGACIÓN CON ENTER ===
     txtCodigo.addActionListener(e -> {
         txtCantidaSumar.requestFocusInWindow();
         txtCantidaSumar.selectAll();
     });
 
+    // IMPORTANTE: Reemplaza COMPLETAMENTE este listener
     txtCantidaSumar.addActionListener(e -> {
-        btnReabastecer.doClick();
-        // Después de reabastecer, volver al código
-        java.awt.EventQueue.invokeLater(() -> {
-            txtCodigo.selectAll();
-            txtCodigo.requestFocusInWindow();
-        });
+
+
+        // Obtener los valores de los campos
+        String codigoProducto = txtCodigo.getText();
+        String cantidadTexto = txtCantidaSumar.getText();
+
+        // Validar que los campos no estén vacíos
+        if (codigoProducto.trim().isEmpty() || cantidadTexto.trim().isEmpty()) {
+            lblMensajeDeError.setText("Por favor ingrese código y cantidad.");
+            lblMensajeDeError.setForeground(Color.WHITE);
+            lblMensajeDeError.setVisible(true);
+            return;
+        }
+
+        // Validar que la cantidad sea un número entero positivo
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad <= 0) {
+                lblMensajeDeError.setText("La cantidad debe ser mayor que 0");
+                lblMensajeDeError.setForeground(Color.WHITE);
+                lblMensajeDeError.setVisible(true);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            lblMensajeDeError.setText("La cantidad debe ser un número válido");
+            lblMensajeDeError.setForeground(Color.WHITE);
+            lblMensajeDeError.setVisible(true);
+            return;
+        }
+
+        // Llamar al controlador para reabastecer
+        if (controladorGestionStock != null) {
+            controladorGestionStock.reabastecerStock(codigoProducto, cantidad);
+        }
+
     });
 
     // Enter en botón reabastecer
@@ -238,8 +271,8 @@ public class VistaGestionStock extends javax.swing.JFrame {
             }
         }
     });
+ }
     
-    }
     
     //METODO ESTABLECER CONTROLADOR 
         public void establecerControlador(Controlador.ControladorGestionStock controlador) {
@@ -434,12 +467,12 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
-         lblMensajeDeError.setVisible(false);
+         
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void txtCantidaSumarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidaSumarActionPerformed
         // TODO add your handling code here:
-         lblMensajeDeError.setVisible(false);
+        
     }//GEN-LAST:event_txtCantidaSumarActionPerformed
 
     private void btnReabastecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReabastecerActionPerformed

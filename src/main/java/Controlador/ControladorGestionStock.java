@@ -43,7 +43,7 @@ public class ControladorGestionStock {
         cargarProductos();
 
         // Mostrar mensaje de éxito
-        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente", java.awt.Color.GREEN);
+        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente", java.awt.Color.WHITE);
     }
 
     // Método para volver al menú del administrador

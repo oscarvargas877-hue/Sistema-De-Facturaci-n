@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
  */
 public class VistaProductosMasVendidos extends javax.swing.JFrame {
     private Controlador.ControladorProductosMasVendidos controladorProductos;
-    private ChartPanel panelGrafico;
+    
     // === PAGINACIÓN DE PRODUCTOS MÁS VENDIDOS ===
     private PaginadorTabla<Modelo.ProductoMasVendidoModelo> paginadorProductos;
 
@@ -159,8 +159,8 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
     // Botón Anterior
     Font fontPag = new Font("Arial Black", Font.BOLD, 26);
     btnAnterior.setFont(fontPag);
-    btnAnterior.setBackground(Color.magenta);  
-    btnAnterior.setForeground(Color.BLACK);
+    btnAnterior.setBackground(Color.WHITE);  
+    btnAnterior.setForeground(Color.DARK_GRAY);
     btnAnterior.setPreferredSize(new Dimension(200, 70));
     btnAnterior.setFocusPainted(false);
     panelPaginacion.add(btnAnterior, gbcPag);
@@ -174,8 +174,8 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
 
     // Botón Siguiente
     btnSiguiente.setFont(fontPag);
-    btnSiguiente.setBackground(Color.MAGENTA);  
-    btnSiguiente.setForeground(Color.BLACK);
+    btnSiguiente.setBackground(Color.WHITE);  
+    btnSiguiente.setForeground(Color.DARK_GRAY);
     btnSiguiente.setPreferredSize(new Dimension(200, 70));
     btnSiguiente.setFocusPainted(false);
     gbcPag.weightx = 1.0;
@@ -268,10 +268,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         // Poner el gráfico en el scroll
         ScrollDiagramaDeBarras.setViewportView(chartPanel);
     }
-    // Método para mostrar mensajes de error (si ocurre algún problema)
-    private void mostrarMensajeError(String mensaje) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
+  
       
 
 

@@ -30,6 +30,7 @@ Vista\VistaEditarUsuario$1.class
 Vista\VistaPrimerAdmin$3.class
 Vista\VistaFacturacion$8.class
 Vista\VistaFacturacion$1.class
+Vista\VistaGestionStock$11.class
 Vista\VistaGestionStock.class
 Controlador\ControladorEditarUsuario.class
 Vista\VistaRegistrarUsuario$3.class
@@ -38,9 +39,11 @@ Modelo\Persona.class
 Vista\VistaMenuCajero$3.class
 Vista\VistaPrimerAdmin$2.class
 Vista\VistaGestionUsuarios$5.class
+Vista\VistaGestionStock$10.class
 Vista\VistaRegistrarUsuario$9.class
 Vista\VistaLogin$1.class
 Vista\VistaProductosMasVendidos.class
+Vista\VistaRegistrarUsuario$10.class
 Vista\VistaLogin.class
 Vista\VistaRegistrarUsuario$2.class
 Controlador\ControladorPrimerAdmin.class
@@ -51,6 +54,7 @@ Vista\VistaVerFactura.class
 Vista\VistaRegistrarUsuario$5.class
 Vista\VistaMenuAdmin$4.class
 Vista\VistaPrimerAdmin$1.class
+Vista\VistaFacturacion$12.class
 Vista\VistaGestionUsuarios$9.class
 Vista\VistaHistorialVentas$2.class
 Controlador\ControladorGestionStock.class
@@ -61,6 +65,7 @@ Vista\VistaGestionUsuarios$6.class
 Vista\VistaHistorialVentas$5.class
 Vista\VistaPrimerAdmin$4.class
 Vista\VistaMenuAdmin$1.class
+Vista\VistaEditarUsuario$3.class
 Vista\VistaRegistrarUsuario.class
 Vista\VistaMenuCajero$2.class
 Vista\VistaGestionUsuarios$3.class
@@ -74,6 +79,7 @@ Vista\VistaFacturacion$2.class
 Vista\VistaLogin$3.class
 Vista\VistaFacturacion$5.class
 Modelo\DetalleFacturaModelo.class
+Vista\VistaFacturacion$10.class
 Vista\VistaFacturacion.class
 Vista\VistaGestionStock$2.class
 Vista\VistaLogin$5.class
@@ -104,3 +110,4 @@ Modelo\ServicioHistorial.class
 Controlador\ControladorCajero.class
 Vista\VistaGestionStock$8.class
 Vista\VistaMenuAdmin$5.class
+Vista\VistaFacturacion$11.class
