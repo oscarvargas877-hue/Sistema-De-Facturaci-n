@@ -153,4 +153,9 @@ public class ControladorGestionUsuarios {
         }
         return usuario;
     }
+    
+    // Getter para acceder a vistaMenuAdmin desde otros controladores
+    public Vista.VistaMenuAdmin getVistaMenuAdmin() {
+        return this.vistaMenuAdmin;
+}
 }

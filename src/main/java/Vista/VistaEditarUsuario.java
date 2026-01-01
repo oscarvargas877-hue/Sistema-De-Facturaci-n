@@ -75,6 +75,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     txtIdUsuario.setHorizontalAlignment(JTextField.CENTER);
     txtIdUsuario.setEditable(false);
     txtIdUsuario.setPreferredSize(new Dimension(400, 60));
+    txtIdUsuario.setForeground(Color.BLACK);
     panelFormulario.add(txtIdUsuario, gbc);
     
     // ================== NOMBRE ==================
@@ -88,6 +89,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     txtNombre.setFont(new Font("Arial", Font.PLAIN, 36));
     txtNombre.setHorizontalAlignment(JTextField.CENTER);
     txtNombre.setPreferredSize(new Dimension(400, 60));
+    txtNombre.setForeground(Color.BLACK);
     panelFormulario.add(txtNombre, gbc);
     
     // ================== CÉDULA ==================
@@ -326,7 +328,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         // Estado
         String estado = usuarioActual.isActivo() ? "Activo" : "Inactivo";
         lblEstado.setText("Estado: " + estado);
-        lblEstado.setForeground(usuarioActual.isActivo() ? Color.CYAN : Color.RED);
+        lblEstado.setForeground(usuarioActual.isActivo() ? Color.WHITE : Color.RED);
     }
 
 
@@ -640,9 +642,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
  
-   // Variable para el grupo de género
-   // Grupo lógico para Género (no es un componente visible)
-    private ButtonGroup grupoGenero;
+ 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
