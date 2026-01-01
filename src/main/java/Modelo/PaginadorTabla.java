@@ -75,50 +75,54 @@ public class PaginadorTabla<T> {
         lblPagina.setText("Página " + paginaActual + " de " + totalPaginas);
     }
 
+    // En PaginadorTabla.java - REEMPLAZA SOLO este método
+
     private Object[] obtenerFilaDesdeObjeto(T item) {
-        if (item instanceof ProductoModelo) {
-            ProductoModelo p = (ProductoModelo) item;
-            return new Object[]{
-                p.getCodigo(),
-                p.getNombre(),
-                String.format("%.2f", p.getPrecio()),
-                p.getCantidadStock()
-            };
-        }
-
-        if (item instanceof UsuarioModelo) {
-            UsuarioModelo u = (UsuarioModelo) item;
-            return new Object[]{
-                u.getIdUsuario(),
-                u.getNombreUsuario(),
-                u.getRol(),
-                u.isActivo() ? "Activo" : "Inactivo"
-            };
-        }
-
-        if (item instanceof HistorialVentaModelo) {
-            HistorialVentaModelo v = (HistorialVentaModelo) item;
-            return new Object[]{
-                v.getIdFactura(),
-                v.getFechaHora(),
-                v.getCajero(),
-                v.getCliente(),
-                String.format("%.2f", v.getTotal())
-            };
-        }
-
-        // ===== AGREGADO: PRODUCTOS MÁS VENDIDOS =====
-        if (item instanceof ProductoMasVendidoModelo) {
-            ProductoMasVendidoModelo p = (ProductoMasVendidoModelo) item;
-            return new Object[]{
-                p.getNombreProducto(),
-                p.getCantidadTotalVendida()
-            };
-        }
-
-        return null;
+    if (item instanceof ProductoModelo) {
+        ProductoModelo p = (ProductoModelo) item;
+        return new Object[]{
+            p.getCodigo(),
+            p.getNombre(),
+            String.format("%.2f", p.getPrecio()),
+            p.getCantidadStock()
+        };
     }
 
+    if (item instanceof UsuarioModelo) {
+        UsuarioModelo u = (UsuarioModelo) item;
+        return new Object[]{
+            u.getIdUsuario(),                                      // ID
+            u.getNombreUsuario(),                                  // Usuario
+            u.getCedula() != null ? u.getCedula() : "",           // Cédula
+            u.getDireccion() != null ? u.getDireccion() : "",     // Dirección
+            u.getEdad() > 0 ? u.getEdad() : "",                   // Edad
+            u.getGenero() != null ? u.getGenero() : "",           // Género
+            u.getRol(),                                            // Rol
+            u.isActivo() ? "Activo" : "Inactivo"                  // Estado
+        };
+    }
+
+    if (item instanceof HistorialVentaModelo) {
+        HistorialVentaModelo v = (HistorialVentaModelo) item;
+        return new Object[]{
+            v.getIdFactura(),
+            v.getFechaHora(),
+            v.getCajero(),
+            v.getCliente(),
+            String.format("%.2f", v.getTotal())
+        };
+    }
+
+    if (item instanceof ProductoMasVendidoModelo) {
+        ProductoMasVendidoModelo p = (ProductoMasVendidoModelo) item;
+        return new Object[]{
+            p.getNombreProducto(),
+            p.getCantidadTotalVendida()
+        };
+    }
+
+    return null;
+}
     public void irPaginaSiguiente() {
         if (paginaActual < totalPaginas) {
             paginaActual++;

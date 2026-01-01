@@ -9,6 +9,7 @@ import Modelo.ClienteModelo;
 import Modelo.DetalleFacturaModelo;
 import Modelo.FacturaModelo;
 import Modelo.ProductoModelo;
+import static Modelo.UsuarioModelo.validarCedulaEcuatoriana;
 import Vista.VistaFacturacion;
 import Vista.VistaMenuCajero;
 import Vista.VistaVerFactura;
@@ -121,6 +122,11 @@ public class ControladorFacturacion {
     }
     if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
         vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
+        return;
+    }
+    // ================== VALIDACIÓN DE CÉDULA ECUATORIANA (ALGORITMO OFICIAL) ==================
+    if (!validarCedulaEcuatoriana(cedula)) {
+        vistaFacturacion.mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
         return;
     }
 

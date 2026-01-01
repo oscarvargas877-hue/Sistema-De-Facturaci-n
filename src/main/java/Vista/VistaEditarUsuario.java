@@ -242,6 +242,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     cargarDatos();
     
     // ================== REFRESCAR ==================
+   
     revalidate();
     repaint();
     }
@@ -268,7 +269,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     
     
     // Método para cargar los datos del usuario en la interfaz
-      private void cargarDatos() {
+        private void cargarDatos() {
         txtIdUsuario.setText(String.valueOf(usuarioActual.getIdUsuario()));
         txtNombre.setText(usuarioActual.getNombreUsuario());
         txtCedula.setText(usuarioActual.getCedula() != null ? usuarioActual.getCedula() : "");
@@ -294,6 +295,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
         lblEstado.setText("Estado: " + estado);
         lblEstado.setForeground(usuarioActual.isActivo() ? Color.CYAN : Color.RED);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

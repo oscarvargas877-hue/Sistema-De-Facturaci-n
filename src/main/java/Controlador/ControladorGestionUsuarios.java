@@ -49,6 +49,7 @@ public class ControladorGestionUsuarios {
     ControladorEditarUsuario controladorEditar = new ControladorEditarUsuario(vistaEditar, this);
     vistaEditar.establecerControlador(controladorEditar);
     vistaEditar.setVisible(true);
+   
 }
     // Método para activar un usuario
     public void activarUsuario(int idUsuario) {

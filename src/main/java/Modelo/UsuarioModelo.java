@@ -182,40 +182,40 @@ public class UsuarioModelo extends Persona {
 
     // Obtiene todos los usuarios (para gestión de usuarios)
     public static List<UsuarioModelo> obtenerTodosLosUsuarios() {
-        List<UsuarioModelo> listaUsuarios = new ArrayList<>();
-        ConexionBDD conexionBDD = new ConexionBDD();
-        Connection conexion = conexionBDD.conectar();
-
-        if (conexion == null) {
-            return listaUsuarios;
+    List<UsuarioModelo> listaUsuarios = new ArrayList<>();
+    ConexionBDD conexionBDD = new ConexionBDD();
+    Connection conexion = conexionBDD.conectar();
+    if (conexion == null) {
+        return listaUsuarios;
+    }
+    try {
+        CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuarios()}");
+        ResultSet resultado = sentencia.executeQuery();
+        while (resultado.next()) {
+            UsuarioModelo usuario = new UsuarioModelo();
+            usuario.setIdUsuario(resultado.getInt("idUsuario"));
+            usuario.setNombreUsuario(resultado.getString("nombreUsuario"));
+            usuario.setCedula(resultado.getString("cedula"));
+            usuario.setDireccion(resultado.getString("direccion"));
+            usuario.setEdad(resultado.getInt("edad"));
+            usuario.setGenero(resultado.getString("genero"));
+            usuario.setRol(resultado.getString("rol"));
+            usuario.setActivo("Activo".equals(resultado.getString("estado")));
+            listaUsuarios.add(usuario);
         }
-
+    } catch (SQLException excepcion) {
+        excepcion.printStackTrace();
+    } finally {
         try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuarios()}");
-            ResultSet resultado = sentencia.executeQuery();
-
-            while (resultado.next()) {
-                UsuarioModelo usuario = new UsuarioModelo();
-                usuario.setIdUsuario(resultado.getInt("idUsuario"));
-                usuario.setNombreUsuario(resultado.getString("nombreUsuario"));
-                usuario.setRol(resultado.getString("rol"));
-                usuario.setActivo(resultado.getInt("activo") == 1);
-                listaUsuarios.add(usuario);
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
             }
         } catch (SQLException excepcion) {
             excepcion.printStackTrace();
-        } finally {
-            try {
-                if (conexion != null && !conexion.isClosed()) {
-                    conexion.close();
-                }
-            } catch (SQLException excepcion) {
-                excepcion.printStackTrace();
-            }
         }
-        return listaUsuarios;
     }
-
+    return listaUsuarios;
+}
     
   // Método para actualizar todos los datos del usuario en la base de datos
    

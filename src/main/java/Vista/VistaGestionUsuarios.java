@@ -15,8 +15,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Usuario
@@ -31,6 +31,16 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
      */
     public VistaGestionUsuarios() {
         initComponents(); // no borrar
+        
+        // Ajustar anchos de columnas (al modelo generado por NetBeans)
+    tablaUsuarios.getColumnModel().getColumn(0).setPreferredWidth(80);   // ID
+    tablaUsuarios.getColumnModel().getColumn(1).setPreferredWidth(200);  // Usuario
+    tablaUsuarios.getColumnModel().getColumn(2).setPreferredWidth(200);  // Cédula
+    tablaUsuarios.getColumnModel().getColumn(3).setPreferredWidth(350);  // Dirección
+    tablaUsuarios.getColumnModel().getColumn(4).setPreferredWidth(100);  // Edad
+    tablaUsuarios.getColumnModel().getColumn(5).setPreferredWidth(150);  // Género
+    tablaUsuarios.getColumnModel().getColumn(6).setPreferredWidth(200);  // Rol
+    tablaUsuarios.getColumnModel().getColumn(7).setPreferredWidth(150);  // Estado
     // PANTALLA COMPLETA
     setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -97,6 +107,7 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     tablaUsuarios.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 24));
     tablaUsuarios.getTableHeader().setForeground(Color.WHITE);
     tablaUsuarios.getTableHeader().setBackground(new Color(0, 102, 102));
+    
 
     // Botones grandes y coloridos
     Font fontBotones = new Font("Arial Black", Font.BOLD, 24);
@@ -165,50 +176,71 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     
 
   // Método público para cargar usuarios con paginación  colores en estado
-   public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
-    // Usar paginador para mostrar solo 5 por página
-    paginadorUsuarios.cargarDatos(listaUsuarios);
+ 
+ // En VistaGestionUsuarios.java - REEMPLAZA el método cargarUsuarios
 
-    // Renderer personalizado para estado y colores
+public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
+    DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
+    modelo.setRowCount(0); // Limpiar filas existentes
+
+    // IMPORTANTE: El orden EXACTO debe coincidir con las columnas de la tabla:
+    // "ID", "Usuario", "Cédula", "Direccion", "Edad", "Género", "Rol", "Estado"
+    
+    for (Modelo.UsuarioModelo usuario : listaUsuarios) {
+        Object[] fila = {
+            usuario.getIdUsuario(),                                    // Columna 0: ID
+            usuario.getNombreUsuario(),                                // Columna 1: Usuario
+            usuario.getCedula() != null ? usuario.getCedula() : "",   // Columna 2: Cédula
+            usuario.getDireccion() != null ? usuario.getDireccion() : "", // Columna 3: Dirección
+            usuario.getEdad() > 0 ? usuario.getEdad() : "",           // Columna 4: Edad
+            usuario.getGenero() != null ? usuario.getGenero() : "",   // Columna 5: Género
+            usuario.getRol(),                                          // Columna 6: Rol
+            usuario.isActivo() ? "Activo" : "Inactivo"                // Columna 7: Estado
+        };
+        modelo.addRow(fila);
+    }
+
+    // Actualizar paginador
+    if (paginadorUsuarios != null) {
+        paginadorUsuarios.cargarDatos(listaUsuarios);
+    }
+
+    // Renderer para colorear el estado (columna 7)
     tablaUsuarios.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
         @Override
-        public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
+            java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-            // Color del texto: SIEMPRE NEGRO excepto si está seleccionado
             if (isSelected) {
-                setForeground(Color.WHITE);
+                c.setBackground(new java.awt.Color(0, 120, 215));
+                c.setForeground(java.awt.Color.WHITE);
             } else {
-                setForeground(Color.BLACK);
+                c.setBackground(java.awt.Color.WHITE);
+                c.setForeground(java.awt.Color.BLACK);
             }
 
-            // La columna "Estado" es la 3 (índice 3) - colorear SOLO esa celda
-            if (column == 3 && value != null) {
+            // Colorear solo la columna Estado (7)
+            if (column == 7 && value != null) {
                 String estado = value.toString();
-                
                 if ("Activo".equals(estado)) {
-                    setForeground(isSelected ? Color.WHITE : new Color(0, 153, 0)); // Verde
-                    setFont(getFont().deriveFont(Font.BOLD));
+                    c.setForeground(isSelected ? java.awt.Color.WHITE : new java.awt.Color(0, 153, 0));
+                    c.setFont(c.getFont().deriveFont(java.awt.Font.BOLD));
                 } else if ("Inactivo".equals(estado)) {
-                    setForeground(isSelected ? Color.WHITE : Color.RED); // Rojo
-                    setFont(getFont().deriveFont(Font.BOLD));
+                    c.setForeground(isSelected ? java.awt.Color.WHITE : java.awt.Color.RED);
+                    c.setFont(c.getFont().deriveFont(java.awt.Font.BOLD));
                 }
-            } else {
-                setFont(getFont().deriveFont(Font.PLAIN));
             }
 
-            // Fondo de fila seleccionada
-            setBackground(isSelected ? new Color(0, 120, 215) : Color.WHITE);
-
-            return this;
+            return c;
         }
     });
 
     // Tabla no editable
     tablaUsuarios.setDefaultEditor(Object.class, null);
+
 }
+   
      // Método para obtener el ID del usuario seleccionado
     private int obtenerIdUsuarioSeleccionado() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
@@ -254,15 +286,23 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         tablaUsuarios.setForeground(new java.awt.Color(0, 102, 102));
         tablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Usuario", "Rol", "Estado"
+                "ID", "Usuario", "Cédula", "Direccion", "Edad", "Género", "Rol", "Estado"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaUsuarios);
 
         ScrollTablaUsuarios.setViewportView(jScrollPane1);
@@ -324,34 +364,36 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(110, 110, 110)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(317, 317, 317)
-                        .addComponent(lblTitulo))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnEditar)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(238, 238, 238)
+                                .addComponent(btnActivar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(105, 105, 105)
+                                .addComponent(btnAnteriorGestion)
+                                .addGap(67, 67, 67)
+                                .addComponent(lblPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSiguienteGestion)))
+                        .addGap(81, 81, 81)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAtras)
+                            .addComponent(btnInactivar))
+                        .addContainerGap(51, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblListaUsuarios)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnEditar)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(238, 238, 238)
-                                            .addComponent(btnActivar))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(105, 105, 105)
-                                            .addComponent(btnAnteriorGestion)
-                                            .addGap(67, 67, 67)
-                                            .addComponent(lblPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnSiguienteGestion)))
-                                    .addGap(81, 81, 81)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnAtras)
-                                        .addComponent(btnInactivar))
-                                    .addGap(45, 45, 45))
-                                .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(317, 317, 317)
+                .addComponent(lblTitulo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
