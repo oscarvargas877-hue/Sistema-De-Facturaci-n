@@ -46,7 +46,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 
         // ================== MENSAJE DE ERROR Y ÉXITO ==================
         lblMensajeError.setFont(new Font("Arial Black", Font.BOLD, 20));
-        lblMensajeError.setForeground(Color.RED);
+        lblMensajeError.setForeground(Color.WHITE);
         lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
         lblMensajeError.setVisible(false);
 

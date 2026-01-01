@@ -16,7 +16,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -145,7 +144,7 @@ public class VistaProductosMasVendidos extends javax.swing.JFrame {
         btnAtras.setPreferredSize(tamañoBoton);
         btnAtras.setBackground(new Color(155, 89, 182)); // Morado
         btnAtras.setForeground(Color.WHITE);
-// AGREGA ESTO ANTES DE revalidate(); EN EL CONSTRUCTOR
+
 
     // ================== AGREGAR BOTONES DE PAGINACIÓN AL PANEL ==================
     JPanel panelPaginacion = new JPanel(new GridBagLayout());

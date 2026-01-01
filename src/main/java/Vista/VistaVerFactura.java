@@ -5,16 +5,27 @@
 package Vista;
 
 import Modelo.DetalleFacturaModelo;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
-import java.util.Date;  // ← Este es el correcto
+import java.util.Date;  
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -37,180 +48,183 @@ public class VistaVerFactura extends javax.swing.JFrame {
                            List<DetalleFacturaModelo> detalle, double totalSinIVA) {
         initComponents();
       
-    // ================== ASIGNAR DATOS A VARIABLES ==================
-       this.numeroFactura = numeroFactura;
-       this.nombresApellidos = nombresApellidos;
-       this.cedula = cedula;
-       this.direccion = direccion.isEmpty() ? "No registrada" : direccion;
-       this.detalle = detalle;
-       this.totalSinIVA = totalSinIVA;
+  
+  this.numeroFactura = numeroFactura;
+    this.nombresApellidos = nombresApellidos;
+    this.cedula = cedula;
+    this.direccion = direccion == null || direccion.trim().isEmpty() ? "No registrada" : direccion;
+    this.detalle = detalle;
+    this.totalSinIVA = totalSinIVA;
 
-       // ================== CONFIGURACIÓN GENERAL ==================
-       setExtendedState(JFrame.MAXIMIZED_BOTH);
-       getContentPane().setBackground(Color.WHITE);
+    /* ---------- ESTILOS MEJORADOS (solo decoración, nada de lógica cambiada) ---------- */
+    lblNombreNegocio.setFont(new Font("Arial Black", Font.BOLD, 48)); // Más grande y destacado
+    lblNombreNegocio.setForeground(new Color(0, 100, 100));
+    lblNombreNegocio.setHorizontalAlignment(javax.swing.JLabel.CENTER);
 
-       // ================== ENCABEZADO ==================
-       lblNombreNegocio.setFont(new Font("Arial Black", Font.BOLD, 40));
-       lblNombreNegocio.setForeground(new Color(0, 102, 102));
-       lblNombreNegocio.setHorizontalAlignment(JLabel.CENTER);
+    lblRuc.setFont(new Font("Arial", Font.BOLD, 26));
+    lblRuc.setForeground(Color.BLACK);
+    lblRuc.setHorizontalAlignment(JLabel.CENTER);
 
-       lblRuc.setFont(new Font("Arial", Font.BOLD, 24));
-       lblRuc.setForeground(Color.BLACK);
-       lblRuc.setHorizontalAlignment(JLabel.CENTER);
+    lblDireccionNegocio.setFont(new Font("Arial", Font.PLAIN, 22));
+    lblDireccionNegocio.setForeground(Color.DARK_GRAY);
+    lblDireccionNegocio.setHorizontalAlignment(JLabel.CENTER);
 
-       lblDireccionNegocio.setFont(new Font("Arial", Font.PLAIN, 20));
-       lblDireccionNegocio.setForeground(Color.BLACK);
-       lblDireccionNegocio.setHorizontalAlignment(JLabel.CENTER);
+    lblNumeroFechaHora.setFont(new Font("Arial", Font.BOLD, 26));
+    lblNumeroFechaHora.setForeground(Color.BLACK);
+    lblNumeroFechaHora.setHorizontalAlignment(JLabel.CENTER);
 
-       lblNumeroFechaHora.setFont(new Font("Arial", Font.BOLD, 22));
-       lblNumeroFechaHora.setForeground(Color.BLACK);
-       lblNumeroFechaHora.setHorizontalAlignment(JLabel.CENTER);
+    lblNombreCliente.setFont(new Font("Arial", Font.BOLD, 24));
+    lblNombreCliente.setForeground(Color.BLACK);
 
-       // ================== DATOS DEL CLIENTE ==================
-       lblNombreCliente.setFont(new Font("Arial", Font.BOLD, 20));
-       lblNombreCliente.setForeground(Color.BLACK);
+    lblCedula.setFont(new Font("Arial", Font.BOLD, 24));
+    lblCedula.setForeground(Color.BLACK);
 
-       lblCedula.setFont(new Font("Arial", Font.BOLD, 20));
-       lblCedula.setForeground(Color.BLACK);
+    lblDireccion.setFont(new Font("Arial", Font.BOLD, 24));
+    lblDireccion.setForeground(Color.BLACK);
 
-       lblDireccion.setFont(new Font("Arial", Font.BOLD, 20));
-       lblDireccion.setForeground(Color.BLACK);
+    tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 20)); // Letras más grandes en la tabla
+    tablaDetalle.setForeground(new Color(0, 90, 90));
+    tablaDetalle.setRowHeight(60); // Filas más altas para mejor lectura
+    tablaDetalle.setGridColor(new Color(180, 180, 180)); // Grid suave
+    tablaDetalle.setShowGrid(true);
 
-       // ================== TABLA DETALLE ==================
-       tablaDetalle.setFont(new Font("Arial", Font.PLAIN, 18));
-       tablaDetalle.setForeground(new Color(0, 102, 102));
-       tablaDetalle.setRowHeight(50);
-       tablaDetalle.getTableHeader().setFont(new Font("Arial Black", Font.BOLD, 18));
-       tablaDetalle.getTableHeader().setBackground(new Color(0, 102, 102));
-       tablaDetalle.getTableHeader().setForeground(Color.WHITE);
+    JTableHeader header = tablaDetalle.getTableHeader();
+    header.setFont(new Font("Arial Black", Font.BOLD, 22)); // Header más grande
+    header.setBackground(new Color(0, 102, 102));
+    header.setForeground(Color.WHITE);
+    header.setPreferredSize(new Dimension(header.getWidth(), 70)); // Header más alto
 
-       javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
-       centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-       for (int i = 0; i < tablaDetalle.getColumnCount(); i++) {
-           tablaDetalle.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-       }
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    for (int i = 0; i < tablaDetalle.getColumnCount(); i++) {
+        tablaDetalle.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
 
-       ScrollDetalleFactura.setPreferredSize(new Dimension(900, 250));
+    // Anchos mejorados para que se vea todo
+    tablaDetalle.getColumnModel().getColumn(0).setPreferredWidth(550); // Producto más ancho
+    tablaDetalle.getColumnModel().getColumn(1).setPreferredWidth(120);
+    tablaDetalle.getColumnModel().getColumn(2).setPreferredWidth(140);
+    tablaDetalle.getColumnModel().getColumn(3).setPreferredWidth(140);
+    tablaDetalle.getColumnModel().getColumn(4).setPreferredWidth(140);
 
-       // ================== TOTALES ==================
-       lblIva.setFont(new Font("Arial Black", Font.BOLD, 26));
-       lblIva.setForeground(Color.BLACK);
+    // Totales más destacados
+    lblIva.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblIva.setForeground(Color.BLACK);
 
-       lblTotal.setFont(new Font("Arial Black", Font.BOLD, 32));
-       lblTotal.setForeground(new Color(0, 130, 0));
+    lblTotal.setFont(new Font("Arial Black", Font.BOLD, 42)); // Total bien grande y verde
+    lblTotal.setForeground(new Color(0, 140, 0));
 
-       // ================== MENSAJE DE GRACIAS ==================
-       lblGracias.setFont(new Font("Arial", Font.ITALIC, 28));
-       lblGracias.setForeground(new Color(0, 102, 102));
-       lblGracias.setHorizontalAlignment(JLabel.CENTER);
+    lblGracias.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 34));
+    lblGracias.setForeground(new Color(0, 102, 102));
+    lblGracias.setHorizontalAlignment(JLabel.CENTER);
 
-       // ================== BOTÓN ACEPTAR ==================
-       btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 26));
-       btnAceptar.setBackground(new Color(46, 204, 113));
-       btnAceptar.setForeground(Color.WHITE);
-       btnAceptar.setFocusPainted(false);
-       btnAceptar.setPreferredSize(new Dimension(200, 60));
+    btnAceptar.setFont(new Font("Arial Black", Font.BOLD, 30));
+    btnAceptar.setBackground(new Color(46, 204, 113));
+    btnAceptar.setForeground(Color.WHITE);
+    btnAceptar.setFocusPainted(false);
+    btnAceptar.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40)); // Botón más grande
 
-       // ================== PANELES ==================
-       PanelEncabezado.setBackground(new Color(240, 240, 240));
-       PanelCliente.setBackground(new Color(250, 250, 250));
-       PanelTotales.setBackground(new Color(240, 240, 240));
-       
-      
-    // Alinear los paneles a la misma altura
-    getContentPane().revalidate();
-    getContentPane().repaint();
+    // Paneles con bordes elegantes
+    PanelEncabezado.setBackground(new Color(240, 250, 250));
+    PanelEncabezado.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
 
-       // ================== CARGAR LA FACTURA CON DATOS ==================
-       // Número de factura + fecha y hora
-       String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
-       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-       SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-       String fecha = dateFormat.format(new Date());
-       String hora = timeFormat.format(new Date());
+    PanelCliente.setBackground(Color.WHITE);
+    PanelCliente.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
 
-       lblNombreNegocio.setText("SUPERMERCADOS TUTI ");
-       lblRuc.setText("RUC: 1793000000001");
-       lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
-       lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + "     Fecha: " + fecha + "     Hora: " + hora);
+    PanelTotales.setBackground(new Color(240, 255, 240));
+    PanelTotales.setBorder(BorderFactory.createLineBorder(new Color(0, 140, 0), 3));
 
-       // Datos del cliente
-       lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
-       lblCedula.setText("Cédula: " + this.cedula);
-       lblDireccion.setText("Dirección: " + this.direccion);
+    PanelDetalle.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
 
-       // ================== LLENAR TABLA CON DETALLES ==================
-       DefaultTableModel modelo = new DefaultTableModel(
-           new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
-       );
+    /* ---------- DATOS FACTURA ---------- */
+    String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+    String fecha = df.format(new Date());
+    String hora = tf.format(new Date());
 
-       double subtotal = 0;
-       if (detalle != null && !detalle.isEmpty()) {
-           for (DetalleFacturaModelo item : detalle) {
-               String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-               modelo.addRow(new Object[]{
-                   item.getNombreProducto(),
-                   item.getCantidad(),
-                   String.format("%.2f", item.getPrecioUnitario()),
-                   descuentoStr,
-                   String.format("%.2f", item.getSubtotal())
-               });
-               subtotal += item.getSubtotal();
-           }
-       }
+    lblNombreNegocio.setText("SUPERMERCADOS TUTI");
+    lblRuc.setText("RUC: 1793000000001");
+    lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
+    lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + " Fecha: " + fecha + " Hora: " + hora);
 
-       tablaDetalle.setModel(modelo);
-       tablaDetalle.setDefaultEditor(Object.class, null);
+    lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
+    lblCedula.setText("Cédula: " + this.cedula);
+    lblDireccion.setText("Dirección: " + this.direccion);
 
-       // ================== CALCULAR Y MOSTRAR TOTALES ==================
-       double iva = subtotal * 0.15;
-       double totalFinal = subtotal + iva;
+    /* ---------- LLENAR TABLA ---------- */
+    DefaultTableModel modelo = new DefaultTableModel(
+        new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+    );
 
-       lblIva.setText("IVA 15%: $" + String.format("%.2f", iva));
-       lblTotal.setText("Total: $" + String.format("%.2f", totalFinal));
+    double subtotal = 0.0;
+    if (detalle != null) {
+        for (DetalleFacturaModelo item : detalle) {
+            String desc = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+            modelo.addRow(new Object[]{
+                item.getNombreProducto(),
+                item.getCantidad(),
+                String.format("%.2f", item.getPrecioUnitario()),
+                desc,
+                String.format("%.2f", item.getSubtotal())
+            });
+            subtotal += item.getSubtotal();
+        }
+    }
+    tablaDetalle.setModel(modelo);
+    tablaDetalle.setDefaultEditor(Object.class, null);
 
-       lblGracias.setText("Gracias por su compra");
+    /* ---------- ALTURA DINÁMICA: QUE LA TABLA MUESTRE TODAS SUS FILAS ---------- */
+    int filas = modelo.getRowCount();
+    int altoFila = tablaDetalle.getRowHeight();
+    int altoHeader = header.getPreferredSize().height;
+    int altoTabla = altoHeader + filas * altoFila + 20; // Margen extra
 
+    tablaDetalle.setPreferredSize(new Dimension(1000, altoTabla));
+    tablaDetalle.setMaximumSize(new Dimension(1000, altoTabla));
+    tablaDetalle.setMinimumSize(new Dimension(1000, altoTabla));
+
+    /* ---------- SACAMOS LA TABLA DEL SCROLL Y LA METEMOS EN PanelDetalle ---------- */
+    jScrollPane2.setViewportView(null);
+    PanelDetalle.removeAll();
+    PanelDetalle.setLayout(new BorderLayout());
+    PanelDetalle.add(header, BorderLayout.NORTH);
+    PanelDetalle.add(tablaDetalle, BorderLayout.CENTER);
+    PanelDetalle.revalidate();
+    PanelDetalle.repaint();
+
+    /* ---------- TOTALES ---------- */
+    double iva = subtotal * 0.15;
+    double total = subtotal + iva;
+    lblIva.setText("IVA 15%: $" + String.format("%.2f", iva));
+    lblTotal.setText("Total: $" + String.format("%.2f", total));
+    lblGracias.setText("Gracias por su compra");
+
+    /* ---------- COLORES ---------- */
+    PanelEncabezado.setBackground(new Color(240, 250, 250));
+    PanelCliente.setBackground(Color.WHITE);
+    PanelTotales.setBackground(new Color(240, 255, 240));
+
+    /* ---------- SCROLL GLOBAL DE LA VENTANA ---------- */
+    Component originalContent = getContentPane();
+    JPanel wrapper = new JPanel(new BorderLayout());
+    wrapper.add(originalContent, BorderLayout.CENTER);
+    JScrollPane globalScroll = new JScrollPane(wrapper);
+    globalScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    globalScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    globalScroll.getVerticalScrollBar().setUnitIncrement(20); // Scroll más suave
+    setContentPane(globalScroll);
+
+    /* ---------- MAXIMIZAR ---------- */
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+    revalidate();
+    repaint();
+    
     }
           
-           // Método para actualizar la tabla de detalle
+          
 
-    private void actualizarTablaDetalle() {
-        // Crear el modelo de la tabla
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-            new Object[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
-        );
-
-        // Llenar la tabla con los detalles
-        if (detalle != null && !detalle.isEmpty()) {
-            for (Modelo.DetalleFacturaModelo item : detalle) {
-                String descuentoStr = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-                modelo.addRow(new Object[]{
-                    item.getNombreProducto(),
-                    item.getCantidad(),
-                    String.format("%.2f", item.getPrecioUnitario()),
-                    descuentoStr,
-                    String.format("%.2f", item.getSubtotal())
-                });
-            }
-        } else {
-            modelo.addRow(new Object[]{"-", "-", "-", "-", "-"});
-        }
-        
-
-        // Asignar el modelo a la tabla
-        tablaDetalle.setModel(modelo);
-        //PARA QUE LAS FILAS NO SEAN EDITABLES
-        tablaDetalle.setDefaultEditor(Object.class, null);
-
-        // ️ Forzar que la tabla se redimensione y se vea completa
-        tablaDetalle.setPreferredScrollableViewportSize(new Dimension(800, 600));
-        tablaDetalle.setFillsViewportHeight(true);
-
-        // Refrescar el scrollpane
-        ScrollDetalleFactura.revalidate();
-        ScrollDetalleFactura.repaint();
-    }
         public void establecerVistaFacturacion(VistaFacturacion vista) {
         this.vistaFacturacion = vista;
     }
@@ -225,8 +239,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        ScrollDetalleFactura = new javax.swing.JScrollPane();
-        tablaDetalle = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         PanelEncabezado = new javax.swing.JPanel();
         lblNombreNegocio = new javax.swing.JLabel();
         lblRuc = new javax.swing.JLabel();
@@ -241,23 +255,24 @@ public class VistaVerFactura extends javax.swing.JFrame {
         lblTotal = new javax.swing.JLabel();
         lblGracias = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
+        PanelDetalle = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaDetalle = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        tablaDetalle.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        tablaDetalle.setForeground(new java.awt.Color(0, 102, 102));
-        tablaDetalle.setModel(new javax.swing.table.DefaultTableModel(
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        ScrollDetalleFactura.setViewportView(tablaDetalle);
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblNombreNegocio.setText("Supermercados Tuti");
 
@@ -313,14 +328,13 @@ public class VistaVerFactura extends javax.swing.JFrame {
             .addGroup(PanelClienteLayout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addGroup(PanelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(PanelClienteLayout.createSequentialGroup()
                         .addGroup(PanelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(PanelClienteLayout.createSequentialGroup()
-                        .addComponent(lblCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lblDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 451, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         PanelClienteLayout.setVerticalGroup(
             PanelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,17 +359,17 @@ public class VistaVerFactura extends javax.swing.JFrame {
             .addGroup(PanelTotalesLayout.createSequentialGroup()
                 .addGroup(PanelTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelTotalesLayout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(lblIva))
-                    .addGroup(PanelTotalesLayout.createSequentialGroup()
                         .addGap(44, 44, 44)
-                        .addComponent(lblTotal)))
-                .addContainerGap(369, Short.MAX_VALUE))
+                        .addComponent(lblTotal))
+                    .addGroup(PanelTotalesLayout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(lblIva)))
+                .addContainerGap(581, Short.MAX_VALUE))
         );
         PanelTotalesLayout.setVerticalGroup(
             PanelTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelTotalesLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(28, 28, 28)
                 .addComponent(lblIva)
                 .addGap(18, 18, 18)
                 .addComponent(lblTotal)
@@ -373,32 +387,63 @@ public class VistaVerFactura extends javax.swing.JFrame {
             }
         });
 
+        tablaDetalle.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Producto", "Cantidad", "Precio", "Descuento", "Subtotal"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaDetalle);
+
+        javax.swing.GroupLayout PanelDetalleLayout = new javax.swing.GroupLayout(PanelDetalle);
+        PanelDetalle.setLayout(PanelDetalleLayout);
+        PanelDetalleLayout.setHorizontalGroup(
+            PanelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelDetalleLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        PanelDetalleLayout.setVerticalGroup(
+            PanelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelDetalleLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(316, 316, 316)
-                .addComponent(lblGracias)
-                .addGap(70, 70, 70)
-                .addComponent(btnAceptar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(176, 176, 176)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(PanelCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(PanelEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(152, 152, 152))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(PanelTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PanelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(PanelEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(152, 152, 152))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ScrollDetalleFactura)
-                        .addContainerGap())))
+                        .addGap(228, 228, 228)
+                        .addComponent(lblGracias)
+                        .addGap(133, 133, 133)
+                        .addComponent(btnAceptar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(222, 222, 222)
+                        .addComponent(PanelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,15 +452,15 @@ public class VistaVerFactura extends javax.swing.JFrame {
                 .addComponent(PanelEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ScrollDetalleFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(28, 28, 28)
+                .addComponent(PanelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
                 .addComponent(PanelTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGracias)
                     .addComponent(btnAceptar))
-                .addGap(9, 9, 9))
+                .addContainerGap(347, Short.MAX_VALUE))
         );
 
         pack();
@@ -435,10 +480,13 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCliente;
+    private javax.swing.JPanel PanelDetalle;
     private javax.swing.JPanel PanelEncabezado;
     private javax.swing.JPanel PanelTotales;
-    private javax.swing.JScrollPane ScrollDetalleFactura;
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblDireccionNegocio;

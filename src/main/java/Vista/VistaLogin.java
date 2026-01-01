@@ -67,7 +67,7 @@ public class VistaLogin extends javax.swing.JFrame {
     btnCerrar.setPreferredSize(new Dimension(350, 70));
 
     lblMensajeError.setFont(new Font("Arial", Font.BOLD, 22));
-    lblMensajeError.setForeground(Color.RED);
+    lblMensajeError.setForeground(Color.WHITE);
     lblMensajeError.setHorizontalAlignment(JLabel.CENTER);
 
     // Centrar todo el panel principal (el que genera NetBeans)
