@@ -115,7 +115,45 @@ public class VistaRegistrarUsuario extends javax.swing.JFrame {
         // Refrescar
         revalidate();
         repaint();
-    
+        
+            // === NAVEGACIÓN CON ENTER EN REGISTRAR USUARIO ===
+        txtNombreUsuario.addActionListener(e -> jPContrasenia.requestFocusInWindow());
+        jPContrasenia.addActionListener(e -> txtCedula.requestFocusInWindow());
+        txtCedula.addActionListener(e -> txtDireccion.requestFocusInWindow());
+        txtDireccion.addActionListener(e -> txtEdad.requestFocusInWindow());
+        
+        txtEdad.addActionListener(e -> {
+        RadioMasculino.requestFocusInWindow();
+        });
+
+        // AÑADE ESTO PARA LOS RADIO BUTTONS DE GÉNERO
+        RadioFemenino.addActionListener(e -> {
+            RadioAdministrador.requestFocusInWindow();
+        });
+
+        RadioMasculino.addActionListener(e -> {
+            RadioAdministrador.requestFocusInWindow();
+        });
+
+        // AÑADE ESTO PARA EL ÚLTIMO RADIO BUTTON (ROL)
+        RadioCajero.addActionListener(e -> {
+            btnRegistrar.requestFocusInWindow();
+        });
+
+        RadioAdministrador.addActionListener(e -> {
+            btnRegistrar.requestFocusInWindow();
+        });
+
+        // AHORA EL BOTÓN REGISTRAR RESPONDE A ENTER
+        btnRegistrar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                    btnRegistrarActionPerformed(null);
+                }
+            }
+        });
+
+
     }
          public void establecerControlador(Controlador.ControladorRegistrarUsuario controlador) {
         this.controladorRegistrar = controlador;

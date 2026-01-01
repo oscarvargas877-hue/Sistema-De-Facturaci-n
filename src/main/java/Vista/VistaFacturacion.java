@@ -31,6 +31,48 @@ private javax.swing.JDialog dialogoEspera;
      */
     public VistaFacturacion() {
         initComponents();
+        
+        
+    // === AUMENTAR TAMAÑO DE LETRAS EN LA TABLA ===
+    TablaDetalleVenta.setFont(new Font("Arial", Font.PLAIN, 15));  // Letras de datos más grandes
+    TablaDetalleVenta.setRowHeight(50);  // Filas más altas para que quepan las letras
+
+    // Hacer el encabezado más grande y visible
+    javax.swing.table.JTableHeader encabezado = TablaDetalleVenta.getTableHeader();
+    encabezado.setFont(new Font("Arial Black", Font.BOLD, 20));  // Encabezado más grande
+    encabezado.setForeground(Color.WHITE);  // Letras blancas
+    encabezado.setBackground(new Color(0, 102, 102));  // Fondo verde oscuro
+    encabezado.setPreferredSize(new Dimension(0, 30));  // Altura del encabezado
+
+    // Renderer personalizado para centrar texto y mejorar visualización
+    TablaDetalleVenta.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+        @Override
+        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Centrar el texto
+            ((javax.swing.JLabel) celda).setHorizontalAlignment(javax.swing.JLabel.CENTER);
+
+            // Mantener la fuente grande
+            celda.setFont(new Font("Arial", Font.PLAIN, 15));
+
+            // Colores
+            if (isSelected) {
+                celda.setBackground(new Color(0, 120, 215));
+                celda.setForeground(Color.WHITE);
+            } else {
+                celda.setBackground(Color.WHITE);
+                celda.setForeground(new Color(0, 0, 0));
+            }
+
+            return celda;
+        }
+    });
+
+    // No editable
+    TablaDetalleVenta.setDefaultEditor(Object.class, null);
  
     // ================== CONFIGURACIÓN GENERAL ==================
     setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -215,20 +257,46 @@ private javax.swing.JDialog dialogoEspera;
     scrollPane.setBorder(null);
     setContentPane(scrollPane);
     
-    // ================== ACCIONES ==================
-    btnBuscarCedula.addActionListener(e -> {
-        if (controladorFacturacion != null) {
-            controladorFacturacion.buscarClientePorCedula();
-        }
-    });
-
+    java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
+    
+    // === NAVEGACIÓN CON ENTER ===
     txtCedula.addActionListener(e -> {
         if (controladorFacturacion != null) {
             controladorFacturacion.buscarClientePorCedula();
         }
     });
-    
-    java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
+
+    txtNombresApellidos.addActionListener(e -> txtDireccion.requestFocusInWindow());
+    txtDireccion.addActionListener(e -> ComboProductos.requestFocusInWindow());
+    ComboProductos.addActionListener(e -> txtCantidad.requestFocusInWindow());
+
+    txtCantidad.addActionListener(e -> {
+        btnAgregarProducto.doClick();
+        // Después de agregar, volver a enfocarse en cantidad para agregar otro producto
+        java.awt.EventQueue.invokeLater(() -> {
+            txtCantidad.selectAll();
+            txtCantidad.requestFocusInWindow();
+        });
+    });
+
+    // Enter en botón finalizar venta
+    btnFinalizarVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                btnFinalizarVentaActionPerformed(null);
+            }
+        }
+    });
+
+    // Hacer que Tab en TablaDetalleVenta enfoque al botón Finalizar
+    TablaDetalleVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                btnFinalizarVenta.requestFocusInWindow();
+            }
+        }
+    });
+
      
     }
     

@@ -33,7 +33,7 @@ public class ControladorGestionStock {
         // Buscar el producto por código
         Modelo.ProductoModelo producto = ProductoModelo.obtenerProductoPorCodigo(codigoProducto);
         if (producto == null) {
-            vistaGestionStock.mostrarMensajeConColor("Producto no encontrado. Verifique el código.", java.awt.Color.RED);
+            vistaGestionStock.mostrarMensajeConColor("Producto no encontrado. Verifique el código.", java.awt.Color.WHITE);
             return;
         }
 

@@ -66,43 +66,61 @@ public class ControladorFacturacion {
     }
 
     // NUEVO MÉTODO: Buscar cliente al presionar Enter en el campo cédula
+      // NUEVO MÉTODO: Buscar cliente al presionar Enter en el campo cédula o botón Buscar
     public void buscarClientePorCedula() {
-    String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
+        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
 
-    if (cedula.isEmpty()) {
-        vistaFacturacion.mostrarMensajeError("Por favor ingrese la cédula del cliente.");
-        return;
+        if (cedula.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("Por favor ingrese la cédula del cliente.");
+            vistaFacturacion.enfocarCampoCedula();
+            return;
+        }
+
+        // Validación básica: 10 dígitos numéricos
+        if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
+            vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
+            vistaFacturacion.enfocarCampoCedula();
+            return;
+        }
+
+        // === NUEVA VALIDACIÓN: DEBE SER CÉDULA ECUATORIANA VÁLIDA ===
+        if (!validarCedulaEcuatoriana(cedula)) {
+            vistaFacturacion.mostrarMensajeError(
+                "La cédula ingresada no es válida.\n" +
+                "Debe ser una cédula ecuatoriana auténtica."
+            );
+            vistaFacturacion.enfocarCampoCedula();
+            return;
+        }
+        // ===========================================================
+
+        // Si pasa todas las validaciones, buscamos en la BD
+        ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
+
+        if (cliente != null) {
+            // Cliente encontrado → mostrar datos y bloquear edición
+            vistaFacturacion.mostrarDatosCliente(
+                cliente.getNombresApellidos(),
+                cliente.getDireccion() != null ? cliente.getDireccion() : ""
+            );
+            vistaFacturacion.mostrarMensajeConColor(
+                "Cliente encontrado: " + cliente.getNombresApellidos(),
+                java.awt.Color.GREEN
+            );
+            vistaFacturacion.habilitarEdicionCliente(false);
+            // Enfocar producto para seguir facturando rápido
+            vistaFacturacion.requestFocusInWindow(); // o enfocar ComboProductos si tienes método
+        } else {
+            // Cliente NO encontrado → permitir ingreso manual
+            vistaFacturacion.limpiarDatosCliente();
+            vistaFacturacion.mostrarMensajeConColor(
+                "Cliente no registrado. Ingrese nombres/apellidos y dirección.",
+                java.awt.Color.ORANGE
+            );
+            vistaFacturacion.habilitarEdicionCliente(true);
+            vistaFacturacion.enfocarNombresApellidos();
+        }
     }
-    if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
-        vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
-        return;
-    }
-
-    ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
-
-    if (cliente != null) {
-        // Cliente encontrado → mostrar datos
-        vistaFacturacion.mostrarDatosCliente(
-            cliente.getNombresApellidos(),
-            cliente.getDireccion() != null ? cliente.getDireccion() : ""
-        );
-        vistaFacturacion.mostrarMensajeConColor(
-            "Cliente encontrado: " + cliente.getNombresApellidos(),
-            java.awt.Color.GREEN
-        );
-        vistaFacturacion.habilitarEdicionCliente(false); // Bloquear edición
-
-    } else {
-        // Cliente NO encontrado → permitir crear nuevo
-        vistaFacturacion.limpiarDatosCliente();
-        vistaFacturacion.mostrarMensajeConColor(
-            "Cliente no registrado. Ingrese nombres/apellidos y dirección.",
-            java.awt.Color.ORANGE
-        );
-        vistaFacturacion.habilitarEdicionCliente(true); // Permitir edición
-        vistaFacturacion.enfocarNombresApellidos();
-    }
-}
     
     // MÉTODO FINALIZAR VENTA - CON VALIDACIONES COMPLETAS Y SIN BUGS
     public void finalizarVenta() {

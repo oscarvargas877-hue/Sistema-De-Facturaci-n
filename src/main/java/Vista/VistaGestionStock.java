@@ -189,8 +189,59 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
     revalidate();
     repaint();
-   
+    
+    // === NUEVO: Al seleccionar una fila en la tabla, poner el código automáticamente en txtCodigo ===
+    TablaProductos.getSelectionModel().addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {  // Evita que se dispare dos veces
+            int filaSeleccionada = TablaProductos.getSelectedRow();
+            if (filaSeleccionada != -1) {  // Hay una fila seleccionada
+                Object valorCodigo = TablaProductos.getValueAt(filaSeleccionada, 0);  // Columna 0 = Código
+                if (valorCodigo != null) {
+                    txtCodigo.setText(valorCodigo.toString().trim());
+                    // Opcional: enfocar el campo cantidad para escribir rápido
+                    txtCantidaSumar.requestFocusInWindow();
+                    txtCantidaSumar.selectAll();  // Selecciona el texto para sobrescribir fácil
+                }
+            }
+        }
+    });
+    
+    // === NAVEGACIÓN CON ENTER ===
+    txtCodigo.addActionListener(e -> {
+        txtCantidaSumar.requestFocusInWindow();
+        txtCantidaSumar.selectAll();
+    });
+
+    txtCantidaSumar.addActionListener(e -> {
+        btnReabastecer.doClick();
+        // Después de reabastecer, volver al código
+        java.awt.EventQueue.invokeLater(() -> {
+            txtCodigo.selectAll();
+            txtCodigo.requestFocusInWindow();
+        });
+    });
+
+    // Enter en botón reabastecer
+    btnReabastecer.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                btnReabastecerActionPerformed(null);
+            }
+        }
+    });
+
+    // Enter en botón atrás
+    lblAtras.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                lblAtrasActionPerformed(null);
+            }
+        }
+    });
+    
     }
+    
+    //METODO ESTABLECER CONTROLADOR 
         public void establecerControlador(Controlador.ControladorGestionStock controlador) {
         this.controladorGestionStock = controlador;
     }

@@ -241,10 +241,43 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     // ================== CARGAR DATOS ==================
     cargarDatos();
     
+ 
+
+    // === NAVEGACIÓN CON ENTER ===
+    txtNombre.addActionListener(e -> txtCedula.requestFocusInWindow());
+    txtCedula.addActionListener(e -> txtDireccion.requestFocusInWindow());
+    txtDireccion.addActionListener(e -> txtEdad.requestFocusInWindow());
+
+    txtEdad.addActionListener(e -> {
+        RadioMasculino.requestFocusInWindow();
+    });
+
+    // Al seleccionar género, ir a rol
+    RadioMasculino.addActionListener(e -> RadioAdministrador.requestFocusInWindow());
+    RadioFemenino.addActionListener(e -> RadioAdministrador.requestFocusInWindow());
+
+    // Al seleccionar rol, enfocar botón guardar
+    RadioAdministrador.addActionListener(e -> btnGuardar.requestFocusInWindow());
+    RadioCajero.addActionListener(e -> btnGuardar.requestFocusInWindow());
+
+    // Enter en botón guardar ejecuta la acción
+    btnGuardar.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                btnGuardarActionPerformed(null);
+            }
+        }
+    });
+    
     // ================== REFRESCAR ==================
    
     revalidate();
     repaint();
+    
+
+
+   
+
     }
     
     

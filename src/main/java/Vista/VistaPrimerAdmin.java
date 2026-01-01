@@ -86,7 +86,7 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
         RadioMasculino.setFont(new Font("Arial Black", Font.BOLD, 34));
         RadioMasculino.setForeground(Color.WHITE);
         RadioMasculino.setOpaque(false);
-        RadioMasculino.setSelected(true);
+        RadioMasculino.setSelected(false);
 
         RadioFemenino.setFont(new Font("Arial Black", Font.BOLD, 34));
         RadioFemenino.setForeground(Color.WHITE);
@@ -99,64 +99,76 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 
         revalidate();
         repaint();
+  
+           // === NAVEGACIÓN CON ENTER EN PRIMER ADMIN (CORREGIDO) ===
+        txtNombreUsuario.addActionListener(e -> jPContrasenia.requestFocusInWindow());
+        jPContrasenia.addActionListener(e -> txtCedula.requestFocusInWindow());
+        txtCedula.addActionListener(e -> txtDireccion.requestFocusInWindow());
+        txtDireccion.addActionListener(e -> txtEdad.requestFocusInWindow());
+        
+        // EN EDAD: ENTER EJECUTA DIRECTAMENTE EL BOTÓN (SIN ENFOCARLO)
+        txtEdad.addActionListener(e -> {
+            // No hacemos nada aquí → setDefaultButton ejecuta el botón al presionar Enter
+        });
+
+        // ENTER EN CUALQUIER CAMPO EJECUTA EL BOTÓN PRINCIPAL (FORMA ESTÁNDAR DE SWING)
+        getRootPane().setDefaultButton(btnCrearPrimerAdministrador);
     }
        
-             public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
+        public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
         this.controladorPrimerAdmin = controlador;
 
         // Conectamos el botón al controlador
-        btnCrearPrimerAdministrador.addActionListener(e -> {
-            String nombreUsuario = txtNombreUsuario.getText().trim();
-            String contrasenia = new String(jPContrasenia.getPassword());
-            String cedula = txtCedula.getText().trim();
-            String direccion = txtDireccion.getText().trim();
-            String edadStr = txtEdad.getText().trim();
-            String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
+                btnCrearPrimerAdministrador.addActionListener(e -> {
+                String nombreUsuario = txtNombreUsuario.getText().trim();
+                String contrasenia = new String(jPContrasenia.getPassword());
+                String cedula = txtCedula.getText().trim();
+                String direccion = txtDireccion.getText().trim();
+                String edadStr = txtEdad.getText().trim();
 
-            // Validaciones
-            if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
-                direccion.isEmpty() || edadStr.isEmpty()) {
-                mostrarMensajeError("Todos los campos son obligatorios.", Color.RED);
-                return;
-            }
-
-            if (nombreUsuario.contains(" ")) {
-                mostrarMensajeError("El nombre de usuario no puede contener espacios.", Color.RED);
-                return;
-            }
-
-            int edad;
-            try {
-                edad = Integer.parseInt(edadStr);
-                if (edad < 18 || edad > 120) {
-                    mostrarMensajeError("Edad no válida (18-120 años).", Color.RED);
+                // Validaciones básicas
+                if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
+                    direccion.isEmpty() || edadStr.isEmpty()) {
+                    mostrarMensajeError("Todos los campos son obligatorios.", Color.WHITE);
                     return;
                 }
-            } catch (NumberFormatException ex) {
-                mostrarMensajeError("La edad debe ser un número válido.", Color.RED);
-                return;
-            }
+                if (nombreUsuario.contains(" ")) {
+                    mostrarMensajeError("El nombre de usuario no puede contener espacios.", Color.WHITE);
+                    return;
+                }
 
-            // Si todo está bien, llamamos al controlador
-            try {
-                controlador.crearPrimerAdministrador(nombreUsuario, contrasenia, cedula, direccion, edad, genero);
+                // Validar edad
+                int edad;
+                try {
+                    edad = Integer.parseInt(edadStr);
+                    if (edad < 18 || edad > 120) {
+                        mostrarMensajeError("Edad no válida (18-120 años).", Color.WHITE);
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    mostrarMensajeError("La edad debe ser un número válido.", Color.WHITE);
+                    return;
+                }
 
-                // Mensaje de éxito en verde
-                mostrarMensajeExito("¡Primer Administrador creado exitosamente!");
+                // Validar género (obligatorio, fuera del try de edad)
+                if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
+                    mostrarMensajeError("Por favor seleccione un género.", Color.WHITE);
+                    return;
+                }
+                String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
 
-                // Pausa de 2 segundos para que el usuario vea el mensaje
-                Timer timer = new Timer(2000, ev -> {
-                    // Cerrar esta ventana y abrir el Login (el controlador ya lo hace, pero por seguridad)
-                    // Si ya lo hace el controlador, puedes quitar esto
-                });
-                timer.setRepeats(false);
-                timer.start();
-
-            } catch (Exception ex) {
-                mostrarMensajeError("Error al crear el administrador: " + ex.getMessage(), Color.RED);
-            }
-        });
-    }
+                // Si todo OK, crear administrador
+                try {
+                    controlador.crearPrimerAdministrador(nombreUsuario, contrasenia, cedula, direccion, edad, genero);
+                    mostrarMensajeExito("¡Primer Administrador creado exitosamente!");
+                    Timer timer = new Timer(2000, ev -> {});
+                    timer.setRepeats(false);
+                    timer.start();
+                } catch (Exception ex) {
+                    mostrarMensajeError("Error al crear el administrador: " + ex.getMessage(), Color.WHITE);
+                }
+            });
+       }
 
     // Método auxiliar para errores (rojo)
     private void mostrarMensajeError(String mensaje, Color color) {
@@ -168,12 +180,12 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
     }
     // Sobrecarga solo mensaje 
     public void mostrarMensajeError(String mensaje) {
-        mostrarMensajeError(mensaje, Color.RED);
+        mostrarMensajeError(mensaje, Color.WHITE);
     }
     // Método auxiliar para éxito (verde)
     public void mostrarMensajeExito(String mensaje) {
         lblMensajeError.setText(mensaje);
-        lblMensajeError.setForeground(new Color(46, 100, 113)); 
+        lblMensajeError.setForeground(new Color(255, 255, 255)); 
         lblMensajeError.setVisible(true);
         revalidate();
         repaint();
@@ -370,12 +382,12 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 // Acción al presionar Enter en el campo de contraseña (opcional pero útil)
     private void jPContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPContraseniaActionPerformed
         // TODO add your handling code here:
-         btnCrearPrimerAdministrador.doClick();
+        
     }//GEN-LAST:event_jPContraseniaActionPerformed
 // Acción al presionar Enter en el campo de usuario
     private void txtNombreUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUsuarioActionPerformed
         // TODO add your handling code here:
-         jPContrasenia.requestFocus();
+        
     }//GEN-LAST:event_txtNombreUsuarioActionPerformed
 
     private void txtEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEdadActionPerformed

@@ -96,7 +96,18 @@ public class VistaLogin extends javax.swing.JFrame {
 
     revalidate();
     repaint();
- 
+    // === NAVEGACIÓN CON ENTER EN LOGIN ===
+    txtUsuario.addActionListener(e -> jPContrasenia.requestFocusInWindow());
+
+    jPContrasenia.addActionListener(e -> {
+        // Simula clic en el botón "Iniciar Sesión"
+        if (controladorLogin != null) {
+            controladorLogin.validarCredenciales(
+                txtUsuario.getText().trim(),
+                new String(jPContrasenia.getPassword())
+            );
+        }
+    });
      
     }
 
