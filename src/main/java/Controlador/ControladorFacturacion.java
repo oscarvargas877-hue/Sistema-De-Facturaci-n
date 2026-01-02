@@ -209,13 +209,19 @@ public class ControladorFacturacion {
             java.awt.EventQueue.invokeLater(() -> {
                 vistaFacturacion.ocultarMensajeEspera();
                 if (exito) {
+                    double subtotal = total;
+                    double iva = Math.round(subtotal * 0.15 * 100.0) / 100.0;
+                    double totalConIva = subtotal + iva;
+
                     VistaVerFactura vistaVer = new VistaVerFactura(
                         factura.getIdFactura(),
                         nombresApellidos,
                         cedula,
                         direccion,
                         listaDetalles,
-                        total
+                        subtotal,
+                        iva,
+                        totalConIva
                     );
                     vistaVer.establecerVistaFacturacion(vistaFacturacion);
                     vistaVer.setVisible(true);

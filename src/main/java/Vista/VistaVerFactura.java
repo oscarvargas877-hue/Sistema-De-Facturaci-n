@@ -36,22 +36,27 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private String cedula;
     private String direccion;
     private List<DetalleFacturaModelo> detalle;
-    private double totalSinIVA;
+    private double subtotal;
+    private double iva;
+    private double totalConIva;
     private VistaFacturacion vistaFacturacion;
     /**
      * Creates new form VistaVerFactura
      */
-    public VistaVerFactura(int numeroFactura, String nombresApellidos, String cedula, String direccion,
-                           List<DetalleFacturaModelo> detalle, double totalSinIVA) {
+    public VistaVerFactura(int numeroFactura, String nombresApellidos, String cedula,
+                       String direccion, List<DetalleFacturaModelo> detalle,
+                       double subtotal, double iva, double totalConIva) {
         initComponents();
       
   
-  this.numeroFactura = numeroFactura;
-    this.nombresApellidos = nombresApellidos;
-    this.cedula = cedula;
-    this.direccion = direccion == null || direccion.trim().isEmpty() ? "No registrada" : direccion;
-    this.detalle = detalle;
-    this.totalSinIVA = totalSinIVA;
+        this.numeroFactura = numeroFactura;
+        this.nombresApellidos = nombresApellidos;
+        this.cedula = cedula;
+        this.direccion = direccion == null || direccion.trim().isEmpty() ? "No registrada" : direccion;
+        this.detalle = detalle;
+        this.subtotal = subtotal;
+        this.iva = iva;
+        this.totalConIva = totalConIva;
 
     /* ---------- ESTILOS MEJORADOS (solo decoración, nada de lógica cambiada) ---------- */
     lblNombreNegocio.setFont(new Font("Arial Black", Font.BOLD, 48)); // Más grande y destacado
@@ -133,43 +138,40 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     PanelDetalle.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
 
-    /* ---------- DATOS FACTURA ---------- */
-    String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
-    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-    String fecha = df.format(new Date());
-    String hora = tf.format(new Date());
+        /* ---------- DATOS FACTURA ---------- */
+        String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+        String fecha = df.format(new Date());
+        String hora = tf.format(new Date());
 
-    lblNombreNegocio.setText("SUPERMERCADOS TUTI");
-    lblRuc.setText("RUC: 1793000000001");
-    lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
-    lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + " Fecha: " + fecha + " Hora: " + hora);
+        lblNombreNegocio.setText("SUPERMERCADOS TUTI");
+        lblRuc.setText("RUC: 1793000000001");
+        lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
+        lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + " Fecha: " + fecha + " Hora: " + hora);
+        lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
+        lblCedula.setText("Cédula: " + this.cedula);
+        lblDireccion.setText("Dirección: " + this.direccion);
 
-    lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
-    lblCedula.setText("Cédula: " + this.cedula);
-    lblDireccion.setText("Dirección: " + this.direccion);
+        /* ---------- LLENAR TABLA (solo llenamos, NO recalculamos subtotal) ---------- */
+        DefaultTableModel modelo = new DefaultTableModel(
+            new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+        );
 
-    /* ---------- LLENAR TABLA ---------- */
-    DefaultTableModel modelo = new DefaultTableModel(
-        new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
-    );
-
-    double subtotal = 0.0;
-    if (detalle != null) {
-        for (DetalleFacturaModelo item : detalle) {
-            String desc = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-            modelo.addRow(new Object[]{
-                item.getNombreProducto(),
-                item.getCantidad(),
-                String.format("%.2f", item.getPrecioUnitario()),
-                desc,
-                String.format("%.2f", item.getSubtotal())
-            });
-            subtotal += item.getSubtotal();
+        if (detalle != null) {
+            for (DetalleFacturaModelo item : detalle) {
+                String desc = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+                modelo.addRow(new Object[]{
+                    item.getNombreProducto(),
+                    item.getCantidad(),
+                    String.format("%.2f", item.getPrecioUnitario()),
+                    desc,
+                    String.format("%.2f", item.getSubtotal())
+                });
+            }
         }
-    }
-    tablaDetalle.setModel(modelo);
-    tablaDetalle.setDefaultEditor(Object.class, null);
+        tablaDetalle.setModel(modelo);
+        tablaDetalle.setDefaultEditor(Object.class, null);
 
     /* ---------- ALTURA DINÁMICA: QUE LA TABLA MUESTRE TODAS SUS FILAS ---------- */
     int filas = modelo.getRowCount();
@@ -190,13 +192,10 @@ public class VistaVerFactura extends javax.swing.JFrame {
     PanelDetalle.revalidate();
     PanelDetalle.repaint();
 
-    /* ---------- TOTALES ---------- */
-    double iva = subtotal * 0.15;
-    double total = subtotal + iva;
-    lblIva.setText("IVA 15%: $" + String.format("%.2f", iva));
-    lblTotal.setText("Total: $" + String.format("%.2f", total));
-    lblGracias.setText("Gracias por su compra");
-
+   /* ---------- TOTALES (usamos los valores que nos pasaron) ---------- */
+        lblIva.setText("IVA 15%: $" + String.format("%.2f", this.iva));
+        lblTotal.setText("Total: $" + String.format("%.2f", this.totalConIva));
+        lblGracias.setText("Gracias por su compra");
     /* ---------- COLORES ---------- */
     PanelEncabezado.setBackground(new Color(240, 250, 250));
     PanelCliente.setBackground(Color.WHITE);

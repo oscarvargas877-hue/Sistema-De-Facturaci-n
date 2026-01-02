@@ -8,6 +8,7 @@ package Modelo;
 import BDD.ConexionBDD;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Types;
 import java.util.List;
 
 public class FacturaModelo {
@@ -16,107 +17,108 @@ public class FacturaModelo {
     private String fechaHora;
     private int idCajero;
     private String cliente;
-    private double total;
+    private double subtotal;
+    private double iva;
+    private double totalConIva;
 
     public FacturaModelo() {}
 
-    public FacturaModelo(int idCajero, Integer idCliente, String nombreClienteSiNoRegistrado, double total) {
-      this.idCajero = idCajero;
-      this.idCliente = idCliente;
-      this.cliente = nombreClienteSiNoRegistrado; // Mantén por compatibilidad o para clientes sin cédula
-      this.total = total;
-  }
-    
+    public FacturaModelo(int idCajero, Integer idCliente, String nombreClienteSiNoRegistrado, double subtotal) {
+        this.idCajero = idCajero;
+        this.idCliente = idCliente;
+        this.cliente = nombreClienteSiNoRegistrado;
+        this.subtotal = subtotal;
+    }
 
     public boolean guardarFacturaYDetalles(List<DetalleFacturaModelo> detalles) {
-        Connection conexion = null;
-        CallableStatement stmtFactura = null;
-        CallableStatement stmtDetalle = null;
-        CallableStatement stmtStock = null;
+    Connection conexion = null;
+    CallableStatement stmtFactura = null;
+    CallableStatement stmtDetalle = null;
+    CallableStatement stmtStock = null;
 
-        try {
-            conexion = new ConexionBDD().conectar();
-            if (conexion == null) return false;
-
-            conexion.setAutoCommit(false);
-
-            // 1. Crear factura con el SP ACTUALIZADO (ahora recibe idCliente)
-            stmtFactura = conexion.prepareCall("{CALL sp_crear_factura(?,?,?,?,?)}");  // 4 IN + 1 OUT
-
-            stmtFactura.setInt(1, this.idCajero);
-
-            // NUEVO: Manejar idCliente (puede ser null)
-            if (this.idCliente != null) {
-                stmtFactura.setInt(2, this.idCliente);
-            } else {
-                stmtFactura.setNull(2, java.sql.Types.INTEGER);
-            }
-
-            // Nombre del cliente (puede ser "Consumidor Final" o lo que escriba el cajero)
-            stmtFactura.setString(3, this.cliente != null && !this.cliente.trim().isEmpty() ? this.cliente : "Consumidor Final");
-
-            stmtFactura.setDouble(4, this.total);
-            stmtFactura.registerOutParameter(5, java.sql.Types.INTEGER);  // OUT ahora es el parámetro 5
-
-            stmtFactura.executeUpdate();
-
-            int idFactura = stmtFactura.getInt(5);  // Cambiado de 4 a 5
-            this.idFactura = idFactura;
-
-            // Preparar SP de detalle y stock (sin cambios aquí)
-            stmtDetalle = conexion.prepareCall("{CALL sp_crear_detalle_factura(?,?,?,?,?,?)}");
-            stmtStock = conexion.prepareCall("{CALL sp_actualizar_stock(?,?)}");
-
-            for (DetalleFacturaModelo d : detalles) {
-                // Insertar detalle
-                stmtDetalle.setInt(1, idFactura);
-                stmtDetalle.setInt(2, d.getIdProducto());
-                stmtDetalle.setInt(3, d.getCantidad());
-                stmtDetalle.setDouble(4, d.getPrecioUnitario());
-                stmtDetalle.setDouble(5, d.getDescuentoAplicado());
-                stmtDetalle.setDouble(6, d.getSubtotal());
-                stmtDetalle.executeUpdate();
-
-                // Restar stock
-                stmtStock.setInt(1, d.getIdProducto());
-                stmtStock.setInt(2, d.getCantidad());
-                stmtStock.executeUpdate();
-            }
-
-            conexion.commit();
-            return true;
-
-        } catch (Exception e) {
-            if (conexion != null) {
-                try { 
-                    conexion.rollback(); 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-            e.printStackTrace();
+    try {
+        ConexionBDD conexionBDD = new ConexionBDD();
+        conexion = conexionBDD.conectar();
+        if (conexion == null) {
             return false;
-        } finally {
+        }
+        conexion.setAutoCommit(false);
+
+        // Calcular IVA y total con IVA
+        double ivaCalculado = Math.round(this.subtotal * 0.15 * 100.0) / 100.0;
+        double totalConIvaCalculado = this.subtotal + ivaCalculado;
+
+        // Llamar al SP sp_crear_factura con los 3 parámetros de dinero (subtotal, iva, total_con_iva)
+        stmtFactura = conexion.prepareCall("{CALL sp_crear_factura(?,?,?,?,?,?,?)}");
+        stmtFactura.setInt(1, this.idCajero);
+        if (this.idCliente != null) {
+            stmtFactura.setInt(2, this.idCliente);
+        } else {
+            stmtFactura.setNull(2, Types.INTEGER);
+        }
+        stmtFactura.setString(3, this.cliente != null && !this.cliente.trim().isEmpty() ? this.cliente : "Consumidor Final");
+        stmtFactura.setDouble(4, this.subtotal);          // p_subtotal
+        stmtFactura.setDouble(5, ivaCalculado);           // p_iva (calculado: 15%)
+        stmtFactura.setDouble(6, totalConIvaCalculado);   // p_total_con_iva
+        stmtFactura.registerOutParameter(7, Types.INTEGER); // OUT p_idFactura
+        stmtFactura.executeUpdate();
+
+        int idFacturaGenerado = stmtFactura.getInt(7);
+        this.idFactura = idFacturaGenerado;
+
+        // Insertar cada detalle
+        stmtDetalle = conexion.prepareCall("{CALL sp_crear_detalle_factura(?,?,?,?,?,?)}");
+        for (DetalleFacturaModelo detalle : detalles) {
+            stmtDetalle.setInt(1, idFacturaGenerado);
+            stmtDetalle.setInt(2, detalle.getIdProducto());
+            stmtDetalle.setInt(3, detalle.getCantidad());
+            stmtDetalle.setDouble(4, detalle.getPrecioUnitario());
+            stmtDetalle.setDouble(5, detalle.getDescuentoAplicado());
+            stmtDetalle.setDouble(6, detalle.getSubtotal());
+            stmtDetalle.executeUpdate();
+
+            // Actualizar stock
+            stmtStock = conexion.prepareCall("{CALL sp_actualizar_stock(?,?)}");
+            stmtStock.setInt(1, detalle.getIdProducto());
+            stmtStock.setInt(2, detalle.getCantidad());
+            stmtStock.executeUpdate();
+            stmtStock.close();
+        }
+
+        conexion.commit();
+        return true;
+
+    } catch (Exception e) {
+        if (conexion != null) {
             try {
-                if (stmtFactura != null) stmtFactura.close();
-                if (stmtDetalle != null) stmtDetalle.close();
-                if (stmtStock != null) stmtStock.close();
-                if (conexion != null) {
-                    conexion.setAutoCommit(true);
-                    conexion.close();
-                }
-            } catch (Exception e) { 
-                e.printStackTrace(); 
+                conexion.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
+        e.printStackTrace(); // Muestra el error real en consola
+        return false;
+    } finally {
+        try {
+            if (stmtFactura != null) stmtFactura.close();
+            if (stmtDetalle != null) stmtDetalle.close();
+            if (stmtStock != null) stmtStock.close();
+            if (conexion != null) {
+                conexion.setAutoCommit(true);
+                conexion.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+}
 
     // Getters y Setters
     public int getIdFactura() { return idFactura; }
     public void setIdFactura(int idFactura) { this.idFactura = idFactura; }
 
-    public Integer getIdCliente() {return idCliente;}
-    public void setIdCliente(Integer idCliente) {this.idCliente = idCliente;}
+    public Integer getIdCliente() { return idCliente; }
+    public void setIdCliente(Integer idCliente) { this.idCliente = idCliente; }
 
     public String getFechaHora() { return fechaHora; }
     public void setFechaHora(String fechaHora) { this.fechaHora = fechaHora; }
@@ -127,6 +129,12 @@ public class FacturaModelo {
     public String getCliente() { return cliente; }
     public void setCliente(String cliente) { this.cliente = cliente; }
 
-    public double getTotal() { return total; }
-    public void setTotal(double total) { this.total = total; }
+    public double getSubtotal() { return subtotal; }
+    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+
+    public double getIva() { return iva; }
+    public void setIva(double iva) { this.iva = iva; }
+
+    public double getTotalConIva() { return totalConIva; }
+    public void setTotalConIva(double totalConIva) { this.totalConIva = totalConIva; }
 }
