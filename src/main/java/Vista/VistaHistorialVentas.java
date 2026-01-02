@@ -29,6 +29,24 @@ private PaginadorTabla<Modelo.HistorialVentaModelo> paginadorHistorial;
      */
     public VistaHistorialVentas() {
         initComponents();
+        
+        javax.swing.table.DefaultTableModel modeloNuevo = new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null}
+        },
+        new String [] {
+            "ID", "Fecha/Hora", "Cajero", "Cliente", "IVA", "Total"
+        }
+    );
+    tablaHistorial.setModel(modeloNuevo);
+    tablaHistorial.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tablaHistorial.setPreferredScrollableViewportSize(new Dimension(800, 350));
+ 
+  
+        
         // PANTALLA COMPLETA
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
