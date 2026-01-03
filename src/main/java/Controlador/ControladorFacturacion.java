@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Controlador;
 
 import Modelo.ClienteModelo;
@@ -29,18 +28,42 @@ public class ControladorFacturacion {
         this.idCajero = idCajero;
         this.listaDetalles = new ArrayList<>();
 
-        // Al abrir la ventana, enfocar el campo cédula para rapidez
+        // Enfocar cédula al abrir
         java.awt.EventQueue.invokeLater(() -> {
             vistaFacturacion.enfocarCampoCedula();
         });
     }
 
+    // ================== CARGAR PRODUCTOS EN COMBO ==================
     public void cargarProductos() {
         List<ProductoModelo> productos = ProductoModelo.obtenerTodosLosProductos();
         vistaFacturacion.cargarProductos(productos);
     }
 
-    public void agregarProducto(String nombreProducto, int cantidad) {
+    // ================== INTENTAR AGREGAR PRODUCTO (con todas las validaciones) ==================
+    public void intentarAgregarProducto(String nombreProducto, String cantidadStr) {
+        if (nombreProducto == null || nombreProducto.trim().isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("Por favor seleccione un producto.");
+            return;
+        }
+
+        if (cantidadStr.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("Por favor ingrese una cantidad.");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadStr);
+            if (cantidad <= 0) {
+                vistaFacturacion.mostrarMensajeError("La cantidad debe ser mayor que 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            vistaFacturacion.mostrarMensajeError("La cantidad debe ser un número válido.");
+            return;
+        }
+
         ProductoModelo producto = ProductoModelo.obtenerProductoPorNombre(nombreProducto);
         if (producto == null) {
             vistaFacturacion.mostrarMensajeError("Producto no encontrado.");
@@ -53,22 +76,30 @@ public class ControladorFacturacion {
             return;
         }
 
+        // Crear detalle (el descuento se calcula automáticamente en el constructor de DetalleFacturaModelo)
         DetalleFacturaModelo detalle = new DetalleFacturaModelo(
-            producto.getIdProducto(),
-            producto.getNombre(),
-            cantidad,
-            producto.getPrecio()
+                producto.getIdProducto(),
+                producto.getNombre(),
+                cantidad,
+                producto.getPrecio()
         );
+
         listaDetalles.add(detalle);
 
+        // Actualizar vista
         double total = calcularTotalActual();
         vistaFacturacion.actualizarDetalleYTotal(listaDetalles, total);
+
+               // Limpiar cantidad y enfocar para próximo producto (rapidez)
+        java.awt.EventQueue.invokeLater(() -> {
+            vistaFacturacion.limpiarYEnfocarCantidad();
+        });
     }
 
-    // NUEVO MÉTODO: Buscar cliente al presionar Enter en el campo cédula
-      // NUEVO MÉTODO: Buscar cliente al presionar Enter en el campo cédula o botón Buscar
+    // ================== BUSCAR CLIENTE POR CÉDULA ==================
+    
     public void buscarClientePorCedula() {
-        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
+        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();  // Obtiene de la vista
 
         if (cedula.isEmpty()) {
             vistaFacturacion.mostrarMensajeError("Por favor ingrese la cédula del cliente.");
@@ -76,185 +107,152 @@ public class ControladorFacturacion {
             return;
         }
 
-        // Validación básica: 10 dígitos numéricos
         if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
             vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
             vistaFacturacion.enfocarCampoCedula();
             return;
         }
 
-        // === NUEVA VALIDACIÓN: DEBE SER CÉDULA ECUATORIANA VÁLIDA ===
         if (!validarCedulaEcuatoriana(cedula)) {
-            vistaFacturacion.mostrarMensajeError(
-                "La cédula ingresada no es válida.\n" +
-                "Debe ser una cédula ecuatoriana auténtica."
-            );
+            vistaFacturacion.mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
             vistaFacturacion.enfocarCampoCedula();
             return;
         }
-        // ===========================================================
 
-        // Si pasa todas las validaciones, buscamos en la BD
         ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
-
         if (cliente != null) {
-            // Cliente encontrado → mostrar datos y bloquear edición
-            vistaFacturacion.mostrarDatosCliente(
-                cliente.getNombresApellidos(),
-                cliente.getDireccion() != null ? cliente.getDireccion() : ""
-            );
-            vistaFacturacion.mostrarMensajeConColor(
-                "Cliente encontrado: " + cliente.getNombresApellidos(),
-                java.awt.Color.GREEN
-            );
+            vistaFacturacion.mostrarDatosCliente(cliente.getNombresApellidos(), cliente.getDireccion());
+            vistaFacturacion.mostrarMensajeConColor("Cliente encontrado: " + cliente.getNombresApellidos(), java.awt.Color.GREEN);
             vistaFacturacion.habilitarEdicionCliente(false);
-            // Enfocar producto para seguir facturando rápido
-            vistaFacturacion.requestFocusInWindow(); // o enfocar ComboProductos si tienes método
         } else {
-            // Cliente NO encontrado → permitir ingreso manual
             vistaFacturacion.limpiarDatosCliente();
-            vistaFacturacion.mostrarMensajeConColor(
-                "Cliente no registrado. Ingrese nombres/apellidos y dirección.",
-                java.awt.Color.ORANGE
-            );
+            vistaFacturacion.mostrarMensajeConColor("Cliente no registrado. Ingrese nombres/apellidos y dirección.", java.awt.Color.ORANGE);
             vistaFacturacion.habilitarEdicionCliente(true);
             vistaFacturacion.enfocarNombresApellidos();
         }
     }
-    
-    // MÉTODO FINALIZAR VENTA - CON VALIDACIONES COMPLETAS Y SIN BUGS
+
+    // ================== FINALIZAR VENTA ==================
     public void finalizarVenta() {
-    if (listaDetalles.isEmpty()) {
-        vistaFacturacion.mostrarMensajeError("No hay productos en la factura. Agregue al menos uno.");
-        return;
-    }
-
-    String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
-    String nombresApellidos = vistaFacturacion.obtenerNombresApellidosIngresado().trim();
-    String direccion = vistaFacturacion.obtenerDireccionClienteIngresada().trim();
-
-    // ================== VALIDACIONES OBLIGATORIAS ==================
-    if (cedula.isEmpty()) {
-        vistaFacturacion.mostrarMensajeError("La cédula del cliente es obligatoria.");
-        return;
-    }
-    if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
-        vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
-        return;
-    }
-    // ================== VALIDACIÓN DE CÉDULA ECUATORIANA (ALGORITMO OFICIAL) ==================
-    if (!validarCedulaEcuatoriana(cedula)) {
-        vistaFacturacion.mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
-        return;
-    }
-
-    if (nombresApellidos.isEmpty()) {
-        vistaFacturacion.mostrarMensajeError("Los nombres y apellidos del cliente son obligatorios.");
-        return;
-    }
-
-    if (direccion.isEmpty()) {
-        vistaFacturacion.mostrarMensajeError("La dirección del cliente es obligatoria.");
-        return;
-    }
-
-    vistaFacturacion.mostrarMensajeEspera("Procesando venta...");
-
-    double total = calcularTotalActual();
-
-    new Thread(() -> {
-        try {
-            Integer idCliente = null;
-
-            // ================== SIEMPRE BUSCAR CLIENTE POR CÉDULA ==================
-            ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
-
-            if (cliente != null) {
-                // Cliente ya existe → usar su ID
-                idCliente = cliente.getIdCliente();
-            } else {
-                // Cliente no existe → crear nuevo
-                ClienteModelo nuevo = new ClienteModelo();
-                nuevo.setCedula(cedula);
-                nuevo.setNombresApellidos(nombresApellidos);
-                nuevo.setDireccion(direccion);
-                nuevo.setTelefono(null);
-                nuevo.setGenero(null);
-
-                if (!nuevo.guardar()) {
-                    java.awt.EventQueue.invokeLater(() -> {
-                        vistaFacturacion.ocultarMensajeEspera();
-                        vistaFacturacion.mostrarMensajeError("Error al crear el cliente nuevo. Puede que la cédula ya exista.");
-                    });
-                    return;
-                }
-
-                // Buscar de nuevo para obtener el ID
-                ClienteModelo creado = ClienteModelo.buscarPorCedula(cedula);
-                if (creado != null) {
-                    idCliente = creado.getIdCliente();
-                } else {
-                    java.awt.EventQueue.invokeLater(() -> {
-                        vistaFacturacion.ocultarMensajeEspera();
-                        vistaFacturacion.mostrarMensajeError("Cliente creado pero no se pudo obtener su ID.");
-                    });
-                    return;
-                }
-            }
-
-            // ================== GUARDAR FACTURA ==================
-            FacturaModelo factura = new FacturaModelo(idCajero, idCliente, nombresApellidos, total);
-            boolean exito = factura.guardarFacturaYDetalles(listaDetalles);
-
-            java.awt.EventQueue.invokeLater(() -> {
-                vistaFacturacion.ocultarMensajeEspera();
-                if (exito) {
-                    double subtotal = total;
-                    double iva = Math.round(subtotal * 0.15 * 100.0) / 100.0;
-                    double totalConIva = subtotal + iva;
-
-                    VistaVerFactura vistaVer = new VistaVerFactura(
-                        factura.getIdFactura(),
-                        nombresApellidos,
-                        cedula,
-                        direccion,
-                        listaDetalles,
-                        subtotal,
-                        iva,
-                        totalConIva
-                    );
-                    vistaVer.establecerVistaFacturacion(vistaFacturacion);
-                    vistaVer.setVisible(true);
-                    vistaFacturacion.dispose();
-                } else {
-                    vistaFacturacion.mostrarMensajeError("Error al guardar la factura.");
-                }
-            });
-
-        } catch (Exception e) {
-            java.awt.EventQueue.invokeLater(() -> {
-                vistaFacturacion.ocultarMensajeEspera();
-                vistaFacturacion.mostrarMensajeError("Error inesperado: " + e.getMessage());
-                e.printStackTrace();
-            });
+        if (listaDetalles.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("No hay productos en la factura. Agregue al menos uno.");
+            return;
         }
-    }).start();
-}
 
+        String cedula = vistaFacturacion.obtenerCedulaIngresada().trim();
+        String nombresApellidos = vistaFacturacion.obtenerNombresApellidosIngresado().trim();
+        String direccion = vistaFacturacion.obtenerDireccionClienteIngresada().trim();
+
+        if (cedula.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("La cédula del cliente es obligatoria.");
+            return;
+        }
+        if (cedula.length() != 10 || !cedula.matches("\\d{10}")) {
+            vistaFacturacion.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos numéricos.");
+            return;
+        }
+        if (!validarCedulaEcuatoriana(cedula)) {
+            vistaFacturacion.mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
+            return;
+        }
+        if (nombresApellidos.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("Los nombres y apellidos del cliente son obligatorios.");
+            return;
+        }
+        if (direccion.isEmpty()) {
+            vistaFacturacion.mostrarMensajeError("La dirección del cliente es obligatoria.");
+            return;
+        }
+
+        vistaFacturacion.mostrarMensajeEspera("Procesando venta...");
+
+        double subtotal = calcularTotalActual();
+        double iva = Math.round(subtotal * 0.15 * 100.0) / 100.0; // IVA 15% Ecuador 2026?
+        double totalConIva = subtotal + iva;
+
+        new Thread(() -> {
+            try {
+                Integer idCliente = null;
+
+                ClienteModelo cliente = ClienteModelo.buscarPorCedula(cedula);
+                if (cliente != null) {
+                    idCliente = cliente.getIdCliente();
+                } else {
+                    ClienteModelo nuevo = new ClienteModelo();
+                    nuevo.setCedula(cedula);
+                    nuevo.setNombresApellidos(nombresApellidos);
+                    nuevo.setDireccion(direccion);
+                    nuevo.setTelefono(null);
+                    nuevo.setGenero(null);
+
+                    if (!nuevo.guardar()) {
+                        java.awt.EventQueue.invokeLater(() -> {
+                            vistaFacturacion.ocultarMensajeEspera();
+                            vistaFacturacion.mostrarMensajeError("Error al crear el cliente nuevo.");
+                        });
+                        return;
+                    }
+
+                    ClienteModelo creado = ClienteModelo.buscarPorCedula(cedula);
+                    if (creado != null) {
+                        idCliente = creado.getIdCliente();
+                    }
+                }
+
+                FacturaModelo factura = new FacturaModelo(idCajero, idCliente, nombresApellidos, subtotal);
+                boolean exito = factura.guardarFacturaYDetalles(listaDetalles);
+
+                java.awt.EventQueue.invokeLater(() -> {
+                    vistaFacturacion.ocultarMensajeEspera();
+                    if (exito) {
+                        VistaVerFactura vistaVer = new VistaVerFactura(
+                                factura.getIdFactura(),
+                                nombresApellidos,
+                                cedula,
+                                direccion,
+                                listaDetalles,
+                                subtotal,
+                                iva,
+                                totalConIva
+                        );
+                        vistaVer.establecerVistaFacturacion(vistaFacturacion);
+                        vistaVer.setVisible(true);
+                        limpiarVenta(); // Preparar para nueva venta o cerrar
+                    } else {
+                        vistaFacturacion.mostrarMensajeError("Error al guardar la factura.");
+                    }
+                });
+
+            } catch (Exception e) {
+                java.awt.EventQueue.invokeLater(() -> {
+                    vistaFacturacion.ocultarMensajeEspera();
+                    vistaFacturacion.mostrarMensajeError("Error inesperado: " + e.getMessage());
+                    e.printStackTrace();
+                });
+            }
+        }).start();
+    }
+
+    // ================== VOLVER AL MENÚ ==================
     public void volverAlMenu() {
         vistaFacturacion.dispose();
         vistaMenuCajero.setVisible(true);
     }
 
-    public void limpiarVenta() {
+    // ================== LIMPIAR VENTA ==================
+       public void limpiarVenta() {
         listaDetalles.clear();
         java.awt.EventQueue.invokeLater(() -> {
-            vistaFacturacion.limpiarCamposParaNuevaVenta();
+            vistaFacturacion.limpiarCamposParaNuevaVenta();  // Ya limpia txtTotal a "0.00"
             vistaFacturacion.limpiarDatosCliente();
             vistaFacturacion.enfocarCampoCedula();
+
+            // Actualizar tabla y total con lista vacía
+            vistaFacturacion.actualizarDetalleYTotal(new ArrayList<>(), 0.0);
         });
     }
 
+    // ================== CALCULAR TOTAL ==================
     private double calcularTotalActual() {
         double total = 0.0;
         for (DetalleFacturaModelo detalle : listaDetalles) {

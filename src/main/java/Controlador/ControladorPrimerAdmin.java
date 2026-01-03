@@ -77,4 +77,89 @@ public class ControladorPrimerAdmin {
             ex.printStackTrace();
         }
     }
+    
+        public void intentarCrearPrimerAdministrador(String nombreUsuario, String contrasenia,
+                                                String cedula, String direccion, String edadStr,
+                                                String genero) {
+
+        // ================== VALIDACIÓN DE NOMBRE DE USUARIO ==================
+        if (nombreUsuario.isEmpty()) {
+            vistaPrimerAdmin.mostrarMensajeError("El nombre de usuario es obligatorio.");
+            return;
+        }
+        if (nombreUsuario.length() < 4) {
+            vistaPrimerAdmin.mostrarMensajeError("El nombre de usuario debe tener al menos 4 caracteres.");
+            return;
+        }
+        if (nombreUsuario.contains(" ")) {
+            vistaPrimerAdmin.mostrarMensajeError("El nombre de usuario no puede contener espacios.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE CONTRASEÑA ==================
+        if (contrasenia.isEmpty()) {
+            vistaPrimerAdmin.mostrarMensajeError("La contraseña es obligatoria.");
+            return;
+        }
+        if (contrasenia.length() < 4) {
+            vistaPrimerAdmin.mostrarMensajeError("La contraseña debe tener al menos 4 caracteres.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE CÉDULA ==================
+        if (cedula.isEmpty()) {
+            vistaPrimerAdmin.mostrarMensajeError("La cédula es obligatoria.");
+            return;
+        }
+        if (cedula.length() != 10) {
+            vistaPrimerAdmin.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos.");
+            return;
+        }
+        if (!cedula.matches("\\d{10}")) {
+            vistaPrimerAdmin.mostrarMensajeError("La cédula solo debe contener números.");
+            return;
+        }
+        if (!Modelo.UsuarioModelo.validarCedulaEcuatoriana(cedula)) {
+            vistaPrimerAdmin.mostrarMensajeError("La cédula ingresada no es válida verifique.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE DIRECCIÓN ==================
+        if (direccion.isEmpty()) {
+            vistaPrimerAdmin.mostrarMensajeError("La dirección es obligatoria.");
+            return;
+        }
+        if (direccion.length() < 5) {
+            vistaPrimerAdmin.mostrarMensajeError("La dirección debe tener al menos 5 caracteres.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE EDAD ==================
+        if (edadStr.isEmpty()) {
+            vistaPrimerAdmin.mostrarMensajeError("La edad es obligatoria.");
+            return;
+        }
+        int edad;
+        try {
+            edad = Integer.parseInt(edadStr);
+            if (edad < 18 || edad > 60) {
+                vistaPrimerAdmin.mostrarMensajeError("La edad debe estar entre 18 y 60 años.");
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            vistaPrimerAdmin.mostrarMensajeError("La edad debe ser un número válido.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE GÉNERO ==================
+        if (genero == null) {
+            vistaPrimerAdmin.mostrarMensajeError("Por favor seleccione un género.");
+            return;
+        }
+
+        // ================== SI TODO PASA → CREAR EL PRIMER ADMIN ==================
+        // Llamar al método 
+        crearPrimerAdministrador(nombreUsuario, contrasenia, cedula, direccion, edad, genero);
+
+    }
 }

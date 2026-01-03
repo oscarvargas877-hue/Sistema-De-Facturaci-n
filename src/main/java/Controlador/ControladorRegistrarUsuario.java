@@ -106,4 +106,95 @@ public class ControladorRegistrarUsuario {
         vistaRegistrar.dispose();
         vistaMenuAdmin.setVisible(true);
     }
+    
+    
+    public void intentarRegistrarUsuario(String nombreUsuario, String contrasenia,
+                                        String cedula, String direccion, String edadStr,
+                                        String genero, String rol) {
+
+        // ================== VALIDACIÓN DE NOMBRE DE USUARIO ==================
+        if (nombreUsuario.isEmpty()) {
+            vistaRegistrar.mostrarMensajeError("El nombre de usuario es obligatorio.");
+            return;
+        }
+        if (nombreUsuario.length() < 4) {
+            vistaRegistrar.mostrarMensajeError("El nombre de usuario debe tener al menos 4 caracteres.");
+            return;
+        }
+        if (nombreUsuario.contains(" ")) {
+            vistaRegistrar.mostrarMensajeError("El nombre de usuario no puede contener espacios.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE CONTRASEÑA ==================
+        if (contrasenia.isEmpty()) {
+            vistaRegistrar.mostrarMensajeError("La contraseña es obligatoria.");
+            return;
+        }
+        if (contrasenia.length() < 4) {  
+            vistaRegistrar.mostrarMensajeError("La contraseña debe tener al menos 4 caracteres.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE CÉDULA ==================
+        if (cedula.isEmpty()) {
+            vistaRegistrar.mostrarMensajeError("La cédula es obligatoria.");
+            return;
+        }
+        if (cedula.length() != 10) {
+            vistaRegistrar.mostrarMensajeError("La cédula debe tener exactamente 10 dígitos.");
+            return;
+        }
+        if (!cedula.matches("\\d{10}")) {
+            vistaRegistrar.mostrarMensajeError("La cédula solo debe contener números.");
+            return;
+        }
+        if (!Modelo.UsuarioModelo.validarCedulaEcuatoriana(cedula)) {
+            vistaRegistrar.mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE DIRECCIÓN ==================
+        if (direccion.isEmpty()) {
+            vistaRegistrar.mostrarMensajeError("La dirección es obligatoria.");
+            return;
+        }
+        if (direccion.length() < 5) {
+            vistaRegistrar.mostrarMensajeError("La dirección debe tener al menos 5 caracteres.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE EDAD ==================
+        if (edadStr.isEmpty()) {
+            vistaRegistrar.mostrarMensajeError("La edad es obligatoria.");
+            return;
+        }
+        int edad;
+        try {
+            edad = Integer.parseInt(edadStr);
+            if (edad < 18 || edad > 60) {
+                vistaRegistrar.mostrarMensajeError("La edad debe estar entre 18 y 60 años.");
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            vistaRegistrar.mostrarMensajeError("La edad debe ser un número válido.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE GÉNERO ==================
+        if (genero == null) {
+            vistaRegistrar.mostrarMensajeError("Por favor seleccione un género.");
+            return;
+        }
+
+        // ================== VALIDACIÓN DE ROL ==================
+        if (rol == null) {
+            vistaRegistrar.mostrarMensajeError("Por favor seleccione un rol.");
+            return;
+        }
+
+        // ================== SI TODAS LAS VALIDACIONES PASAN → REGISTRAR ==================
+        // Llamamos al método existente que ya tienes en este controlador
+        registrarUsuario(nombreUsuario, contrasenia, rol, cedula, direccion, edad, genero);
+    }
 }

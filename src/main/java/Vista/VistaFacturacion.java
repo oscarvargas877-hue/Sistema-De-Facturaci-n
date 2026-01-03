@@ -259,44 +259,39 @@ private javax.swing.JDialog dialogoEspera;
     
     java.awt.EventQueue.invokeLater(() -> txtCedula.requestFocusInWindow());
     
-    // === NAVEGACIÓN CON ENTER ===
-    txtCedula.addActionListener(e -> {
-        if (controladorFacturacion != null) {
-            controladorFacturacion.buscarClientePorCedula();
-        }
-    });
+    // ================== CONFIGURACIÓN DE NAVEGACIÓN Y EVENTOS ==================
 
+    // Botón por defecto: Enter en cualquier campo enfocado ejecuta "Buscar" mientras cédula tenga foco inicial
+    getRootPane().setDefaultButton(btnBuscarCedula);
+
+    // ================== NAVEGACIÓN CON ENTER EN CAMPOS ==================
+
+
+
+    // Enter en nombres/dirección → pasa al siguiente campo (opcional, si son editables)
     txtNombresApellidos.addActionListener(e -> txtDireccion.requestFocusInWindow());
     txtDireccion.addActionListener(e -> ComboProductos.requestFocusInWindow());
+
+    // Enter en combo productos → pasa a cantidad
     ComboProductos.addActionListener(e -> txtCantidad.requestFocusInWindow());
 
+    // Enter en cantidad → agrega producto y vuelve a enfocar cantidad (limpio y sin duplicados)
     txtCantidad.addActionListener(e -> {
-        btnAgregarProducto.doClick();
-        // Después de agregar, volver a enfocarse en cantidad para agregar otro producto
+        btnAgregarProducto.doClick(); // Llama al método del botón (que delega al controlador)
         java.awt.EventQueue.invokeLater(() -> {
-            txtCantidad.selectAll();
-            txtCantidad.requestFocusInWindow();
+            limpiarYEnfocarCantidad(); // Método que debes tener (ver abajo)
         });
     });
 
-    // Enter en botón finalizar venta
-    btnFinalizarVenta.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-                btnFinalizarVentaActionPerformed(null);
-            }
-        }
+    // ================== ENFOCAR CÉDULA AL ABRIR ==================
+    java.awt.EventQueue.invokeLater(() -> {
+        enfocarCampoCedula(); // Ya lo tienes definido
     });
 
-    // Hacer que Tab en TablaDetalleVenta enfoque al botón Finalizar
-    TablaDetalleVenta.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-                btnFinalizarVenta.requestFocusInWindow();
-            }
-        }
-    });
-
+    // ================== CARGAR PRODUCTOS AL ABRIR ==================
+    if (controladorFacturacion != null) {
+        controladorFacturacion.cargarProductos();
+    }
      
     }
     
@@ -504,6 +499,11 @@ private javax.swing.JDialog dialogoEspera;
         txtDireccion.setEditable(false);
 
         btnBuscarCedula.setText("Buscar");
+        btnBuscarCedula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarCedulaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -619,32 +619,13 @@ private javax.swing.JDialog dialogoEspera;
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         // TODO add your handling code here:
+        // ================== SOLO RECOGER DATOS ==================
         String nombreProducto = (String) ComboProductos.getSelectedItem();
-        String cantidadTexto = txtCantidad.getText();
+        String cantidadStr = txtCantidad.getText().trim();
 
-        if (nombreProducto == null || nombreProducto.trim().isEmpty()) {
-            mostrarMensajeError("Por favor seleccione un producto.");
-            return;
-        }
-        if (cantidadTexto.trim().isEmpty()) {
-            mostrarMensajeError("Por favor ingrese una cantidad.");
-            return;
-        }
-
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(cantidadTexto);
-            if (cantidad <= 0) {
-                mostrarMensajeError("La cantidad debe ser mayor que 0.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            mostrarMensajeError("La cantidad debe ser un número válido.");
-            return;
-        }
-
+        // Delegar validaciones y agregado al controlador
         if (controladorFacturacion != null) {
-            controladorFacturacion.agregarProducto(nombreProducto, cantidad);
+            controladorFacturacion.intentarAgregarProducto(nombreProducto, cantidadStr);
         }
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
@@ -673,6 +654,13 @@ private javax.swing.JDialog dialogoEspera;
         controladorFacturacion.volverAlMenu();
     }
     }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void btnBuscarCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCedulaActionPerformed
+        // TODO add your handling code here:
+     if (controladorFacturacion != null) {
+            controladorFacturacion.buscarClientePorCedula();  
+        }
+    }//GEN-LAST:event_btnBuscarCedulaActionPerformed
     
      // Limpia todos los campos para empezar una nueva venta
      
@@ -772,6 +760,17 @@ private javax.swing.JDialog dialogoEspera;
             }
             dialog.setVisible(true);
         }
+        // ================== LIMPIAR Y ENFOCAR CAMPO CANTIDAD ==================
+        public void limpiarYEnfocarCantidad() {
+        txtCantidad.setText("");
+        txtCantidad.requestFocusInWindow();
+        txtCantidad.selectAll(); //  selecciona el texto para sobrescribir rápido
+    }
+    
+        public void enfocarCantidad() {
+        txtCantidad.requestFocusInWindow();
+        txtCantidad.selectAll();
+    }
     
     /**
      * @param args the command line arguments

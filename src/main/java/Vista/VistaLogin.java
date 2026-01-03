@@ -99,16 +99,24 @@ public class VistaLogin extends javax.swing.JFrame {
     // === NAVEGACIÓN CON ENTER EN LOGIN ===
     txtUsuario.addActionListener(e -> jPContrasenia.requestFocusInWindow());
 
-    jPContrasenia.addActionListener(e -> {
-        // Simula clic en el botón "Iniciar Sesión"
-        if (controladorLogin != null) {
-            controladorLogin.validarCredenciales(
-                txtUsuario.getText().trim(),
-                new String(jPContrasenia.getPassword())
-            );
-        }
-    });
-     
+    jPContrasenia.addActionListener(e -> intentarIniciarSesion());
+    }
+    // ================== MÉTODO UNIFICADO PARA LOGIN ==================
+    private void intentarIniciarSesion() {
+    String nombreUsuario = txtUsuario.getText().trim();
+    String contrasenia = new String(jPContrasenia.getPassword()).trim();
+
+    // Validación mínima en vista (campos vacíos)
+    if (nombreUsuario.isEmpty() || contrasenia.isEmpty()) {
+        mostrarMensajeError("Por favor ingrese usuario y contraseña.");
+        return;
+    }
+
+    // Delegar al controlador
+    if (controladorLogin != null) {
+        controladorLogin.validarCredenciales(nombreUsuario, contrasenia);
+    }
+
     }
 
 
@@ -239,21 +247,7 @@ public class VistaLogin extends javax.swing.JFrame {
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         // TODO add your handling code here:
-        // Obtener los valores de los campos
-        String nombreUsuario = txtUsuario.getText();
-        String contrasenia = new String(jPContrasenia.getPassword());
-
-        // Validar que los campos no estén vacíos
-        if (nombreUsuario.trim().isEmpty() || contrasenia.trim().isEmpty()) {
-            lblMensajeError.setText("Por favor ingrese usuario y contraseña.");
-            lblMensajeError.setVisible(true);
-            return;
-        }
-
-        // Llamar al controlador para validar el login
-        if (controladorLogin != null) {
-            controladorLogin.validarCredenciales(nombreUsuario, contrasenia);
-        }
+      intentarIniciarSesion();
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed

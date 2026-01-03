@@ -8,6 +8,7 @@ package Controlador;
 import Modelo.ProductoModelo;
 import Vista.VistaGestionStock;
 import Vista.VistaMenuAdmin;
+import java.awt.Color;
 
 // Controlador para la gestión de stock (HU004)
 public class ControladorGestionStock {
@@ -30,20 +31,20 @@ public class ControladorGestionStock {
 
     // Método para reabastecer el stock de un producto
     public void reabastecerStock(String codigoProducto, int cantidad) {
-        // Buscar el producto por código
-        Modelo.ProductoModelo producto = ProductoModelo.obtenerProductoPorCodigo(codigoProducto);
-        if (producto == null) {
-            vistaGestionStock.mostrarMensajeConColor("Producto no encontrado. Verifique el código.", java.awt.Color.WHITE);
+        if (cantidad <= 0) {
+            vistaGestionStock.mostrarMensajeConColor("La cantidad debe ser mayor que 0.", Color.WHITE);
             return;
         }
 
-        // Actualizar el stock en la base de datos 
-        ProductoModelo.reabastecerStock(producto.getIdProducto(), cantidad);
-        // Recargar la tabla para reflejar el cambio
-        cargarProductos();
+        Modelo.ProductoModelo producto = ProductoModelo.obtenerProductoPorCodigo(codigoProducto);
+        if (producto == null) {
+            vistaGestionStock.mostrarMensajeConColor("Producto no encontrado. Verifique el código.", Color.WHITE);
+            return;
+        }
 
-        // Mostrar mensaje de éxito
-        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente", java.awt.Color.WHITE);
+        ProductoModelo.reabastecerStock(producto.getIdProducto(), cantidad);
+        cargarProductos();
+        vistaGestionStock.mostrarMensajeConColor("Stock actualizado correctamente", Color.WHITE);
     }
 
     // Método para volver al menú del administrador

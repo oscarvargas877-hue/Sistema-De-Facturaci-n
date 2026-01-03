@@ -9,7 +9,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.Timer;
+
 
 
 /**
@@ -117,58 +117,11 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
        
         public void establecerControlador(Controlador.ControladorPrimerAdmin controlador) {
         this.controladorPrimerAdmin = controlador;
-
-        // Conectamos el botón al controlador
-                btnCrearPrimerAdministrador.addActionListener(e -> {
-                String nombreUsuario = txtNombreUsuario.getText().trim();
-                String contrasenia = new String(jPContrasenia.getPassword());
-                String cedula = txtCedula.getText().trim();
-                String direccion = txtDireccion.getText().trim();
-                String edadStr = txtEdad.getText().trim();
-
-                // Validaciones básicas
-                if (nombreUsuario.isEmpty() || contrasenia.isEmpty() || cedula.isEmpty() ||
-                    direccion.isEmpty() || edadStr.isEmpty()) {
-                    mostrarMensajeError("Todos los campos son obligatorios.", Color.WHITE);
-                    return;
-                }
-                if (nombreUsuario.contains(" ")) {
-                    mostrarMensajeError("El nombre de usuario no puede contener espacios.", Color.WHITE);
-                    return;
-                }
-
-                // Validar edad
-                int edad;
-                try {
-                    edad = Integer.parseInt(edadStr);
-                    if (edad < 18 || edad > 120) {
-                        mostrarMensajeError("Edad no válida (18-120 años).", Color.WHITE);
-                        return;
-                    }
-                } catch (NumberFormatException ex) {
-                    mostrarMensajeError("La edad debe ser un número válido.", Color.WHITE);
-                    return;
-                }
-
-                // Validar género (obligatorio, fuera del try de edad)
-                if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
-                    mostrarMensajeError("Por favor seleccione un género.", Color.WHITE);
-                    return;
-                }
-                String genero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
-
-                // Si todo OK, crear administrador
-                try {
-                    controlador.crearPrimerAdministrador(nombreUsuario, contrasenia, cedula, direccion, edad, genero);
-                    mostrarMensajeExito("¡Primer Administrador creado exitosamente!");
-                    Timer timer = new Timer(2000, ev -> {});
-                    timer.setRepeats(false);
-                    timer.start();
-                } catch (Exception ex) {
-                    mostrarMensajeError("Error al crear el administrador: " + ex.getMessage(), Color.WHITE);
-                }
-            });
-       }
+        }
+     
+             
+                        
+       
 
     // Método auxiliar para errores (rojo)
     private void mostrarMensajeError(String mensaje, Color color) {
@@ -360,23 +313,27 @@ public class VistaPrimerAdmin extends javax.swing.JFrame {
 // Acción del botón "Crear Primer Administrador"
     private void btnCrearPrimerAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPrimerAdministradorActionPerformed
         // TODO add your handling code here:
-    String nombreUsuario = txtNombreUsuario.getText();
-    String contrasenia = new String(jPContrasenia.getPassword());
+ // ================== SOLO RECOGER DATOS (sin validar nada aquí) ==================
+        String nombreUsuario = txtNombreUsuario.getText().trim();
+        String contrasenia = new String(jPContrasenia.getPassword()); // No trim en contraseña
+        String cedula = txtCedula.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        String edadStr = txtEdad.getText().trim();
 
-    // Validar que los campos no estén vacíos
-    if (nombreUsuario.trim().isEmpty() || contrasenia.trim().isEmpty()) {
-        lblMensajeError.setText("Por favor complete todos los campos.");
-        lblMensajeError.setVisible(true);
-        return;
-    }
+        String genero = RadioMasculino.isSelected() ? "Masculino"
+                : RadioFemenino.isSelected() ? "Femenino" : null;
 
-    // Validar que el nombre de usuario no contenga espacios
-    if (nombreUsuario.contains(" ")) {
-        lblMensajeError.setText("El nombre de usuario no puede contener espacios.");
-        lblMensajeError.setVisible(true);
-        return;
-    }
-
+        // Delegar todo al controlador
+        if (controladorPrimerAdmin != null) {
+            controladorPrimerAdmin.intentarCrearPrimerAdministrador(
+                    nombreUsuario,
+                    contrasenia,
+                    cedula,
+                    direccion,
+                    edadStr,
+                    genero
+            );
+        }
    
     }//GEN-LAST:event_btnCrearPrimerAdministradorActionPerformed
 // Acción al presionar Enter en el campo de contraseña (opcional pero útil)

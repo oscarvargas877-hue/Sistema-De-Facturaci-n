@@ -79,7 +79,7 @@ public class ProductoModelo {
      return null;
  }
 
-    // Método para obtener todos los productos (usa el SP sp_obtener_productos)
+    // Método para obtener todos los productos 
     public static List<ProductoModelo> obtenerTodosLosProductos() {
         List<ProductoModelo> listaProductos = new ArrayList<>();
         ConexionBDD conexionBDD = new ConexionBDD();

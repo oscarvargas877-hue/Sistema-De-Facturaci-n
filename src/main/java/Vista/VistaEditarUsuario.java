@@ -263,37 +263,44 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
     RadioCajero.addActionListener(e -> btnGuardar.requestFocusInWindow());
 
     // Enter en botón guardar ejecuta la acción
-    btnGuardar.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-                btnGuardarActionPerformed(null);
-            }
-        }
-    });
-    
+    getRootPane().setDefaultButton(btnGuardar);
     // ================== REFRESCAR ==================
    
     revalidate();
     repaint();
-    
-
-
    
-
     }
     
     
     
      // Método para inyectar el controlador desde fuera
-       public void establecerControlador(Controlador.ControladorEditarUsuario controlador) {
+        public void establecerControlador(Controlador.ControladorEditarUsuario controlador) {
         this.controladorEditar = controlador;
-        
-        
+
         btnCancelar.addActionListener(e -> controladorEditar.cancelarEdicion());
 
-       }
+        btnGuardar.addActionListener(e -> {
+        String nuevoNombre = txtNombre.getText().trim();
+        String nuevaCedula = txtCedula.getText().trim();
+        String nuevaDireccion = txtDireccion.getText().trim();
+        String edadStr = txtEdad.getText().trim();
+        String nuevoGenero = RadioMasculino.isSelected() ? "Masculino"
+                : RadioFemenino.isSelected() ? "Femenino" : null;
+        String nuevoRol = RadioAdministrador.isSelected() ? "administrador"
+                : RadioCajero.isSelected() ? "cajero" : null;
 
-    // Mensajes flotantes
+        controladorEditar.intentarGuardarCambios(
+                usuarioActual.getIdUsuario(),
+                nuevoNombre,
+                nuevaCedula,
+                nuevaDireccion,
+                edadStr,
+                nuevoGenero,
+                nuevoRol
+        );
+    });
+}
+    // MENSAJES FLOTANTES
     public void mostrarMensajeError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -550,95 +557,7 @@ public class VistaEditarUsuario extends javax.swing.JFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-   // ================== RECOGER Y LIMPIAR DATOS ==================
-    String nuevoNombre = txtNombre.getText().trim();
-    String nuevaCedula = txtCedula.getText().trim();
-    String nuevaDireccion = txtDireccion.getText().trim();
-    String edadStr = txtEdad.getText().trim();
-
-    // ================== VALIDACIÓN DE NOMBRE DE USUARIO ==================
-    if (nuevoNombre.isEmpty()) {
-        mostrarMensajeError("El nombre de usuario es obligatorio.");
-        return;
-    }
-    if (nuevoNombre.length() < 4) {
-        mostrarMensajeError("El nombre de usuario debe tener al menos 4 caracteres.");
-        return;
-    }
-    if (nuevoNombre.contains(" ")) {
-        mostrarMensajeError("El nombre de usuario no puede contener espacios.");
-        return;
-    }
-
-    // ================== VALIDACIÓN DE CÉDULA (LA MÁS IMPORTANTE) ==================
-    if (nuevaCedula.isEmpty()) {
-        mostrarMensajeError("La cédula es obligatoria.");
-        return;
-    }
-    if (nuevaCedula.length() != 10) {
-        mostrarMensajeError("La cédula debe tener exactamente 10 dígitos.");
-        return;
-    }
-    if (!nuevaCedula.matches("\\d{10}")) {
-        mostrarMensajeError("La cédula solo debe contener números.");
-        return;
-    }
-    if (!Modelo.UsuarioModelo.validarCedulaEcuatoriana(nuevaCedula)) {
-        mostrarMensajeError("La cédula ingresada no es válida según el algoritmo ecuatoriano.");
-        return;
-    }
-
-    // ================== VALIDACIÓN DE DIRECCIÓN ==================
-    if (nuevaDireccion.isEmpty()) {
-        mostrarMensajeError("La dirección es obligatoria.");
-        return;
-    }
-    if (nuevaDireccion.length() < 5) {
-        mostrarMensajeError("La dirección debe tener al menos 5 caracteres.");
-        return;
-    }
-
-    // ================== VALIDACIÓN DE EDAD ==================
-    if (edadStr.isEmpty()) {
-        mostrarMensajeError("La edad es obligatoria.");
-        return;
-    }
-    int nuevaEdad;
-    try {
-        nuevaEdad = Integer.parseInt(edadStr);
-        if (nuevaEdad < 16 || nuevaEdad > 120) {
-            mostrarMensajeError("La edad debe estar entre 16 y 120 años.");
-            return;
-        }
-    } catch (NumberFormatException ex) {
-        mostrarMensajeError("La edad debe ser un número válido.");
-        return;
-    }
-
-    // ================== VALIDACIÓN DE GÉNERO ==================
-    if (!RadioMasculino.isSelected() && !RadioFemenino.isSelected()) {
-        mostrarMensajeError("Por favor seleccione un género.");
-        return;
-    }
-    String nuevoGenero = RadioMasculino.isSelected() ? "Masculino" : "Femenino";
-
-    // ================== VALIDACIÓN DE ROL ==================
-    if (!RadioAdministrador.isSelected() && !RadioCajero.isSelected()) {
-        mostrarMensajeError("Por favor seleccione un rol.");
-        return;
-    }
-    String nuevoRol = RadioAdministrador.isSelected() ? "administrador" : "cajero";
-
-    // ================== SI TODAS LAS VALIDACIONES PASAN → ACTUALIZAR Y GUARDAR ==================
-    usuarioActual.setNombreUsuario(nuevoNombre);
-    usuarioActual.setCedula(nuevaCedula);
-    usuarioActual.setDireccion(nuevaDireccion);
-    usuarioActual.setEdad(nuevaEdad);
-    usuarioActual.setGenero(nuevoGenero);
-    usuarioActual.setRol(nuevoRol);
-
-    // Solo ahora llamamos al controlador
-    controladorEditar.guardarCambios(usuarioActual);
+ 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
  

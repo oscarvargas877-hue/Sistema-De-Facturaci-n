@@ -136,11 +136,11 @@ public class VistaGestionStock extends javax.swing.JFrame {
     panelCentral.add(btnReabastecer, gbc);
 
     // BOTÓN Atrás
-    lblAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
-    lblAtras.setPreferredSize(new Dimension(400, 60));
-    lblAtras.setBackground(new Color(155, 89, 182));
-    lblAtras.setForeground(Color.WHITE);
-    panelCentral.add(lblAtras, gbc);
+    btnAtras.setFont(new Font("Arial Black", Font.BOLD, 28));
+    btnAtras.setPreferredSize(new Dimension(400, 60));
+    btnAtras.setBackground(new Color(155, 89, 182));
+    btnAtras.setForeground(Color.WHITE);
+    panelCentral.add(btnAtras, gbc);
 
     // MENSAJE DE ERROR
     lblMensajeDeError.setFont(new Font("Arial Black", Font.BOLD, 26));
@@ -215,70 +215,53 @@ public class VistaGestionStock extends javax.swing.JFrame {
     });
 
     // IMPORTANTE: Reemplaza COMPLETAMENTE este listener
-    txtCantidaSumar.addActionListener(e -> {
+    // Enter en cantidad → intentar reabastecer
+    txtCantidaSumar.addActionListener(e -> intentarReabastecer());
 
+    // Paginación: PaginadorTabla ya agrega listeners a los botones → no necesitas nada más
+}
 
-        // Obtener los valores de los campos
-        String codigoProducto = txtCodigo.getText();
-        String cantidadTexto = txtCantidaSumar.getText();
+    // ================== MÉTODO PRIVADO UNIFICADO (vista solo recoge datos) ==================
+    private void intentarReabastecer() {
+    String codigo = txtCodigo.getText().trim();
+    String cantidadTexto = txtCantidaSumar.getText().trim();
 
-        // Validar que los campos no estén vacíos
-        if (codigoProducto.trim().isEmpty() || cantidadTexto.trim().isEmpty()) {
-            lblMensajeDeError.setText("Por favor ingrese código y cantidad.");
-            lblMensajeDeError.setForeground(Color.WHITE);
-            lblMensajeDeError.setVisible(true);
-            return;
-        }
+    // Validación mínima en vista (solo campos vacíos)
+    if (codigo.isEmpty() || cantidadTexto.isEmpty()) {
+        mostrarMensajeConColor("Por favor ingrese código y cantidad.", Color.WHITE);
+        return;
+    }
 
-        // Validar que la cantidad sea un número entero positivo
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(cantidadTexto);
-            if (cantidad <= 0) {
-                lblMensajeDeError.setText("La cantidad debe ser mayor que 0");
-                lblMensajeDeError.setForeground(Color.WHITE);
-                lblMensajeDeError.setVisible(true);
-                return;
-            }
-        } catch (NumberFormatException ex) {
-            lblMensajeDeError.setText("La cantidad debe ser un número válido");
-            lblMensajeDeError.setForeground(Color.WHITE);
-            lblMensajeDeError.setVisible(true);
-            return;
-        }
+    int cantidad;
+    try {
+        cantidad = Integer.parseInt(cantidadTexto);
+    } catch (NumberFormatException ex) {
+        mostrarMensajeConColor("La cantidad debe ser un número válido.", Color.WHITE);
+        return;
+    }
 
-        // Llamar al controlador para reabastecer
-        if (controladorGestionStock != null) {
-            controladorGestionStock.reabastecerStock(codigoProducto, cantidad);
-        }
+    // Delegar TODO lo demás al controlador
+    if (controladorGestionStock != null) {
+        controladorGestionStock.reabastecerStock(codigo, cantidad);
+    }
 
-    });
-
-    // Enter en botón reabastecer
-    btnReabastecer.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-                btnReabastecerActionPerformed(null);
-            }
-        }
-    });
-
-    // Enter en botón atrás
-    lblAtras.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-                lblAtrasActionPerformed(null);
-            }
-        }
-    });
+    // Limpiar cantidad para el siguiente producto
+    txtCantidaSumar.setText("");
+    txtCantidaSumar.requestFocusInWindow();
  }
     
     
     //METODO ESTABLECER CONTROLADOR 
-        public void establecerControlador(Controlador.ControladorGestionStock controlador) {
-        this.controladorGestionStock = controlador;
-    }
+    public void establecerControlador(Controlador.ControladorGestionStock controlador) {
+    this.controladorGestionStock = controlador;
 
+    // === LISTENERS UNIFICADOS ===
+    // Reabastecer (clic en botón)
+    btnReabastecer.addActionListener(e -> intentarReabastecer());
+
+    // Atrás
+    btnAtras.addActionListener(e -> controladorGestionStock.volverAlMenu());
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -298,7 +281,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
         txtCodigo = new javax.swing.JTextField();
         txtCantidaSumar = new javax.swing.JTextField();
         btnReabastecer = new javax.swing.JButton();
-        lblAtras = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
         btnSiguiente = new javax.swing.JButton();
         lblPagina = new javax.swing.JLabel();
@@ -365,12 +348,12 @@ public class VistaGestionStock extends javax.swing.JFrame {
             }
         });
 
-        lblAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
-        lblAtras.setForeground(new java.awt.Color(0, 102, 102));
-        lblAtras.setText("Atras");
-        lblAtras.addActionListener(new java.awt.event.ActionListener() {
+        btnAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        btnAtras.setForeground(new java.awt.Color(0, 102, 102));
+        btnAtras.setText("Atras");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblAtrasActionPerformed(evt);
+                btnAtrasActionPerformed(evt);
             }
         });
 
@@ -416,7 +399,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
                                                 .addComponent(btnReabastecer))
                                             .addGap(0, 0, Short.MAX_VALUE)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblAtras)
+                                        .addComponent(btnAtras)
                                         .addGap(49, 49, 49)
                                         .addComponent(btnAnterior)
                                         .addGap(86, 86, 86)
@@ -453,7 +436,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
                 .addComponent(btnReabastecer)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblAtras)
+                    .addComponent(btnAtras)
                     .addComponent(lblPagina)
                     .addComponent(btnAnterior)
                     .addComponent(btnSiguiente))
@@ -477,45 +460,15 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
     private void btnReabastecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReabastecerActionPerformed
         // TODO add your handling code here:
-        // Obtener los valores de los campos
-        String codigoProducto = txtCodigo.getText();
-        String cantidadTexto = txtCantidaSumar.getText();
-
-        // Validar que los campos no estén vacíos
-        if (codigoProducto.trim().isEmpty() || cantidadTexto.trim().isEmpty()) {
-            lblMensajeDeError.setText("Por favor ingrese código y cantidad.");
-            lblMensajeDeError.setVisible(true);
-            return;
-        }
-
-        // Validar que la cantidad sea un número entero positivo
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(cantidadTexto);
-            if (cantidad <= 0) {
-                lblMensajeDeError.setText("La cantidad debe ser mayor que 0.");
-                lblMensajeDeError.setVisible(true);
-                return;
-            }
-        } catch (NumberFormatException e) {
-            lblMensajeDeError.setText("La cantidad debe ser un número válido.");
-            lblMensajeDeError.setVisible(true);
-            return;
-        }
-
-        // Llamar al controlador para reabastecer el stock
-        if (controladorGestionStock != null) {
-            controladorGestionStock.reabastecerStock(codigoProducto, cantidad);
-        }
+   
+    
     }//GEN-LAST:event_btnReabastecerActionPerformed
 
-    private void lblAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAtrasActionPerformed
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         // Llamar al controlador para volver al menú del administrador
-        if (controladorGestionStock != null) {
-            controladorGestionStock.volverAlMenu();
-        }
-    }//GEN-LAST:event_lblAtrasActionPerformed
+      
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
         // TODO add your handling code here:
@@ -638,10 +591,10 @@ public class VistaGestionStock extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TablaProductos;
     private javax.swing.JButton btnAnterior;
+    private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnReabastecer;
     private javax.swing.JButton btnSiguiente;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton lblAtras;
     private javax.swing.JLabel lblCantidadSumar;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblListaProductos;

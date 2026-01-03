@@ -218,12 +218,7 @@ private PaginadorTabla<Modelo.HistorialVentaModelo> paginadorHistorial;
         });
     }
      
-    
-  
-     // Método para mostrar mensajes de error
-    private void mostrarMensajeError(String mensaje) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
+
 
 
     /**

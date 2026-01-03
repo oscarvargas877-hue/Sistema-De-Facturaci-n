@@ -14,7 +14,7 @@ public class DetalleFacturaModelo {
     private String nombreProducto;
     private int cantidad;
     private double precioUnitario;
-    private double descuentoAplicado; // 0.00 a 1.00 (ej: 0.10 = 10%)
+    private double descuentoAplicado; 
     private double subtotal;
 
     public DetalleFacturaModelo() {}

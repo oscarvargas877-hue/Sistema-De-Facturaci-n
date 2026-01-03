@@ -38,7 +38,7 @@ public class UsuarioModelo extends Persona {
      this.activo = true;
     }
 
-    // Constructor para crear un usuario con estado activo explícito (usado en gestión)
+    // Constructor para crear un usuario con estado activo  (usado en gestión)
     public UsuarioModelo(String nombreUsuario, String contrasenia, String rol, boolean activo) {
         this.nombreUsuario = nombreUsuario;
         this.contrasenia = BCrypt.hashpw(contrasenia, BCrypt.gensalt(12));
