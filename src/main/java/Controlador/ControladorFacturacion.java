@@ -205,19 +205,27 @@ public class ControladorFacturacion {
                 java.awt.EventQueue.invokeLater(() -> {
                     vistaFacturacion.ocultarMensajeEspera();
                     if (exito) {
+                        // Crear la vista de factura impresa
                         VistaVerFactura vistaVer = new VistaVerFactura(
-                                factura.getIdFactura(),
-                                nombresApellidos,
-                                cedula,
-                                direccion,
-                                listaDetalles,
-                                subtotal,
-                                iva,
-                                totalConIva
+                            factura.getIdFactura(),
+                            nombresApellidos,
+                            cedula,
+                            direccion,
+                            listaDetalles,
+                            subtotal,
+                            iva,
+                            totalConIva
                         );
-                        vistaVer.establecerVistaFacturacion(vistaFacturacion);
+
+                        // Inyectar el nuevo controlador (pasa la vista de facturación actual)
+                        ControladorVerFactura controladorVer = new ControladorVerFactura(vistaVer, vistaFacturacion);
+                        vistaVer.establecerControlador(controladorVer);
+
+                        // Mostrar factura impresa y ocultar facturación temporalmente
                         vistaVer.setVisible(true);
-                        limpiarVenta(); // Preparar para nueva venta o cerrar
+                        vistaFacturacion.setVisible(false);  // Oculta mientras se ve la factura impresa
+
+                        // NO llamamos a limpiarVenta() aquí → lo hace el controlador al aceptar
                     } else {
                         vistaFacturacion.mostrarMensajeError("Error al guardar la factura.");
                     }

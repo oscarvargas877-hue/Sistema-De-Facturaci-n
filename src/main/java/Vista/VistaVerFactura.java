@@ -39,7 +39,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private double subtotal;
     private double iva;
     private double totalConIva;
-    private VistaFacturacion vistaFacturacion;
+    private Controlador.ControladorVerFactura controladorVerFactura;
+
     /**
      * Creates new form VistaVerFactura
      */
@@ -73,7 +74,7 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     lblNumeroFechaHora.setFont(new Font("Arial", Font.BOLD, 26));
     lblNumeroFechaHora.setForeground(Color.BLACK);
-    lblNumeroFechaHora.setHorizontalAlignment(JLabel.CENTER);
+    lblNumeroFechaHora.setHorizontalAlignment(JLabel.LEFT);
 
     lblNombreCliente.setFont(new Font("Arial", Font.BOLD, 24));
     lblNombreCliente.setForeground(Color.BLACK);
@@ -138,40 +139,40 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     PanelDetalle.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 102), 3));
 
-        /* ---------- DATOS FACTURA ---------- */
-        String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-        String fecha = df.format(new Date());
-        String hora = tf.format(new Date());
+    /* ---------- DATOS FACTURA ---------- */
+    String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+    String fecha = df.format(new Date());
+    String hora = tf.format(new Date());
 
-        lblNombreNegocio.setText("SUPERMERCADOS TUTI");
-        lblRuc.setText("RUC: 1793000000001");
-        lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
-        lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + " Fecha: " + fecha + " Hora: " + hora);
-        lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
-        lblCedula.setText("Cédula: " + this.cedula);
-        lblDireccion.setText("Dirección: " + this.direccion);
+    lblNombreNegocio.setText("SUPERMERCADOS TUTI");
+    lblRuc.setText("RUC: 1793000000001");
+    lblDireccionNegocio.setText("Dirección matriz: Av. Principal y Calle Secundaria, Eugenio Espejo - Calderón");
+    lblNumeroFechaHora.setText("Factura N.º: " + numFacturaStr + " Fecha: " + fecha + " Hora: " + hora);
+    lblNombreCliente.setText("Nombres y apellidos: " + this.nombresApellidos);
+    lblCedula.setText("Cédula: " + this.cedula);
+    lblDireccion.setText("Dirección: " + this.direccion);
 
-        /* ---------- LLENAR TABLA (solo llenamos, NO recalculamos subtotal) ---------- */
-        DefaultTableModel modelo = new DefaultTableModel(
-            new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
-        );
+    /* ---------- LLENAR TABLA (solo llenamos, NO recalculamos subtotal) ---------- */
+    DefaultTableModel modelo = new DefaultTableModel(
+        new String[]{"Producto", "Cantidad", "Precio", "Descuento", "Subtotal"}, 0
+    );
 
-        if (detalle != null) {
-            for (DetalleFacturaModelo item : detalle) {
-                String desc = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
-                modelo.addRow(new Object[]{
-                    item.getNombreProducto(),
-                    item.getCantidad(),
-                    String.format("%.2f", item.getPrecioUnitario()),
-                    desc,
-                    String.format("%.2f", item.getSubtotal())
-                });
-            }
+    if (detalle != null) {
+        for (DetalleFacturaModelo item : detalle) {
+            String desc = String.format("%.0f%%", item.getDescuentoAplicado() * 100);
+            modelo.addRow(new Object[]{
+                item.getNombreProducto(),
+                item.getCantidad(),
+                String.format("%.2f", item.getPrecioUnitario()),
+                desc,
+                String.format("%.2f", item.getSubtotal())
+            });
         }
-        tablaDetalle.setModel(modelo);
-        tablaDetalle.setDefaultEditor(Object.class, null);
+    }
+    tablaDetalle.setModel(modelo);
+    tablaDetalle.setDefaultEditor(Object.class, null);
 
     /* ---------- ALTURA DINÁMICA: QUE LA TABLA MUESTRE TODAS SUS FILAS ---------- */
     int filas = modelo.getRowCount();
@@ -219,11 +220,11 @@ public class VistaVerFactura extends javax.swing.JFrame {
     
     }
           
-          
+    public void establecerControlador(Controlador.ControladorVerFactura controlador) {
+    this.controladorVerFactura = controlador;
+}    
 
-        public void establecerVistaFacturacion(VistaFacturacion vista) {
-        this.vistaFacturacion = vista;
-    }
+ 
     
 
     /**
@@ -465,10 +466,9 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
     // Cerrar esta ventana y regresar al menú del cajero
-        if (vistaFacturacion != null) {
-            vistaFacturacion.setVisible(true);
-           }
-           this.dispose();
+      if (controladorVerFactura != null) {
+        controladorVerFactura.aceptar();
+    }
 
     }//GEN-LAST:event_btnAceptarActionPerformed
 
