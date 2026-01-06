@@ -333,5 +333,55 @@ public class UsuarioModelo extends Persona {
 
         return digitoVerificador == resultado;
     }
+    
+       
+     // Busca un usuario por cédula usando Stored Procedure
+  
+    
+   
+    public static List<UsuarioModelo> buscarPorCedula(String cedula) {
+        List<UsuarioModelo> lista = new ArrayList<>();
+
+        ConexionBDD conexionBDD = new ConexionBDD();
+        Connection conexion = conexionBDD.conectar();
+
+        if (conexion == null) {
+            return lista; // Lista vacía si no hay conexión
+        }
+
+        try {
+            CallableStatement cstmt = conexion.prepareCall("{CALL sp_buscar_usuario_por_cedula(?)}");
+            cstmt.setString(1, cedula);
+
+            ResultSet rs = cstmt.executeQuery();
+
+            while (rs.next()) {
+                UsuarioModelo usuario = new UsuarioModelo();
+                usuario.setIdUsuario(rs.getInt("idUsuario"));
+                usuario.setNombreUsuario(rs.getString("nombreUsuario"));
+                usuario.setCedula(rs.getString("cedula"));
+                usuario.setDireccion(rs.getString("direccion"));
+                usuario.setEdad(rs.getInt("edad"));
+                usuario.setGenero(rs.getString("genero"));
+                usuario.setRol(rs.getString("rol"));
+                usuario.setActivo(rs.getInt("activo") == 1);
+
+                lista.add(usuario);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conexion != null && !conexion.isClosed()) {
+                    conexion.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
 }
 

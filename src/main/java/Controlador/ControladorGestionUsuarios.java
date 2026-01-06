@@ -13,6 +13,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 // Controlador para la gestión de usuarios (HU003)
 public class ControladorGestionUsuarios {
@@ -157,4 +159,45 @@ public class ControladorGestionUsuarios {
     public Vista.VistaMenuAdmin getVistaMenuAdmin() {
         return this.vistaMenuAdmin;
 }
+    //buscar a usuarios por la cedula 
+        public void buscarUsuariosPorCedula(String cedulaBuscada) {
+        cedulaBuscada = cedulaBuscada.trim();
+
+        // Caso vacío: cargar todos los usuarios (usa tu método existente)
+        if (cedulaBuscada.isEmpty()) {
+            cargarUsuarios(); 
+            return;
+        }
+
+        // Validaciones (formato y algoritmo ecuatoriano)
+        if (cedulaBuscada.length() != 10 || !cedulaBuscada.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(vistaGestion,
+                "La cédula debe contener exactamente 10 dígitos numéricos.",
+                "Formato inválido",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!UsuarioModelo.validarCedulaEcuatoriana(cedulaBuscada)) {
+            JOptionPane.showMessageDialog(vistaGestion,
+                "La cédula ingresada no es válida según el algoritmo ecuatoriano.",
+                "Cédula inválida",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Llamar al MODELO lógica de BD
+        List<UsuarioModelo> listaFiltrada = UsuarioModelo.buscarPorCedula(cedulaBuscada);
+
+        // Mensaje opcional si no encuentra
+        if (listaFiltrada.isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGestion,
+                "No se encontró el usuario con la cédula: " + cedulaBuscada,
+                "Sin resultados",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        // Actualizar vista
+        vistaGestion.cargarUsuarios(listaFiltrada);
+    }
 }

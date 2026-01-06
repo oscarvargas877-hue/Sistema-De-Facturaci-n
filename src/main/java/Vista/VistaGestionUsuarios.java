@@ -14,6 +14,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -62,10 +63,50 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weighty = 0;
     panelCentral.add(lblTitulo, gbc);
+    
 
-    // Lista de usuarios
+     // ================== HEADER: Lista de usuarios (izquierda) + Búsqueda (derecha, txt expansivo) ==================
+    lblListaUsuarios.setHorizontalAlignment(JLabel.LEFT);
+
+    // Estilos consistentes
+    lblCedula.setFont(new Font("Arial Black", Font.BOLD, 24));
+    lblCedula.setForeground(Color.WHITE);
+
+    txtCedula.setFont(new Font("Arial", Font.PLAIN, 20));
+
+    btnCedula.setFont(new Font("Arial Black", Font.BOLD, 20));
+    btnCedula.setBackground(new Color(0, 102, 102));
+    btnCedula.setForeground(Color.WHITE);
+
+    // Altura fija para que todo quede perfectamente centrado verticalmente
+    int alturaComponentes = 55;
+    txtCedula.setPreferredSize(new Dimension(200, alturaComponentes)); // ancho mínimo inicial (se expandirá más)
+    btnCedula.setPreferredSize(new Dimension(240, alturaComponentes));
+
+    // Panel de búsqueda: txt se expande al máximo
+    JPanel panelBusqueda = new JPanel(new BorderLayout(20, 0)); // 20 px de separación horizontal entre componentes
+    panelBusqueda.setOpaque(false);
+    // Espacio extra a la derecha para que no pegue al borde de la ventana
+    panelBusqueda.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 80));
+
+    panelBusqueda.add(lblCedula, BorderLayout.WEST);
+    panelBusqueda.add(txtCedula, BorderLayout.CENTER);  // ← Aquí el txt se hace muy ancho automáticamente
+    panelBusqueda.add(btnCedula, BorderLayout.EAST);
+
+    // Panel principal del header
+    JPanel panelHeaderLista = new JPanel(new BorderLayout());
+    panelHeaderLista.setOpaque(false);
+    panelHeaderLista.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // padding izquierdo
+
+    panelHeaderLista.add(lblListaUsuarios, BorderLayout.WEST);
+    panelHeaderLista.add(panelBusqueda, BorderLayout.EAST);
+
+    // Agregar al panel central
     gbc.insets = new Insets(10, 0, 20, 0);
-    panelCentral.add(lblListaUsuarios, gbc);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panelCentral.add(panelHeaderLista, gbc);
+    
+    
 
     //  TABLA altura reducida y controlada 
     gbc.insets = new Insets(0, 50, 20, 50); // margen lateral y debajo
@@ -165,9 +206,16 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
 
     // Inicializar el paginador con los componentes existentes
     paginadorUsuarios = new PaginadorTabla<>(tablaUsuarios, lblPagina, btnAnteriorGestion, btnSiguienteGestion);
+      
+        // ================== BÚSQUEDA SIN DUPLICADOS ==================
+    // Hacer que Enter en el campo ejecute el botón de búsqueda (una sola llamada)
+    getRootPane().setDefaultButton(btnCedula);
 
+   
     revalidate();
     repaint();
+    
+    
     }
     // Método para inyectar el controlador desde fuera
     public void establecerControlador(Controlador.ControladorGestionUsuarios controlador) {
@@ -240,6 +288,8 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
     tablaUsuarios.setDefaultEditor(Object.class, null);
 
 }
+
+
    
      // Método para obtener el ID del usuario seleccionado
     private int obtenerIdUsuarioSeleccionado() {
@@ -249,6 +299,7 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
         }
         return -1; // No hay selección
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -271,6 +322,9 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
         lblPagina = new javax.swing.JLabel();
         btnAnteriorGestion = new javax.swing.JButton();
         btnSiguienteGestion = new javax.swing.JButton();
+        lblCedula = new javax.swing.JLabel();
+        btnCedula = new javax.swing.JButton();
+        txtCedula = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -359,6 +413,15 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
             }
         });
 
+        lblCedula.setText("Buscar:");
+
+        btnCedula.setText("Buscar Cédula");
+        btnCedula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCedulaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -386,6 +449,12 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
                         .addContainerGap(51, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblCedula)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(51, 51, 51)
+                                .addComponent(btnCedula))
                             .addComponent(lblListaUsuarios)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
@@ -401,7 +470,12 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(lblTitulo)
-                .addGap(42, 42, 42)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCedula)
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCedula))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblListaUsuarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -479,6 +553,28 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
     }
     }//GEN-LAST:event_btnSiguienteGestionActionPerformed
 
+    
+    // ================== AQUÍ PEGAS EL MÉTODO DE BÚSQUEDA ==================
+    private void realizarBusqueda() {
+      String cedula = txtCedula.getText().trim();
+        
+        if (controladorGestion != null) {
+            controladorGestion.buscarUsuariosPorCedula(cedula);
+        }
+        
+        // Si encontró usuario(s), muestra mensaje flotante como el de error (pero de éxito)
+        if (!cedula.isEmpty() && tablaUsuarios.getRowCount() > 0) {
+            JOptionPane.showMessageDialog(this, "Usuario encontrado", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    
+    
+    private void btnCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCedulaActionPerformed
+        // TODO add your handling code here:
+        realizarBusqueda();
+    }//GEN-LAST:event_btnCedulaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -519,13 +615,16 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
     private javax.swing.JButton btnActivar;
     private javax.swing.JButton btnAnteriorGestion;
     private javax.swing.JButton btnAtras;
+    private javax.swing.JButton btnCedula;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnInactivar;
     private javax.swing.JButton btnSiguienteGestion;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblListaUsuarios;
     private javax.swing.JLabel lblPagina;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tablaUsuarios;
+    private javax.swing.JTextField txtCedula;
     // End of variables declaration//GEN-END:variables
 }
