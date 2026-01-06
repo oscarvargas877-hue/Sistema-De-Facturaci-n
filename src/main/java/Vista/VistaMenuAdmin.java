@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,73 +26,74 @@ public class VistaMenuAdmin extends javax.swing.JFrame {
      */
     public VistaMenuAdmin() {
         initComponents();//NO BORRAR
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
-        pack(); 
-        
-        // PANTALLA COMPLETA
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+   this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Fondo profesional
-        getContentPane().setBackground(new Color(70, 130, 180));
+    // Fondo profesional
+    getContentPane().setBackground(new Color(70, 130, 180));
 
-        // ESTILOS BRUTALES 
-        lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setHorizontalAlignment(JLabel.CENTER);
+    // ================== ESTILOS DEL TÍTULO ==================
+    lblTitulo.setFont(new Font("Arial Black", Font.BOLD, 48));
+    lblTitulo.setForeground(Color.WHITE);
+    lblTitulo.setHorizontalAlignment(JLabel.CENTER);
 
-        Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
-        Dimension tamañoBoton = new Dimension(600, 80);
+    // ================== ESTILOS DE LOS BOTONES ==================
+    Font fontBotones = new Font("Arial Black", Font.BOLD, 28);
+    Dimension tamañoBoton = new Dimension(500, 70); // Altura reducida para que quepa todo
 
-        btnRegistrarUsuario.setFont(fontBotones);
-        btnRegistrarUsuario.setPreferredSize(tamañoBoton);
-        btnRegistrarUsuario.setBackground(new Color(52, 152, 219));
-        btnRegistrarUsuario.setForeground(Color.WHITE);
+    JButton[] botones = {
+        btnRegistrarUsuario, btnGestionarUsuarios, btnGestionStock,
+        btnHistorialVentas, btnProductosMasVendidos, btnCerrarSesion
+    };
 
-        btnGestionarUsuarios.setFont(fontBotones);
-        btnGestionarUsuarios.setPreferredSize(tamañoBoton);
-        btnGestionarUsuarios.setBackground(new Color(155, 89, 182));
-        btnGestionarUsuarios.setForeground(Color.WHITE);
+    for (JButton btn : botones) {
+        btn.setFont(fontBotones);
+        btn.setPreferredSize(tamañoBoton);
+        btn.setMinimumSize(tamañoBoton);
+        btn.setMaximumSize(tamañoBoton);
+        btn.setForeground(Color.WHITE);
+    }
 
-        btnGestionStock.setFont(fontBotones);
-        btnGestionStock.setPreferredSize(tamañoBoton);
-        btnGestionStock.setBackground(new Color(46, 204, 113));
-        btnGestionStock.setForeground(Color.WHITE);
+    // Colores individuales
+    btnRegistrarUsuario.setBackground(new Color(52, 152, 219));
+    btnGestionarUsuarios.setBackground(new Color(155, 89, 182));
+    btnGestionStock.setBackground(new Color(46, 204, 113));
+    btnHistorialVentas.setBackground(new Color(241, 196, 15));
+    btnProductosMasVendidos.setBackground(new Color(230, 126, 34));
+    btnCerrarSesion.setBackground(new Color(231, 76, 60));
 
-        btnHistorialVentas.setFont(fontBotones);
-        btnHistorialVentas.setPreferredSize(tamañoBoton);
-        btnHistorialVentas.setBackground(new Color(241, 196, 15));
-        btnHistorialVentas.setForeground(Color.WHITE);
+    // ================== PANEL CENTRAL CON BOXLAYOUT ==================
+    JPanel panelCentral = new JPanel();
+    panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+    panelCentral.setOpaque(false);
 
-        btnProductosMasVendidos.setFont(fontBotones);
-        btnProductosMasVendidos.setPreferredSize(tamañoBoton);
-        btnProductosMasVendidos.setBackground(new Color(230, 126, 34));
-        btnProductosMasVendidos.setForeground(Color.WHITE);
+    // Espacio flexible arriba
+    panelCentral.add(Box.createVerticalGlue());
 
-        btnCerrarSesion.setFont(fontBotones);
-        btnCerrarSesion.setPreferredSize(tamañoBoton);
-        btnCerrarSesion.setBackground(new Color(231, 76, 60));
-        btnCerrarSesion.setForeground(Color.WHITE);
+    // Título centrado
+    lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+    panelCentral.add(lblTitulo);
+    panelCentral.add(Box.createVerticalStrut(40)); // Espacio reducido después del título
 
-        // Centrar todo el panel principal (el que genera NetBeans)
-        JPanel panelPrincipal = (JPanel) getContentPane();
-        panelPrincipal.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(25, 0, 25, 0);
+    // Botones con espacio SOLO ENTRE ELLOS
+    boolean primero = true;
+    for (JButton btn : botones) {
+        if (!primero) {
+            panelCentral.add(Box.createVerticalStrut(20)); // Espacio reducido entre botones
+        }
+        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(btn);
+        primero = false;
+    }
 
-        // Reagregar los componentes al nuevo layout
-        panelPrincipal.removeAll();
-        panelPrincipal.add(lblTitulo, gbc);
-        panelPrincipal.add(btnRegistrarUsuario, gbc);
-        panelPrincipal.add(btnGestionarUsuarios, gbc);
-        panelPrincipal.add(btnGestionStock, gbc);
-        panelPrincipal.add(btnHistorialVentas, gbc);
-        panelPrincipal.add(btnProductosMasVendidos, gbc);
-        panelPrincipal.add(btnCerrarSesion, gbc);
+    // Espacio flexible abajo para centrar todo
+    panelCentral.add(Box.createVerticalGlue());
 
-        revalidate();
-        repaint();
+    // Añadir panel al frame
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(panelCentral, BorderLayout.CENTER);
+
+    // Pantalla completa
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public void establecerControlador(Controlador.ControladorAdmin controlador) {

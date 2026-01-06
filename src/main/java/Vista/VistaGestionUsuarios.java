@@ -336,7 +336,7 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
 
         btnAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnAtras.setForeground(new java.awt.Color(0, 102, 102));
-        btnAtras.setText("Atras");
+        btnAtras.setText("Atrás");
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -401,7 +401,7 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(lblTitulo)
-                .addGap(38, 38, 38)
+                .addGap(42, 42, 42)
                 .addComponent(lblListaUsuarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ScrollTablaUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)

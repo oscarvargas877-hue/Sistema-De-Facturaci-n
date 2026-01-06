@@ -193,10 +193,31 @@ public class VistaVerFactura extends javax.swing.JFrame {
     PanelDetalle.revalidate();
     PanelDetalle.repaint();
 
-   /* ---------- TOTALES (usamos los valores que nos pasaron) ---------- */
-        lblIva.setText("IVA 15%: $" + String.format("%.2f", this.iva));
-        lblTotal.setText("Total: $" + String.format("%.2f", this.totalConIva));
-        lblGracias.setText("Gracias por su compra");
+
+       
+
+    // --- MOSTRAR SUBTOTAL DE ÍTEMS ---
+    lblSubtotalItem.setFont(new Font("Arial Black", Font.BOLD, 32));
+    lblSubtotalItem.setForeground(Color.BLACK);
+    lblSubtotalItem.setText("Subtotal: $" + String.format("%.2f", this.subtotal)); // ← Usa el subtotal que te pasaron
+
+    lblIva.setText("IVA 15%: $" + String.format("%.2f", this.iva));
+    lblTotal.setText("Total: $" + String.format("%.2f", this.totalConIva));
+        
+    lblMensaje.setFont(new Font("Arial", Font.BOLD, 20));
+    lblMensaje.setForeground(new Color(0, 0, 0)); // Naranja oscuro para destacar
+    lblMensaje.setHorizontalAlignment(JLabel.CENTER);
+    lblMensaje.setBorder(BorderFactory.createTitledBorder(
+        BorderFactory.createLineBorder(new Color(200, 150, 100), 2),
+        "Promoción especial",
+        javax.swing.border.TitledBorder.LEFT,
+        javax.swing.border.TitledBorder.TOP,
+        new Font("Arial", Font.BOLD, 16),
+        new Color(0, 0, 0)
+    ));
+    lblMensaje.setText("Si la compra de un producto es mayor a 5 unidades, ¡tendrá el 10% de descuento!");
+    
+     lblGracias.setText("Gracias por su compra");
     /* ---------- COLORES ---------- */
     PanelEncabezado.setBackground(new Color(240, 250, 250));
     PanelCliente.setBackground(Color.WHITE);
@@ -250,11 +271,13 @@ public class VistaVerFactura extends javax.swing.JFrame {
         PanelTotales = new javax.swing.JPanel();
         lblIva = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
+        lblSubtotalItem = new javax.swing.JLabel();
         lblGracias = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
         PanelDetalle = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaDetalle = new javax.swing.JTable();
+        lblMensaje = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -349,6 +372,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
         lblTotal.setText("Total: ");
 
+        lblSubtotalItem.setText("Subtotal");
+
         javax.swing.GroupLayout PanelTotalesLayout = new javax.swing.GroupLayout(PanelTotales);
         PanelTotales.setLayout(PanelTotalesLayout);
         PanelTotalesLayout.setHorizontalGroup(
@@ -360,13 +385,17 @@ public class VistaVerFactura extends javax.swing.JFrame {
                         .addComponent(lblTotal))
                     .addGroup(PanelTotalesLayout.createSequentialGroup()
                         .addGap(36, 36, 36)
-                        .addComponent(lblIva)))
+                        .addGroup(PanelTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSubtotalItem)
+                            .addComponent(lblIva))))
                 .addContainerGap(581, Short.MAX_VALUE))
         );
         PanelTotalesLayout.setVerticalGroup(
             PanelTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelTotalesLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addContainerGap()
+                .addComponent(lblSubtotalItem)
+                .addGap(18, 18, 18)
                 .addComponent(lblIva)
                 .addGap(18, 18, 18)
                 .addComponent(lblTotal)
@@ -412,6 +441,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        lblMensaje.setText("Recuerde si la compra de un producto es mayor a 5 tendra el 10% de descuento ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -433,14 +464,17 @@ public class VistaVerFactura extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(228, 228, 228)
-                        .addComponent(lblGracias)
-                        .addGap(133, 133, 133)
-                        .addComponent(btnAceptar))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(222, 222, 222)
-                        .addComponent(PanelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(PanelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 853, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblGracias)
+                                .addGap(133, 133, 133)
+                                .addComponent(btnAceptar)))))
+                .addGap(0, 115, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -453,11 +487,13 @@ public class VistaVerFactura extends javax.swing.JFrame {
                 .addComponent(PanelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addComponent(PanelTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblMensaje)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGracias)
                     .addComponent(btnAceptar))
-                .addContainerGap(347, Short.MAX_VALUE))
+                .addContainerGap(335, Short.MAX_VALUE))
         );
 
         pack();
@@ -488,10 +524,12 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private javax.swing.JLabel lblDireccionNegocio;
     private javax.swing.JLabel lblGracias;
     private javax.swing.JLabel lblIva;
+    private javax.swing.JLabel lblMensaje;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblNombreNegocio;
     private javax.swing.JLabel lblNumeroFechaHora;
     private javax.swing.JLabel lblRuc;
+    private javax.swing.JLabel lblSubtotalItem;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JTable tablaDetalle;
     // End of variables declaration//GEN-END:variables

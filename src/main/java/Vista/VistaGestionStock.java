@@ -350,7 +350,7 @@ public class VistaGestionStock extends javax.swing.JFrame {
 
         btnAtras.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         btnAtras.setForeground(new java.awt.Color(0, 102, 102));
-        btnAtras.setText("Atras");
+        btnAtras.setText("Atrás");
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
