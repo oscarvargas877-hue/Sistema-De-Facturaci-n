@@ -4,15 +4,11 @@
  */
 package Controlador;
 
-import BDD.ConexionBDD;
+
 import Modelo.UsuarioModelo;
 import Vista.VistaEditarUsuario;
 import Vista.VistaGestionUsuarios;
 import Vista.VistaMenuAdmin;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -35,13 +31,12 @@ public class ControladorGestionUsuarios {
     }
 
     public void editarUsuario(int idUsuario) {
-    // Buscar el usuario completo con TODOS los datos desde la base de datos
-    Modelo.UsuarioModelo usuario = obtenerUsuarioCompletoPorId(idUsuario);
-    if (usuario == null) {
-        javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
+        Modelo.UsuarioModelo usuario = Modelo.UsuarioModelo.obtenerPorId(idUsuario);  // ← Nueva llamada al modelo
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
     
 
     // Abrir ventana de edición
@@ -51,51 +46,39 @@ public class ControladorGestionUsuarios {
     vistaEditar.establecerControlador(controladorEditar);
     vistaEditar.setVisible(true);
    
-}
+    }
     // Método para activar un usuario
     public void activarUsuario(int idUsuario) {
-        Modelo.UsuarioModelo usuario = buscarUsuarioPorId(idUsuario);
-        if (usuario == null) {
-            javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Verificar si ya está activo
-        if (usuario.isActivo()) {
-            javax.swing.JOptionPane.showMessageDialog(vistaGestion, "El usuario ya está activo.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Cambiar el estado a activo
-        usuario.setActivo(true);
-        usuario.cambiarEstado(true);
-
-        // Recargar la lista
-        cargarUsuarios();
-        javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario activado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+      Modelo.UsuarioModelo usuario = Modelo.UsuarioModelo.obtenerPorId(idUsuario);  // ← Cambiado a obtenerPorId (eficiente)
+      if (usuario == null) {
+          JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+          return;
+      }
+      if (usuario.isActivo()) {
+          JOptionPane.showMessageDialog(vistaGestion, "El usuario ya está activo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+          return;
+      }
+      usuario.setActivo(true);
+      usuario.cambiarEstado(true);
+      cargarUsuarios();
+      JOptionPane.showMessageDialog(vistaGestion, "Usuario activado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     // Método para inactivar un usuario
     public void inactivarUsuario(int idUsuario) {
-        Modelo.UsuarioModelo usuario = buscarUsuarioPorId(idUsuario);
-        if (usuario == null) {
-            javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Verificar si ya está inactivo
-        if (!usuario.isActivo()) {
-            javax.swing.JOptionPane.showMessageDialog(vistaGestion, "El usuario ya está inactivo.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Cambiar el estado a inactivo
-        usuario.setActivo(false);
-        usuario.cambiarEstado(false);
-
-        // Recargar la lista
-        cargarUsuarios();
-        javax.swing.JOptionPane.showMessageDialog(vistaGestion, "Usuario inactivado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+      Modelo.UsuarioModelo usuario = Modelo.UsuarioModelo.obtenerPorId(idUsuario);  // ← Cambiado a obtenerPorId (eficiente)
+      if (usuario == null) {
+          JOptionPane.showMessageDialog(vistaGestion, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+          return;
+      }
+      if (!usuario.isActivo()) {
+          JOptionPane.showMessageDialog(vistaGestion, "El usuario ya está inactivo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+          return;
+      }
+      usuario.setActivo(false);
+      usuario.cambiarEstado(false);
+      cargarUsuarios();
+      JOptionPane.showMessageDialog(vistaGestion, "Usuario inactivado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     // Método para volver al menú del administrador
@@ -104,100 +87,67 @@ public class ControladorGestionUsuarios {
         vistaMenuAdmin.setVisible(true);
     }
 
-    // Método auxiliar para buscar un usuario por ID
-    private Modelo.UsuarioModelo buscarUsuarioPorId(int id) {
-        java.util.List<Modelo.UsuarioModelo> lista = UsuarioModelo.obtenerTodosLosUsuarios();
-        for (Modelo.UsuarioModelo u : lista) {
-            if (u.getIdUsuario() == id) {
-                return u;
-            }
-        }
-        return null;
-    }
-
     // Método para recargar la lista de usuarios (usado desde VistaEditarUsuario)
     public void recargarLista() {
         cargarUsuarios();
     }
     
-    // Método nuevo: obtiene TODOS los datos del usuario desde la BD
-    private Modelo.UsuarioModelo obtenerUsuarioCompletoPorId(int idUsuario) {
-        ConexionBDD conexionBDD = new ConexionBDD();
-        Connection conexion = conexionBDD.conectar();
-        if (conexion == null) return null;
-
-        Modelo.UsuarioModelo usuario = null;
-        try {
-            CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuario_completo(?)}");
-            sentencia.setInt(1, idUsuario);
-            ResultSet rs = sentencia.executeQuery();
-
-            if (rs.next()) {
-                usuario = new Modelo.UsuarioModelo();
-                usuario.setIdUsuario(rs.getInt("idUsuario"));
-                usuario.setNombreUsuario(rs.getString("nombreUsuario"));
-                usuario.setRol(rs.getString("rol"));
-                usuario.setActivo(rs.getInt("activo") == 1);
-                usuario.setCedula(rs.getString("cedula"));
-                usuario.setDireccion(rs.getString("direccion"));
-                usuario.setEdad(rs.getInt("edad"));
-                usuario.setGenero(rs.getString("genero"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (conexion != null && !conexion.isClosed()) conexion.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return usuario;
-    }
     
     // Getter para acceder a vistaMenuAdmin desde otros controladores
     public Vista.VistaMenuAdmin getVistaMenuAdmin() {
         return this.vistaMenuAdmin;
 }
     //buscar a usuarios por la cedula 
-        public void buscarUsuariosPorCedula(String cedulaBuscada) {
+    public void buscarUsuariosPorCedula(String cedulaBuscada) {
         cedulaBuscada = cedulaBuscada.trim();
 
-        // Caso vacío: cargar todos los usuarios (usa tu método existente)
+        // Si está vacío → mostrar todos los usuarios
         if (cedulaBuscada.isEmpty()) {
-            cargarUsuarios(); 
+            cargarUsuarios(); // Esto llama a obtenerTodosLosUsuarios()
             return;
         }
 
-        // Validaciones (formato y algoritmo ecuatoriano)
+        // Validación de formato (10 dígitos numéricos)
         if (cedulaBuscada.length() != 10 || !cedulaBuscada.matches("\\d{10}")) {
             JOptionPane.showMessageDialog(vistaGestion,
                 "La cédula debe contener exactamente 10 dígitos numéricos.",
                 "Formato inválido",
                 JOptionPane.ERROR_MESSAGE);
+
+            // ← CLAVE: restablecer a todos los usuarios para limpiar resultados anteriores
+            cargarUsuarios();
             return;
         }
 
+        // Validación algoritmo ecuatoriano
         if (!UsuarioModelo.validarCedulaEcuatoriana(cedulaBuscada)) {
             JOptionPane.showMessageDialog(vistaGestion,
                 "La cédula ingresada no es válida según el algoritmo ecuatoriano.",
                 "Cédula inválida",
                 JOptionPane.ERROR_MESSAGE);
+
+            // ← CLAVE: restablecer a todos los usuarios
+            cargarUsuarios();
             return;
         }
 
-        // Llamar al MODELO lógica de BD
+        // Búsqueda en BD
         List<UsuarioModelo> listaFiltrada = UsuarioModelo.buscarPorCedula(cedulaBuscada);
 
-        // Mensaje opcional si no encuentra
+        // Actualizar tabla
+        vistaGestion.cargarUsuarios(listaFiltrada);
+
+        // ← Mensajes controlados desde el CONTROLADOR (no desde la vista)
         if (listaFiltrada.isEmpty()) {
             JOptionPane.showMessageDialog(vistaGestion,
-                "No se encontró el usuario con la cédula: " + cedulaBuscada,
+                "No se encontró ningún usuario con la cédula: " + cedulaBuscada,
                 "Sin resultados",
                 JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(vistaGestion,
+                "Usuario encontrado",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
         }
-
-        // Actualizar vista
-        vistaGestion.cargarUsuarios(listaFiltrada);
     }
 }

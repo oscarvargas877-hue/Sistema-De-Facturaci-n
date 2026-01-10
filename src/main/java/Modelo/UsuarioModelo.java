@@ -383,5 +383,38 @@ public class UsuarioModelo extends Persona {
 
         return lista;
     }
+    
+    public static UsuarioModelo obtenerPorId(int idUsuario) {
+    ConexionBDD conexionBDD = new ConexionBDD();
+    Connection conexion = conexionBDD.conectar();
+    if (conexion == null) return null;
+
+    UsuarioModelo usuario = null;
+    try {
+        CallableStatement sentencia = conexion.prepareCall("{CALL sp_obtener_usuario_completo(?)}");
+        sentencia.setInt(1, idUsuario);
+        ResultSet rs = sentencia.executeQuery();
+        if (rs.next()) {
+            usuario = new UsuarioModelo();
+            usuario.setIdUsuario(rs.getInt("idUsuario"));
+            usuario.setNombreUsuario(rs.getString("nombreUsuario"));
+            usuario.setRol(rs.getString("rol"));
+            usuario.setActivo(rs.getInt("activo") == 1);
+            usuario.setCedula(rs.getString("cedula"));
+            usuario.setDireccion(rs.getString("direccion"));
+            usuario.setEdad(rs.getInt("edad"));
+            usuario.setGenero(rs.getString("genero"));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (conexion != null && !conexion.isClosed()) conexion.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return usuario;
+}
 }
 

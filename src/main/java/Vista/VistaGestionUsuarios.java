@@ -560,13 +560,10 @@ public void cargarUsuarios(java.util.List<Modelo.UsuarioModelo> listaUsuarios) {
         
         if (controladorGestion != null) {
             controladorGestion.buscarUsuariosPorCedula(cedula);
-        }
-        
-        // Si encontró usuario(s), muestra mensaje flotante como el de error (pero de éxito)
-        if (!cedula.isEmpty() && tablaUsuarios.getRowCount() > 0) {
-            JOptionPane.showMessageDialog(this, "Usuario encontrado", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            
         }
     }
+    
     
     
     

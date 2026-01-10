@@ -225,7 +225,7 @@ public class ControladorFacturacion {
                         vistaVer.setVisible(true);
                         vistaFacturacion.setVisible(false);  // Oculta mientras se ve la factura impresa
 
-                        // NO llamamos a limpiarVenta() aquí → lo hace el controlador al aceptar
+                        
                     } else {
                         vistaFacturacion.mostrarMensajeError("Error al guardar la factura.");
                     }
