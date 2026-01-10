@@ -20,9 +20,24 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+// importaciones de pdf}
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -40,6 +55,8 @@ public class VistaVerFactura extends javax.swing.JFrame {
     private double iva;
     private double totalConIva;
     private Controlador.ControladorVerFactura controladorVerFactura;
+    private javax.swing.JScrollPane globalScroll;  // Para capturar el scroll completo
+    private JPanel wrapper;  // Panel que contiene todo el contenido (para captura completa)
 
     /**
      * Creates new form VistaVerFactura
@@ -235,6 +252,20 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     /* ---------- MAXIMIZAR ---------- */
     setExtendedState(JFrame.MAXIMIZED_BOTH);
+    
+
+   this.wrapper = wrapper;  // ← NUEVA LÍNEA: guarda la referencia al wrapper
+   wrapper.add(originalContent, BorderLayout.CENTER);
+
+   globalScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+   globalScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+   globalScroll.getVerticalScrollBar().setUnitIncrement(20); // Scroll más suave
+   setContentPane(globalScroll);
+   /* ---------- MAXIMIZAR ---------- */
+   setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+   // Guardar referencia al scroll global para usarlo al generar PDF
+   this.globalScroll = globalScroll;
 
     revalidate();
     repaint();
@@ -501,8 +532,76 @@ public class VistaVerFactura extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
-    // Cerrar esta ventana y regresar al menú del cajero
-      if (controladorVerFactura != null) {
+   // Scroll arriba (por si acaso)
+    if (globalScroll != null) {
+        globalScroll.getVerticalScrollBar().setValue(0);
+    }
+
+    // Captura TODO el contenido (incluye lo que está oculto por scroll)
+    java.awt.Dimension tamanoCompleto = wrapper.getPreferredSize();
+    BufferedImage image = new BufferedImage(
+        tamanoCompleto.width,
+        tamanoCompleto.height,
+        BufferedImage.TYPE_INT_RGB
+    );
+    Graphics2D g2d = image.createGraphics();
+    
+    // Calidad máxima
+    g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+    g2d.setRenderingHint(java.awt.RenderingHints.KEY_TEXT_ANTIALIASING, java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+    
+    wrapper.printAll(g2d);  // ← Esto captura TODO completo
+    
+    g2d.dispose();
+
+    // Diálogo para guardar
+    JFileChooser chooser = new JFileChooser();
+    chooser.setDialogTitle("Guardar Factura como PDF");
+    chooser.setFileFilter(new FileNameExtensionFilter("Archivos PDF (*.pdf)", "pdf"));
+    
+    String numFacturaStr = String.format("%03d-%03d-%09d", 1, 1, numeroFactura);
+    chooser.setSelectedFile(new java.io.File("Factura_" + numFacturaStr + ".pdf"));
+    
+    int resultado = chooser.showSaveDialog(this);
+    
+    if (resultado == JFileChooser.APPROVE_OPTION) {
+        java.io.File archivo = chooser.getSelectedFile();
+        if (!archivo.getName().toLowerCase().endsWith(".pdf")) {
+            archivo = new java.io.File(archivo.getAbsolutePath() + ".pdf");
+        }
+        
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            byte[] bytesImagen = baos.toByteArray();
+
+            // PDF horizontal para que quepa bien la tabla
+            Document documento = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
+            PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(archivo));
+            documento.open();
+
+            Image imagenPDF = Image.getInstance(bytesImagen);
+            imagenPDF.scaleToFit(PageSize.A4.rotate().getWidth() - 40, PageSize.A4.rotate().getHeight() - 40);
+            imagenPDF.setAlignment(Image.ALIGN_CENTER);
+
+            documento.add(imagenPDF);
+            documento.close();
+
+            JOptionPane.showMessageDialog(this, 
+                "¡Factura COMPLETA guardada como PDF!\nUbicación: " + archivo.getAbsolutePath(),
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (DocumentException | IOException e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al generar el PDF: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    // Volver a facturación
+    if (controladorVerFactura != null) {
         controladorVerFactura.aceptar();
     }
 

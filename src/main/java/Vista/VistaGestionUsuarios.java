@@ -69,7 +69,7 @@ public class VistaGestionUsuarios extends javax.swing.JFrame {
     lblListaUsuarios.setHorizontalAlignment(JLabel.LEFT);
 
     // Estilos consistentes
-    lblCedula.setFont(new Font("Arial Black", Font.BOLD, 24));
+    lblCedula.setFont(new Font("Arial Black", Font.BOLD, 28));
     lblCedula.setForeground(Color.WHITE);
 
     txtCedula.setFont(new Font("Arial", Font.PLAIN, 20));
